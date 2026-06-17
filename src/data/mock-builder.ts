@@ -20,6 +20,7 @@ import type {
 } from "@/lib/data-providers/types";
 import { GROUP_IDS, WORLD_CUP_TEAMS, type TeamSeed } from "./worldcup-teams";
 import { DATA_CAPTURED_AT, VENUES, WORLD_CUP_FIXTURES } from "./worldcup-fixtures";
+import { WORLD_CUP_PLAYERS } from "./worldcup-players";
 import { MARKETS } from "./markets";
 import { FIRST_NAMES, LAST_NAMES } from "./names";
 import { clamp, hashSeed, round, seededRng } from "@/lib/prediction/math";
@@ -141,18 +142,40 @@ function buildPlayers(teams: Team[]): Player[] {
   const players: Player[] = [];
   teams.forEach((team, tIdx) => {
     const q = qualityFromRanking(team.fifaRanking);
+    // Plantilla real destacada si existe; si no, se generan nombres mock.
+    const roster = WORLD_CUP_PLAYERS[team.id];
+    if (roster && roster.length > 0) {
+      roster.forEach((seed, i) => {
+        const seedKey = `player-${team.id}-${i}`;
+        const rng = seededRng(hashSeed(seedKey));
+        players.push({
+          id: `${team.id}-p${i + 1}`,
+          name: seed.name, // nombre REAL
+          teamId: team.id,
+          position: seed.position, // posicion REAL
+          shirtNumber: (hashSeed(seedKey) % 23) + 1,
+          likelyStarter: true, // figuras: titulares probables
+          stats: statsForPosition(seed.position, q, rng), // stats del modelo
+          source: "manual", // identidad real; stats estimadas
+          updatedAt: MOCK_TIMESTAMP,
+        });
+      });
+      return;
+    }
+
+    // Fallback: jugadores generados (no deberia ocurrir con el dataset actual).
     const plan = POSITION_PLAN[tIdx % POSITION_PLAN.length];
     plan.forEach((pos, i) => {
       const seedKey = `player-${team.id}-${i}`;
       const rng = seededRng(hashSeed(seedKey));
-      const fn = FIRST_NAMES[(hashSeed(seedKey + "f")) % FIRST_NAMES.length];
-      const ln = LAST_NAMES[(hashSeed(seedKey + "l")) % LAST_NAMES.length];
+      const fn = FIRST_NAMES[hashSeed(seedKey + "f") % FIRST_NAMES.length];
+      const ln = LAST_NAMES[hashSeed(seedKey + "l") % LAST_NAMES.length];
       players.push({
         id: `${team.id}-p${i + 1}`,
         name: `${fn} ${ln}`,
         teamId: team.id,
         position: pos,
-        shirtNumber: ((hashSeed(seedKey) % 23) + 1),
+        shirtNumber: (hashSeed(seedKey) % 23) + 1,
         likelyStarter: i < 2 || rng() > 0.4,
         stats: statsForPosition(pos, q, rng),
         source: "mock",
