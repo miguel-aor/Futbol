@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { InboxIcon } from "./icons";
 
 export function StatCard({
   label,
@@ -29,10 +30,12 @@ export function StatCard({
   );
 }
 
-export function EmptyState({ title, message, icon }: { title: string; message?: string; icon?: string }) {
+export function EmptyState({ title, message, icon }: { title: string; message?: string; icon?: ReactNode }) {
   return (
-    <div className="card flex flex-col items-center justify-center gap-2 px-6 py-14 text-center">
-      <div className="text-4xl opacity-60">{icon ?? "📭"}</div>
+    <div className="card flex flex-col items-center justify-center gap-3 px-6 py-14 text-center">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-base-800 text-slate-400">
+        {icon ?? <InboxIcon className="h-6 w-6" />}
+      </div>
       <div className="text-base font-semibold text-slate-200">{title}</div>
       {message ? <p className="max-w-sm text-sm text-slate-500">{message}</p> : null}
     </div>

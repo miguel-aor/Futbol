@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { BallIcon, CloseIcon, MenuIcon } from "./icons";
 
 const LINKS = [
   { href: "/", label: "Inicio" },
@@ -24,7 +25,7 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b border-base-800 bg-base-950/85 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl">⚽</span>
+          <BallIcon className="h-6 w-6 text-brand-400" />
           <span className="text-lg font-bold tracking-tight text-slate-100">
             Futbol<span className="text-brand-400">·</span>
           </span>
@@ -52,12 +53,11 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="rounded-lg border border-base-700 p-2 text-slate-300 md:hidden"
-          aria-label="Menu"
+          className="rounded-lg border border-base-700 p-2 text-slate-300 transition-colors hover:bg-base-850 md:hidden"
+          aria-label={open ? "Cerrar menu" : "Abrir menu"}
+          aria-expanded={open}
         >
-          <span className="block h-0.5 w-5 bg-current" />
-          <span className="mt-1 block h-0.5 w-5 bg-current" />
-          <span className="mt-1 block h-0.5 w-5 bg-current" />
+          {open ? <CloseIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
         </button>
       </div>
 

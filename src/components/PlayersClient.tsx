@@ -82,7 +82,7 @@ export function PlayersClient({ players, teams, groups }: { players: PlayerCardD
 
       <div className="mb-3 text-sm text-slate-500">{filtered.length} jugadores</div>
       {filtered.length === 0 ? (
-        <EmptyState title="Sin jugadores" message="Ajusta los filtros o la busqueda." icon="🧑" />
+        <EmptyState title="Sin jugadores" message="Ajusta los filtros o la busqueda." />
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => (

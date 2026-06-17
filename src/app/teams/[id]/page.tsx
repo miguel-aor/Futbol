@@ -6,6 +6,7 @@ import { OpportunityTable } from "@/components/OpportunityTable";
 import { FormDots } from "@/components/TrendMiniChart";
 import { DataSourceBadge } from "@/components/badges";
 import { EmptyState, SectionTitle, StatCard } from "@/components/primitives";
+import { ArrowLeftIcon, CalendarIcon } from "@/components/icons";
 import { POSITION_LABELS, formatUpdatedAt } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +21,9 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
   return (
     <div className="space-y-8">
-      <Link href="/teams" className="text-sm text-slate-500 hover:text-slate-300">← Selecciones</Link>
+      <Link href="/teams" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-300">
+        <ArrowLeftIcon className="h-4 w-4" /> Selecciones
+      </Link>
 
       <section className="card p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -53,7 +56,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
       <section>
         <SectionTitle title="Partidos proximos" />
         {upcoming.length === 0 ? (
-          <EmptyState title="Sin proximos partidos" icon="📅" />
+          <EmptyState title="Sin proximos partidos" icon={<CalendarIcon className="h-6 w-6" />} />
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {upcoming.map((m) => (

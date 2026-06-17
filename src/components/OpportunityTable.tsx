@@ -7,7 +7,7 @@ import { formatDateTime, formatOdds } from "@/lib/format";
 
 export function OpportunityTable({ opportunities }: { opportunities: OpportunityView[] }) {
   if (opportunities.length === 0) {
-    return <EmptyState title="Sin oportunidades" message="Ajusta los filtros para ver mas picks." icon="🔍" />;
+    return <EmptyState title="Sin oportunidades" message="Ajusta los filtros para ver mas picks." />;
   }
 
   return (

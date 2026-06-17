@@ -42,7 +42,7 @@ export function TeamsClient({ teams, groups }: { teams: TeamCardData[]; groups: 
 
       <div className="mb-3 text-sm text-slate-500">{filtered.length} selecciones</div>
       {filtered.length === 0 ? (
-        <EmptyState title="Sin selecciones" message="Prueba con otro filtro o busqueda." icon="🏳️" />
+        <EmptyState title="Sin selecciones" message="Prueba con otro filtro o busqueda." />
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((t) => (

@@ -6,6 +6,7 @@ import { MatchCard } from "@/components/MatchCard";
 import { OpportunityTable } from "@/components/OpportunityTable";
 import { DataSourceBadge } from "@/components/badges";
 import { EmptyState, SectionTitle } from "@/components/primitives";
+import { CalendarIcon } from "@/components/icons";
 import { formatUpdatedAt } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -50,7 +51,7 @@ export default async function WorldCupPage() {
       <section>
         <SectionTitle title="Proximos partidos del Mundial" />
         {data.upcoming.length === 0 ? (
-          <EmptyState title="Sin proximos partidos" icon="📅" />
+          <EmptyState title="Sin proximos partidos" icon={<CalendarIcon className="h-6 w-6" />} />
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {data.upcoming.slice(0, 9).map((m) => (

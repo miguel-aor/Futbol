@@ -15,6 +15,7 @@ import {
   formatUpdatedAt,
 } from "@/lib/format";
 import type { OpportunityView } from "@/lib/data-access";
+import { ArrowLeftIcon, ClockIcon, PinIcon, StadiumIcon } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +54,9 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div className="space-y-8">
-      <Link href="/dashboard" className="text-sm text-slate-500 hover:text-slate-300">← Volver</Link>
+      <Link href="/dashboard" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-300">
+        <ArrowLeftIcon className="h-4 w-4" /> Volver
+      </Link>
 
       {/* Cabecera */}
       <section className="card p-6">
@@ -86,10 +89,10 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         </div>
 
         <div className="mt-4 flex flex-wrap justify-center gap-4 text-xs text-slate-500">
-          <span>🏟️ {match.venue}</span>
-          <span>📍 {match.city || "Sede por confirmar"}</span>
-          <span>🕒 {formatDateTime(match.kickoff)}</span>
-          {match.neutralVenue ? <span>Campo neutral</span> : null}
+          <span className="inline-flex items-center gap-1.5"><StadiumIcon className="h-4 w-4" /> {match.venue}</span>
+          <span className="inline-flex items-center gap-1.5"><PinIcon className="h-4 w-4" /> {match.city || "Sede por confirmar"}</span>
+          <span className="inline-flex items-center gap-1.5"><ClockIcon className="h-4 w-4" /> {formatDateTime(match.kickoff)}</span>
+          {match.neutralVenue ? <span className="chip bg-base-700/60 text-slate-400">Campo neutral</span> : null}
         </div>
       </section>
 

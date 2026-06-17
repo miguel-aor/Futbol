@@ -7,6 +7,8 @@ import { DataSourceBadge, EdgeBadge, ProbabilityBadge } from "@/components/badge
 import { SectionTitle, StatCard } from "@/components/primitives";
 import { MARKET_BY_KEY } from "@/data/markets";
 import { formatUpdatedAt } from "@/lib/format";
+import { BallIcon, CardIcon, FlagIcon, TargetIcon } from "@/components/icons";
+import type { ReactNode } from "react";
 
 export const dynamic = "force-dynamic";
 
@@ -65,10 +67,10 @@ export default async function HomePage() {
           action={<Link href="/dashboard" className="text-sm font-medium text-brand-400 hover:text-brand-500">Ver todas →</Link>}
         />
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-          <BestPickCard title="Mejor pick de goles" op={best.goals} icon="⚽" />
-          <BestPickCard title="Mejor pick de corners" op={best.corners} icon="🚩" />
-          <BestPickCard title="Mejor pick de tarjetas" op={best.cards} icon="🟨" />
-          <BestPickCard title="Mejor pick de jugador" op={best.player} icon="🎯" />
+          <BestPickCard title="Mejor pick de goles" op={best.goals} icon={<BallIcon className="h-5 w-5 text-brand-400" />} />
+          <BestPickCard title="Mejor pick de corners" op={best.corners} icon={<FlagIcon className="h-5 w-5 text-sky-400" />} />
+          <BestPickCard title="Mejor pick de tarjetas" op={best.cards} icon={<CardIcon className="h-5 w-5 text-edge-mid" />} />
+          <BestPickCard title="Mejor pick de jugador" op={best.player} icon={<TargetIcon className="h-5 w-5 text-fuchsia-400" />} />
         </div>
       </section>
 
@@ -88,7 +90,7 @@ export default async function HomePage() {
   );
 }
 
-function BestPickCard({ title, op, icon }: { title: string; op: OpportunityView | null; icon: string }) {
+function BestPickCard({ title, op, icon }: { title: string; op: OpportunityView | null; icon: ReactNode }) {
   if (!op) {
     return (
       <div className="card p-4">
@@ -101,7 +103,7 @@ function BestPickCard({ title, op, icon }: { title: string; op: OpportunityView 
     <Link href={op.match ? `/matches/${op.match.id}` : "/dashboard"} className="card card-hover block p-4">
       <div className="flex items-center justify-between">
         <span className="label-dim">{title}</span>
-        <span className="text-lg">{icon}</span>
+        {icon}
       </div>
       <div className="mt-2 font-semibold text-slate-100">{op.pick}</div>
       <div className="text-xs text-slate-500">

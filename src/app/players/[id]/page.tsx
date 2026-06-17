@@ -4,6 +4,7 @@ import { getPlayerDetail } from "@/lib/data-access";
 import { PlayerPropsTable } from "@/components/PlayerPropsTable";
 import { DataSourceBadge } from "@/components/badges";
 import { SectionTitle, StatCard } from "@/components/primitives";
+import { ArrowLeftIcon } from "@/components/icons";
 import { POSITION_LABELS, formatDateTime, formatUpdatedAt } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +19,9 @@ export default async function PlayerDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div className="space-y-8">
-      <Link href="/players" className="text-sm text-slate-500 hover:text-slate-300">← Jugadores</Link>
+      <Link href="/players" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-300">
+        <ArrowLeftIcon className="h-4 w-4" /> Jugadores
+      </Link>
 
       <section className="card p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">

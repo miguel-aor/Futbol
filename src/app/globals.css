@@ -33,6 +33,43 @@ body {
   background: #2a3a55;
 }
 
+@layer base {
+  /* Tailwind v3 no agrega cursor pointer a botones por defecto. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  select {
+    cursor: pointer;
+  }
+
+  /* Focus visible consistente para navegacion por teclado. */
+  a:focus-visible,
+  button:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #34d399;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Numeros tabulares: alinean columnas de cuotas/porcentajes. */
+  table,
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Respeta prefers-reduced-motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @layer components {
   .card {
     @apply rounded-xl border border-base-700/60 bg-base-850/80 shadow-card backdrop-blur;
