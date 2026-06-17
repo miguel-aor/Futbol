@@ -5,6 +5,7 @@ import { FIXTURE_LABELS, formatDateTime } from "@/lib/format";
 
 export function MatchCard({ match }: { match: MatchSummary }) {
   const finished = match.status === "finished";
+  const live = match.status === "live";
   return (
     <Link href={`/matches/${match.id}`} className="card card-hover block p-4">
       <div className="mb-3 flex items-center justify-between gap-2 text-xs text-slate-500">
@@ -12,7 +13,13 @@ export function MatchCard({ match }: { match: MatchSummary }) {
           {FIXTURE_LABELS[match.fixtureType] ?? match.fixtureType}
           {match.groupId ? ` · Grupo ${match.groupId}` : ""}
         </span>
-        <span>{finished ? "Finalizado" : formatDateTime(match.kickoff)}</span>
+        {live ? (
+          <span className="chip bg-edge-neg/15 text-edge-neg">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-edge-neg" /> En vivo
+          </span>
+        ) : (
+          <span>{finished ? "Finalizado" : formatDateTime(match.kickoff)}</span>
+        )}
       </div>
 
       <div className="space-y-2">

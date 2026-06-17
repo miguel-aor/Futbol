@@ -24,16 +24,22 @@ export interface SourceUrl {
  */
 export const SOURCE_URLS: SourceUrl[] = [
   {
-    id: "365scores-football-home",
-    kind: "competition",
-    url: "https://www.365scores.com/es/football",
-    note: "Landing de futbol. Pagina dinamica: probablemente requiera parsing de JSON embebido.",
-  },
-  {
     id: "365scores-worldcup",
     kind: "competition",
     url: "https://www.365scores.com/es/football/world-cup",
-    note: "Hub del Mundial. Punto de partida para descubrir partidos y grupos.",
+    note: "Hub del Mundial en 365Scores. Pagina dinamica: requiere parsing de JSON embebido.",
+  },
+  {
+    id: "espn-worldcup-schedule",
+    kind: "competition",
+    url: "https://www.espn.com/soccer/story/_/id/48939282/2026-fifa-world-cup-fixtures-results-match-schedule-group-stage-knockout-rounds-bracket",
+    note: "Calendario y resultados oficiales (ESPN). Fuente usada para el dataset real actual.",
+  },
+  {
+    id: "wikipedia-worldcup",
+    kind: "competition",
+    url: "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup",
+    note: "Resumen del torneo, grupos y resultados. Estructura HTML estable, facil de parsear.",
   },
 ];
 

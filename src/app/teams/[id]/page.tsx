@@ -68,7 +68,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
       {recent.length > 0 ? (
         <section>
-          <SectionTitle title="Ultimos resultados (mock)" />
+          <SectionTitle title="Ultimos resultados" />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {recent.map((m) => (
               <MatchCard key={m.id} match={m} />

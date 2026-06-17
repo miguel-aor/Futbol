@@ -31,7 +31,7 @@ export default async function WorldCupPage() {
       </div>
 
       <section>
-        <SectionTitle title="Equipos destacados" subtitle="Por ranking FIFA mock" />
+        <SectionTitle title="Equipos destacados" subtitle="Por ranking FIFA (aprox.)" />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {featured.map((t) => (
             <Link key={t.id} href={`/teams/${t.id}`} className="card card-hover flex flex-col items-center gap-1 p-4 text-center">
@@ -44,7 +44,7 @@ export default async function WorldCupPage() {
       </section>
 
       <section>
-        <SectionTitle title="Grupos y clasificacion simulada" subtitle="Los 2 primeros (resaltados) avanzarian" />
+        <SectionTitle title="Grupos y clasificacion" subtitle="Posiciones reales tras los partidos jugados. Los 2 primeros avanzan." />
         <WorldCupGroupsClient groups={data.groups} />
       </section>
 
@@ -63,7 +63,7 @@ export default async function WorldCupPage() {
 
       {data.finished.length > 0 ? (
         <section>
-          <SectionTitle title="Partidos terminados (mock)" />
+          <SectionTitle title="Resultados ya jugados" subtitle="Marcadores reales de la jornada 1" />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {data.finished.slice(0, 6).map((m) => (
               <MatchCard key={m.id} match={m} />

@@ -69,12 +69,25 @@ npm start         # node .next/standalone/server.js  (modo Railway)
 | `npm run ingest:365` | **Ingesta experimental manual** de 365Scores. |
 | `npm run normalize:data` | Re-normaliza snapshots raw ya descargados (sin red). |
 
-## Mock data
+## Datos: reales + modelo
 
-Por defecto `DATA_PROVIDER=mock`. Todo el dataset (48 selecciones, 12 grupos,
-partidos de grupo + internacionales, jugadores, picks) se genera de forma
-**determinista** en `src/data/` a partir de `src/data/worldcup-teams.ts` (la
-fuente central de selecciones). No requiere internet ni variables de entorno.
+Por defecto `DATA_PROVIDER=mock`, pero el dataset combina:
+
+- **Reales** (fuentes públicas ESPN/Wikipedia, capturados el 17 jun 2026): los
+  48 equipos y sus **grupos del sorteo**, el **calendario completo** de fase de
+  grupos (72 partidos con sede y fecha) y los **resultados ya jugados** (jornada
+  1). Viven en `src/data/worldcup-teams.ts` y `src/data/worldcup-fixtures.ts`.
+  En la UI llevan el badge **"Snapshot manual"** con su marca de tiempo.
+- **Generados por el modelo** (badge **"Mock"**): plantillas de jugadores,
+  stats, probabilidades, cuotas justas, edge y picks. Son deterministas (mismo
+  resultado en servidor y cliente, sin errores de hidratación).
+
+Las posiciones de cada grupo se calculan en vivo a partir de los resultados
+reales. No requiere internet ni variables de entorno.
+
+> Para actualizar resultados (o seguir partidos en curso) se reejecuta la
+> ingesta manual; los datos no son un feed en vivo segundo a segundo, son un
+> snapshot con timestamp. Ver más abajo y en `/methodology`.
 
 ## Ingesta experimental de 365Scores
 

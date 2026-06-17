@@ -50,12 +50,19 @@ export default function MethodologyPage() {
       <section className="card p-5">
         <h2 className="font-semibold text-slate-100">Sobre las fuentes de datos</h2>
         <p className="mt-2 text-sm text-slate-400">
-          La app funciona 100% sin internet usando <strong className="text-slate-200">mock data</strong> determinista.
-          De forma opcional puede leer <strong className="text-slate-200">snapshots manuales</strong> (JSON importado) o
-          <strong className="text-slate-200"> snapshots experimentales de 365Scores</strong> generados con
-          <code className="mx-1 rounded bg-base-900 px-1.5 py-0.5 text-xs text-slate-300">npm run ingest:365</code>.
-          La recopilacion experimental es manual, con rate limit y cache; nunca corre durante el build ni en cada
-          request, y si falla, la app sigue funcionando con mock data.
+          Los <strong className="text-slate-200">grupos, el calendario y los resultados ya jugados</strong> del
+          Mundial 2026 son <strong className="text-slate-200">reales</strong>, tomados de fuentes publicas
+          (ESPN / Wikipedia) y capturados con fecha y hora (badge &quot;Snapshot manual&quot;). Las
+          <strong className="text-slate-200"> plantillas de jugadores, las stats y todas las predicciones</strong> son
+          generadas por el modelo (badge &quot;Mock&quot;) y sirven para llenar el analisis.
+        </p>
+        <p className="mt-2 text-sm text-slate-400">
+          Los datos NO son en vivo segundo a segundo: son un <strong className="text-slate-200">snapshot</strong> con
+          su marca de tiempo. La actualizacion (incluido el seguimiento de partidos en curso) se hace de forma
+          manual reejecutando la ingesta
+          <code className="mx-1 rounded bg-base-900 px-1.5 py-0.5 text-xs text-slate-300">npm run ingest:365</code>,
+          que respeta rate limit y cache, nunca corre durante el build ni en cada request, y si falla la app sigue
+          funcionando con los datos guardados.
         </p>
       </section>
     </div>

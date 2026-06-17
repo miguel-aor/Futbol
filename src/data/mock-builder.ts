@@ -19,6 +19,7 @@ import type {
   TeamRecentForm,
 } from "@/lib/data-providers/types";
 import { GROUP_IDS, WORLD_CUP_TEAMS, type TeamSeed } from "./worldcup-teams";
+import { DATA_CAPTURED_AT, VENUES, WORLD_CUP_FIXTURES } from "./worldcup-fixtures";
 import { MARKETS } from "./markets";
 import { FIRST_NAMES, LAST_NAMES } from "./names";
 import { clamp, hashSeed, round, seededRng } from "@/lib/prediction/math";
@@ -34,24 +35,8 @@ import {
   getConfidenceLabel,
 } from "@/lib/prediction";
 
-/** Timestamp fijo de los datos mock (mantiene SSR determinista). */
-export const MOCK_TIMESTAMP = "2026-06-17T08:00:00.000Z";
-
-/** Sedes mock del Mundial 2026 (USA/Canada/Mexico). */
-const VENUES: Array<{ venue: string; city: string }> = [
-  { venue: "MetLife Stadium", city: "Nueva Jersey" },
-  { venue: "SoFi Stadium", city: "Los Angeles" },
-  { venue: "AT&T Stadium", city: "Dallas" },
-  { venue: "Estadio Azteca", city: "Ciudad de Mexico" },
-  { venue: "BMO Field", city: "Toronto" },
-  { venue: "Mercedes-Benz Stadium", city: "Atlanta" },
-  { venue: "Lumen Field", city: "Seattle" },
-  { venue: "Arrowhead Stadium", city: "Kansas City" },
-  { venue: "Hard Rock Stadium", city: "Miami" },
-  { venue: "Estadio BBVA", city: "Monterrey" },
-  { venue: "Levi's Stadium", city: "San Francisco" },
-  { venue: "Gillette Stadium", city: "Boston" },
-];
+/** Timestamp de captura de los datos reales (mantiene SSR determinista). */
+export const MOCK_TIMESTAMP = DATA_CAPTURED_AT;
 
 function qualityFromRanking(ranking: number): number {
   return clamp(1 - (ranking - 1) / 85, 0, 1);
@@ -93,7 +78,8 @@ function buildTeam(seed: TeamSeed): Team {
     recentForm,
     attackStrength: round(0.9 + q * 1.3 + (rng() - 0.5) * 0.2, 2),
     defenseStrength: round(1.7 - q * 1.0 + (rng() - 0.5) * 0.2, 2),
-    source: "mock",
+    // Identidad/grupo/ranking reales (publicos); las fuerzas son del modelo.
+    source: "manual",
     updatedAt: MOCK_TIMESTAMP,
   };
 }
@@ -185,108 +171,44 @@ function isoPlusDays(baseIso: string, days: number, hour: number): string {
 }
 
 function buildMatches(teamsById: Record<string, Team>): Match[] {
-  const matches: Match[] = [];
-  const baseDate = "2026-06-11T00:00:00.000Z"; // arranque del torneo
-  let venueIdx = 0;
-
-  // 3 partidos de fase de grupos por grupo (36 total).
-  GROUP_IDS.forEach((groupId, gIdx) => {
-    const groupTeams = WORLD_CUP_TEAMS.filter((t) => t.groupId === groupId).map((t) => t.id);
-    // Pares: (0v1), (2v3), (0v2)
-    const pairings: Array<[number, number]> = [
-      [0, 1],
-      [2, 3],
-      [0, 2],
-    ];
-    pairings.forEach((pair, pIdx) => {
-      const home = teamsById[groupTeams[pair[0]]];
-      const away = teamsById[groupTeams[pair[1]]];
-      const dayOffset = gIdx + pIdx * 4; // distribuye en el calendario
-      const kickoff = isoPlusDays(baseDate, dayOffset, 16 + (pIdx % 3) * 2);
-      const venue = VENUES[venueIdx % VENUES.length];
-      venueIdx++;
-      matches.push(
-        buildMatch({
-          id: `wc-${groupId}-${pIdx + 1}`,
-          fixtureType: "mundial",
-          competition: "Mundial 2026",
-          groupId,
-          home,
-          away,
-          kickoff,
-          venue,
-          neutralVenue: true,
-        }),
-      );
+  // Construye los partidos desde el CALENDARIO REAL del Mundial 2026.
+  return WORLD_CUP_FIXTURES.map((fx) => {
+    const home = teamsById[fx.homeId];
+    const away = teamsById[fx.awayId];
+    const venue = VENUES[fx.venueId];
+    return buildMatch({
+      id: fx.id,
+      groupId: fx.groupId,
+      home,
+      away,
+      kickoff: fx.kickoff,
+      venue,
+      homeScore: fx.homeScore,
+      awayScore: fx.awayScore,
     });
   });
-
-  // 10 partidos internacionales extra (amistoso / eliminatoria / internacional).
-  const intlPairs: Array<[string, string, Match["fixtureType"]]> = [
-    ["arg", "bra", "amistoso"],
-    ["fra", "ger", "amistoso"],
-    ["esp", "por", "eliminatoria"],
-    ["eng", "ned", "amistoso"],
-    ["mex", "usa", "internacional"],
-    ["bel", "cro", "amistoso"],
-    ["uru", "col", "eliminatoria"],
-    ["mar", "sen", "internacional"],
-    ["jpn", "kor", "amistoso"],
-    ["ita", "sui", "internacional"],
-  ];
-  intlPairs.forEach(([h, a, type], i) => {
-    const home = teamsById[h];
-    const away = teamsById[a];
-    if (!home || !away) return;
-    const kickoff = isoPlusDays(baseDate, -14 + i * 3, 18); // antes y alrededor del inicio
-    const venue = VENUES[(venueIdx + i) % VENUES.length];
-    matches.push(
-      buildMatch({
-        id: `intl-${i + 1}`,
-        fixtureType: type,
-        competition:
-          type === "amistoso"
-            ? "Amistoso internacional"
-            : type === "eliminatoria"
-              ? "Eliminatorias"
-              : "Partido internacional",
-        groupId: null,
-        home,
-        away,
-        kickoff,
-        venue,
-        neutralVenue: false,
-      }),
-    );
-  });
-
-  return matches;
 }
 
 function buildMatch(args: {
   id: string;
-  fixtureType: Match["fixtureType"];
-  competition: string;
-  groupId: string | null;
+  groupId: string;
   home: Team;
   away: Team;
   kickoff: string;
   venue: { venue: string; city: string };
-  neutralVenue: boolean;
+  homeScore: number | null;
+  awayScore: number | null;
 }): Match {
   const { id, home, away, kickoff } = args;
-  const prediction = computeMatchPrediction(home, away, args.neutralVenue);
-  const isPast = new Date(kickoff).getTime() < new Date(MOCK_TIMESTAMP).getTime();
-  const rng = seededRng(hashSeed("score-" + id));
+  // En el Mundial todos los partidos son en sede neutral.
+  const prediction = computeMatchPrediction(home, away, true);
 
-  let homeScore: number | null = null;
-  let awayScore: number | null = null;
-  let status: Match["status"] = "scheduled";
-  if (isPast) {
-    status = "finished";
-    homeScore = Math.round(prediction.expectedGoals * 0.5 * (0.6 + rng()));
-    awayScore = Math.round(prediction.expectedGoals * 0.4 * (0.6 + rng()));
-  }
+  // El resultado proviene del calendario real (null si no se ha jugado).
+  const hasResult = args.homeScore != null && args.awayScore != null;
+  const isPast = new Date(kickoff).getTime() < new Date(MOCK_TIMESTAMP).getTime();
+  const homeScore = args.homeScore;
+  const awayScore = args.awayScore;
+  const status: Match["status"] = hasResult ? "finished" : isPast ? "live" : "scheduled";
 
   const mkTrend = (t: Team) => ({
     teamId: t.id,
@@ -316,22 +238,23 @@ function buildMatch(args: {
 
   return {
     id,
-    fixtureType: args.fixtureType,
-    competition: args.competition,
+    fixtureType: "mundial",
+    competition: "Mundial 2026",
     groupId: args.groupId,
     homeTeamId: home.id,
     awayTeamId: away.id,
     kickoff,
     venue: args.venue.venue,
     city: args.venue.city,
-    neutralVenue: args.neutralVenue,
+    neutralVenue: true,
     status,
     homeScore,
     awayScore,
     prediction,
     trends: [mkTrend(home), mkTrend(away)],
     headToHead,
-    source: "mock",
+    // Calendario y resultados reales (fuentes publicas), capturados.
+    source: "manual",
     updatedAt: MOCK_TIMESTAMP,
   };
 }
@@ -342,7 +265,7 @@ function buildOpportunities(matches: Match[], teamsById: Record<string, Team>, p
   for (const p of players) (playersByTeam[p.teamId] ||= []).push(p);
 
   for (const match of matches) {
-    if (match.status === "finished") continue; // solo proximos generan picks
+    if (match.status !== "scheduled") continue; // solo proximos generan picks
     const home = teamsById[match.homeTeamId];
     const away = teamsById[match.awayTeamId];
 
@@ -494,8 +417,9 @@ export function buildMockBundle(): DataBundle {
   return {
     meta: {
       id: "mock",
-      label: "Datos mock",
-      description: "Dataset generado de forma determinista para el prototipo.",
+      label: "Mundial 2026 (real + modelo)",
+      description:
+        "Grupos, calendario y resultados reales (fuentes publicas, captura 17 jun 2026); jugadores y predicciones generados por el modelo.",
       available: true,
       lastUpdated: MOCK_TIMESTAMP,
     },
