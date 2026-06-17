@@ -1,0 +1,3 @@
+# Prototipo interno de analisis. Sin contenido publico de produccion.
+User-agent: *
+Disallow:
