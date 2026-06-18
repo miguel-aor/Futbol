@@ -63,7 +63,7 @@ export default async function HomePage() {
       <section>
         <SectionTitle
           title="Top oportunidades del dia"
-          subtitle="Mejores picks por edge ponderado"
+          subtitle="Mejores picks de los partidos de HOY (por edge)"
           action={<Link href="/dashboard" className="text-sm font-medium text-brand-400 hover:text-brand-500">Ver todas →</Link>}
         />
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">

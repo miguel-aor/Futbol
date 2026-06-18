@@ -5,6 +5,7 @@
 // =====================================================================
 import "server-only";
 import { getActiveBundle } from "./data-providers/providerRegistry";
+import { MOCK_TIMESTAMP } from "@/data/mock-builder";
 import { rankOpportunities, estimatePlayerProp, ALL_PLAYER_PROP_TYPES } from "./prediction";
 import {
   buildMatchIntelligenceReport,
@@ -352,13 +353,28 @@ export interface BestPicks {
 }
 
 export async function getBestPicksByCategory(): Promise<BestPicks> {
-  const ops = await getOpportunityViews();
-  const firstOf = (keys: string[]) => ops.find((o) => keys.includes(o.marketKey)) ?? null;
+  const { bundle } = await ctx();
+  // "Hoy" = fecha del snapshot activo (dinamico, no hardcodeado).
+  const today = (bundle.meta.lastUpdated ?? MOCK_TIMESTAMP).slice(0, 10);
+  const all = await getOpportunityViews();
+  const scheduled = all.filter((o) => o.match && o.match.status !== "finished");
+
+  // Solo picks de partidos de HOY; si hoy no hay, cae a la proxima jornada.
+  let dayOps = scheduled.filter((o) => o.match!.kickoff.slice(0, 10) === today);
+  if (dayOps.length === 0) {
+    const nextDay = scheduled
+      .map((o) => o.match!.kickoff.slice(0, 10))
+      .filter((d) => d >= today)
+      .sort()[0];
+    dayOps = nextDay ? scheduled.filter((o) => o.match!.kickoff.slice(0, 10) === nextDay) : [];
+  }
+
+  const firstOf = (keys: string[]) => dayOps.find((o) => keys.includes(o.marketKey)) ?? null;
   return {
     goals: firstOf(["over_under_goals", "btts"]),
     corners: firstOf(["total_corners"]),
     cards: firstOf(["total_cards"]),
-    player: ops.find((o) => o.playerId != null) ?? null,
+    player: dayOps.find((o) => o.playerId != null) ?? null,
   };
 }
 
