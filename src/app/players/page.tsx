@@ -1,8 +1,7 @@
 import { getActiveProviderMetadata } from "@/lib/data-providers/providerRegistry";
 import { getPlayerCards, getTeamCards } from "@/lib/data-access";
-import { PlayersClient } from "@/components/PlayersClient";
+import { PlayerSelector } from "@/components/worldcup/PlayerSelector";
 import { DataSourceBadge } from "@/components/badges";
-import { GROUP_IDS } from "@/data/worldcup-teams";
 import { formatUpdatedAt } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -22,14 +21,14 @@ export default async function PlayersPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Jugadores</h1>
-          <p className="text-sm text-slate-500">
-            Solo jugadores de selecciones mundialistas. Busca y filtra por seleccion, grupo, posicion o stat.
+          <h1 className="text-2xl font-bold text-wc-text">Jugadores</h1>
+          <p className="text-sm text-wc-muted">
+            Convocatorias reales del Mundial 2026. Busca, filtra por posición y compara dos jugadores.
           </p>
         </div>
         <DataSourceBadge source={meta.id} updatedAt={meta.lastUpdated ? formatUpdatedAt(meta.lastUpdated) : undefined} />
       </div>
-      <PlayersClient players={players} teams={teamOptions} groups={[...GROUP_IDS]} />
+      <PlayerSelector players={players} teams={teamOptions} />
     </div>
   );
 }
