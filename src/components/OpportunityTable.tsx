@@ -1,9 +1,27 @@
 import Link from "next/link";
 import type { OpportunityView } from "@/lib/data-access";
+import type { QualityLevel } from "@/lib/data-providers/types";
 import { ConfidenceBadge, DataSourceBadge, EdgeBadge, ProbabilityBadge } from "./badges";
 import { MARKET_BY_KEY } from "@/data/markets";
 import { EmptyState } from "./primitives";
 import { formatDateTime, formatOdds } from "@/lib/format";
+
+const QUALITY_CLS: Record<QualityLevel, string> = {
+  alta: "bg-edge-pos/15 text-edge-pos",
+  media: "bg-edge-mid/15 text-edge-mid",
+  baja: "bg-edge-neg/15 text-edge-neg",
+};
+
+function QualityChip({ level }: { level: QualityLevel }) {
+  return (
+    <span
+      className={`chip ${QUALITY_CLS[level]}`}
+      title={level === "baja" ? "Este pick tiene muestra limitada o datos incompletos." : "Calidad de datos del pick"}
+    >
+      Datos: {level}
+    </span>
+  );
+}
 
 export function OpportunityTable({ opportunities }: { opportunities: OpportunityView[] }) {
   if (opportunities.length === 0) {
@@ -44,7 +62,10 @@ export function OpportunityTable({ opportunities }: { opportunities: Opportunity
                 </td>
                 <td className="px-3 py-3">
                   <div className="font-medium text-slate-100">{o.pick}</div>
-                  <div className="text-xs text-slate-500">{MARKET_BY_KEY[o.marketKey]?.label ?? o.marketKey}</div>
+                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                    {MARKET_BY_KEY[o.marketKey]?.label ?? o.marketKey}
+                    {o.intel ? <QualityChip level={o.intel.dataQuality} /> : null}
+                  </div>
                 </td>
                 <td className="px-3 py-3"><ProbabilityBadge probability={o.modelProbability} /></td>
                 <td className="px-3 py-3 text-slate-300">{formatOdds(o.fairOdds)}</td>
@@ -73,10 +94,14 @@ export function OpportunityTable({ opportunities }: { opportunities: Opportunity
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <ProbabilityBadge probability={o.modelProbability} />
               <ConfidenceBadge confidence={o.confidence} />
+              {o.intel ? <QualityChip level={o.intel.dataQuality} /> : null}
               <span className="chip bg-base-700/60 text-slate-300">Justa {formatOdds(o.fairOdds)}</span>
               <span className="chip bg-base-700/60 text-slate-300">Mkt {formatOdds(o.marketOdds)}</span>
             </div>
             <p className="mt-2 text-xs text-slate-500">{o.reason}</p>
+            {o.intel?.dataQuality === "baja" ? (
+              <p className="mt-1 text-xs text-edge-neg">Este pick tiene muestra limitada o datos incompletos.</p>
+            ) : null}
             <div className="mt-2 flex justify-end">
               <DataSourceBadge source={o.source} updatedAt={o.updatedAt} />
             </div>

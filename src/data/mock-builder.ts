@@ -23,6 +23,8 @@ import { DATA_CAPTURED_AT, VENUES, WORLD_CUP_FIXTURES } from "./worldcup-fixture
 import { WORLD_CUP_PLAYERS } from "./worldcup-players";
 import { MARKETS } from "./markets";
 import { FIRST_NAMES, LAST_NAMES } from "./names";
+import { WORLD_CUP_REFEREES } from "./worldcup-referees";
+import { assignRefereeId, buildCoaches, buildHistoricalMatches, buildReferees } from "./intelligence-builder";
 import { clamp, hashSeed, round, seededRng } from "@/lib/prediction/math";
 import {
   ALL_PLAYER_PROP_TYPES,
@@ -153,9 +155,13 @@ function buildPlayers(teams: Team[]): Player[] {
           name: seed.name, // nombre REAL
           teamId: team.id,
           position: seed.position, // posicion REAL
-          shirtNumber: (hashSeed(seedKey) % 23) + 1,
-          likelyStarter: true, // figuras: titulares probables
+          shirtNumber: seed.number ?? (hashSeed(seedKey) % 23) + 1, // dorsal REAL si existe
+          club: seed.club ?? "", // club REAL
+          likelyStarter: i < 11, // heuristica: los primeros ~XI
           stats: statsForPosition(seed.position, q, rng), // stats del modelo
+          imageUrl: null, // avatar de iniciales por defecto
+          imageSource: "",
+          imageUpdatedAt: null,
           source: "manual", // identidad real; stats estimadas
           updatedAt: MOCK_TIMESTAMP,
         });
@@ -176,8 +182,12 @@ function buildPlayers(teams: Team[]): Player[] {
         teamId: team.id,
         position: pos,
         shirtNumber: (hashSeed(seedKey) % 23) + 1,
+        club: "",
         likelyStarter: i < 2 || rng() > 0.4,
         stats: statsForPosition(pos, q, rng),
+        imageUrl: null,
+        imageSource: "",
+        imageUpdatedAt: null,
         source: "mock",
         updatedAt: MOCK_TIMESTAMP,
       });
@@ -273,6 +283,7 @@ function buildMatch(args: {
     status,
     homeScore,
     awayScore,
+    refereeId: assignRefereeId(id, WORLD_CUP_REFEREES.length),
     prediction,
     trends: [mkTrend(home), mkTrend(away)],
     headToHead,
@@ -436,13 +447,16 @@ export function buildMockBundle(): DataBundle {
   const opportunities = buildOpportunities(matches, teamsById, players);
   const playerProps = buildPlayerProps(players);
   const standings = buildStandings(matches);
+  const coaches = buildCoaches(teams);
+  const referees = buildReferees();
+  const historicalMatches = buildHistoricalMatches(teams);
 
   return {
     meta: {
       id: "mock",
       label: "Mundial 2026 (real + modelo)",
       description:
-        "Grupos, calendario y resultados reales (fuentes publicas, captura 17 jun 2026); jugadores y predicciones generados por el modelo.",
+        "Grupos, calendario y resultados reales (fuentes publicas, captura 18 jun 2026; jornada 1 completa); jugadores y predicciones generados por el modelo.",
       available: true,
       lastUpdated: MOCK_TIMESTAMP,
     },
@@ -454,5 +468,8 @@ export function buildMockBundle(): DataBundle {
     playerProps,
     markets: MARKETS,
     standings,
+    coaches,
+    referees,
+    historicalMatches,
   };
 }

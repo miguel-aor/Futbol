@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { TeamCardData } from "@/lib/data-access";
 import { DataSourceBadge } from "./badges";
+import { TeamFlag } from "./worldcup/TeamFlag";
 import { FormDots } from "./TrendMiniChart";
 import { formatDateTime } from "@/lib/format";
 
@@ -9,7 +10,7 @@ export function TeamCard({ team }: { team: TeamCardData }) {
     <Link href={`/teams/${team.id}`} className="card card-hover block p-4">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-3xl">{team.flag}</span>
+          <TeamFlag teamId={team.id} size={30} rounded="rounded" title={team.name} />
           <div>
             <div className="font-semibold text-slate-100">{team.name}</div>
             <div className="text-xs text-slate-500">

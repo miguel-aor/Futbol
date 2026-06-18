@@ -38,6 +38,14 @@ export function DashboardClient({
   const [minProb, setMinProb] = useState(0);
   const [minEdge, setMinEdge] = useState(-20);
   const [sort, setSort] = useState<SortKey>("edge");
+  // Filtros avanzados de Intelligence (toggles).
+  const [refereeKnown, setRefereeKnown] = useState(false);
+  const [highQuality, setHighQuality] = useState(false);
+  const [backedByLast10, setBackedByLast10] = useState(false);
+  const [modelTrendAgree, setModelTrendAgree] = useState(false);
+  const [friendlies, setFriendlies] = useState<"all" | "exclude" | "only">("all");
+  const [evenMatchup, setEvenMatchup] = useState(false);
+  const [neutralOnly, setNeutralOnly] = useState(false);
 
   const reset = () => {
     setSearch("");
@@ -51,6 +59,13 @@ export function DashboardClient({
     setMinProb(0);
     setMinEdge(-20);
     setSort("edge");
+    setRefereeKnown(false);
+    setHighQuality(false);
+    setBackedByLast10(false);
+    setModelTrendAgree(false);
+    setFriendlies("all");
+    setEvenMatchup(false);
+    setNeutralOnly(false);
   };
 
   const filtered = useMemo(() => {
@@ -75,6 +90,16 @@ export function DashboardClient({
       if (confidence !== "all" && o.confidence !== confidence) return false;
       if (o.modelProbability * 100 < minProb) return false;
       if (o.edge * 100 < minEdge) return false;
+      // Filtros avanzados de Intelligence.
+      const intel = o.intel;
+      if (refereeKnown && !intel?.refereeKnown) return false;
+      if (highQuality && intel?.dataQuality !== "alta") return false;
+      if (backedByLast10 && !intel?.backedByLast10) return false;
+      if (modelTrendAgree && !intel?.modelTrendAgree) return false;
+      if (evenMatchup && !intel?.evenMatchup) return false;
+      if (neutralOnly && !intel?.neutralVenue) return false;
+      if (friendlies === "exclude" && intel && !intel.official) return false;
+      if (friendlies === "only" && intel?.official) return false;
       return true;
     });
 
@@ -85,7 +110,7 @@ export function DashboardClient({
       return b.edge - a.edge;
     });
     return result;
-  }, [opportunities, search, group, team, confederation, fixtureType, category, source, confidence, minProb, minEdge, sort]);
+  }, [opportunities, search, group, team, confederation, fixtureType, category, source, confidence, minProb, minEdge, sort, refereeKnown, highQuality, backedByLast10, modelTrendAgree, evenMatchup, neutralOnly, friendlies]);
 
   return (
     <div>
@@ -163,10 +188,39 @@ export function DashboardClient({
         />
       </FiltersBar>
 
+      <div className="mb-4 flex flex-wrap gap-2">
+        <Toggle active={refereeKnown} onClick={() => setRefereeKnown((v) => !v)} label="Árbitro conocido" />
+        <Toggle active={highQuality} onClick={() => setHighQuality((v) => !v)} label="Alta calidad de datos" />
+        <Toggle active={backedByLast10} onClick={() => setBackedByLast10((v) => !v)} label="Respaldado por últimos 10" />
+        <Toggle active={modelTrendAgree} onClick={() => setModelTrendAgree((v) => !v)} label="Modelo y tendencia coinciden" />
+        <Toggle active={evenMatchup} onClick={() => setEvenMatchup((v) => !v)} label="Rival similar / parejo" />
+        <Toggle active={neutralOnly} onClick={() => setNeutralOnly((v) => !v)} label="Campo neutral" />
+        <Toggle active={friendlies === "exclude"} onClick={() => setFriendlies((v) => (v === "exclude" ? "all" : "exclude"))} label="Excluir amistosos" />
+        <Toggle active={friendlies === "only"} onClick={() => setFriendlies((v) => (v === "only" ? "all" : "only"))} label="Solo oficiales" />
+      </div>
+
       <div className="mb-3 text-sm text-slate-500">
         {filtered.length} oportunidad{filtered.length === 1 ? "" : "es"}
       </div>
       <OpportunityTable opportunities={filtered} />
     </div>
+  );
+}
+
+function Toggle({ active, onClick, label }: { active: boolean; onClick: () => void; label: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`chip cursor-pointer border transition-colors ${
+        active
+          ? "border-brand-500/50 bg-brand-500/15 text-brand-400"
+          : "border-base-700 bg-base-900/60 text-slate-400 hover:text-slate-200"
+      }`}
+    >
+      <span className={`h-1.5 w-1.5 rounded-full ${active ? "bg-brand-400" : "bg-base-600"}`} />
+      {label}
+    </button>
   );
 }

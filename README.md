@@ -105,24 +105,79 @@ Reglas de diseño (deliberadas):
 - La app **lee** esos snapshots; no depende de llamadas en vivo.
 
 Las URLs se configuran en `src/data/source-urls.ts` (no se hardcodean en el script).
-Como 365Scores es muy dinámico, el script deja el **pipeline completo** listo y el
-parsing fino marcado como `TODO` en `src/lib/data-providers/normalizers.ts`. Si no
-se puede extraer todo, **la app sigue funcionando con mock data**.
+Cada URL declara su `kind` (match/team/player/competition/referee/coach) y el
+script guarda los snapshots en subcarpetas por entidad:
 
-Resumen final del script: URLs procesadas, exitosas, fallidas, archivos generados
-y advertencias.
+```
+data/snapshots/365scores/
+  raw/{matches,teams,players,competitions,referees,coaches}/
+  normalized/{matches,teams,players,reports}/
+```
+
+Como 365Scores es muy dinámico, hay un **parser experimental de subtabs** en
+`normalizers.ts` (`parseScores365Sections`) que detecta de forma tolerante las
+secciones **Match Page, Lineups, Stats, Groups, Head-to-head, Odds, Events,
+Player stats, Team form, Standings y News** y normaliza games/competitors cuando
+los encuentra. El snapshot guarda `sectionsFound`. El parsing fino donde la
+estructura no está confirmada queda como `TODO`. Si no se puede extraer, **la app
+sigue funcionando con mock data** (fallback seguro).
+
+Resumen final del script: URLs procesadas, exitosas, fallidas, archivos generados,
+subtabs detectadas y advertencias.
+
+## World Cup Intelligence Mapping
+
+Capa de **inteligencia** que construye un mapa analítico profundo de cada
+selección y de cada partido próximo. Los **datos base** viajan en el `DataBundle`
+(entrenadores, árbitros y partidos históricos); los **perfiles y reportes son
+derivados** y se computan en `src/lib/prediction/intelligence.ts` (puro y
+determinista, sin persistir).
+
+Entidades nuevas (en `src/lib/data-providers/types.ts`):
+- **`Coach`** — entrenador por selección (`src/data/worldcup-coaches.ts`); nombres
+  de conocimiento público, métricas estimadas por el modelo. Factor de ajuste vía
+  `calculateCoachImpact` (sesgo ofensivo, presión, disciplina, rotación).
+- **`Referee`** — pool de árbitros (`src/data/worldcup-referees.ts`); ajusta los
+  mercados de tarjetas/faltas/penal vía `calculateRefereeImpact` con explicación
+  legible ("árbitro estricto → sube tarjetas", etc.).
+- **`HistoricalMatch`** — partidos anteriores relevantes (generados deterministas);
+  se filtran con `getRelevantHistoricalMatches(teamId, options)` por últimos
+  5/10/20, oficiales, amistosos, rivales fuertes, similitud con el próximo rival,
+  confederación y enfoque de mercado.
+- **`TeamIntelligenceProfile`** — identidad, rendimiento reciente (5/10/20),
+  rendimiento contextual, scores 0-100 (forma/ataque/defensa/disciplina/corners/
+  tiros), jugadores clave y **calidad de datos**.
+- **`PlayerIntelligenceProfile`** — perfil expandido por jugador (forma, balón
+  parado, penalero, riesgo de rotación, minutos esperados…).
+- **`MatchIntelligenceReport`** — reporte por partido: comparativas, árbitro,
+  entrenadores, forma, factores (resultado/goles/corners/tarjetas), picks con
+  razones a favor/en contra, narrativa y calidad de datos.
+- **`DataQualityScore`** — completeness, recency, sourceReliability, sampleSize,
+  consistency → `finalScore` y nivel **alta/media/baja** (con advertencias).
+
+UI:
+- `/matches/[id]` ahora con pestañas: **Resumen · Probabilidades · Estadísticas ·
+  Alineaciones · Historial · Árbitro · Entrenadores · Jugadores · Intelligence**.
+- `/teams/[id]` con sección **"Mapa de rendimiento"** (radar de scores, ventanas
+  5/10/20, entrenador, históricos y jugadores clave).
+- **Dashboard** con filtros avanzados: árbitro conocido, alta calidad de datos,
+  respaldado por últimos 10, modelo y tendencia coinciden, excluir/solo oficiales,
+  rival similar/parejo, campo neutral.
+- Cada pick muestra **calidad de datos**; si es baja, advierte muestra limitada.
 
 ## API interna (Route Handlers)
 
 `GET /api/health`, `/api/data-source`, `/api/matches`, `/api/matches/[id]`,
-`/api/worldcup`, `/api/teams`, `/api/teams/[id]`, `/api/opportunities`,
+`/api/matches/[id]/intelligence`, `/api/worldcup`, `/api/teams`,
+`/api/teams/[id]`, `/api/teams/[id]/intelligence`, `/api/opportunities`,
 `/api/players`, `/api/players/[id]`, `/api/player-props?playerId=...`,
 `/api/snapshots`. Todos consumen la capa de providers.
 
 ## Páginas
 
-`/` (landing), `/dashboard`, `/worldcup`, `/matches/[id]`, `/teams`,
-`/teams/[id]`, `/players`, `/players/[id]`, `/methodology`.
+`/` (landing), `/dashboard`, `/worldcup`, `/matches/[id]` (con pestaña
+**Intelligence**), `/teams`, `/teams/[id]` (con **Mapa de rendimiento**),
+`/players`, `/players/[id]`, `/methodology`.
 
 ## Variables de entorno
 
@@ -156,13 +211,14 @@ Notas:
 ```
 src/
 ├── app/                # App Router: páginas + /api Route Handlers
-├── components/         # UI (cards, tablas, badges, filtros, shell)
-├── data/               # mock data + worldcup-teams.ts + source-urls.ts
+├── components/         # UI (cards, tablas, badges, filtros, shell, IntelligencePanels)
+├── data/               # mock-builder, worldcup-{teams,fixtures,players,coaches,referees}
+│                       #   + intelligence-builder.ts + source-urls.ts
 └── lib/
     ├── data-providers/ # types, mock/manual/365scores, registry, normalizers
-    ├── prediction/     # motor de probabilidades/edge/props
+    ├── prediction/     # motor de probabilidades/edge/props + intelligence.ts
     ├── data-access.ts  # view models para API y server components
     └── format.ts       # helpers de formato deterministas
 scripts/                # ingest-365scores.ts, normalize-snapshots.ts, postbuild
-data/snapshots/         # manual/ y 365scores/{raw,normalized}
+data/snapshots/         # manual/ y 365scores/{raw,normalized}/<entidad>/
 ```

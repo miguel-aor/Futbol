@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PlayerCardData } from "@/lib/data-access";
 import { DataSourceBadge } from "./badges";
+import { PlayerAvatar } from "./worldcup/PlayerAvatar";
 import { POSITION_LABELS } from "@/lib/format";
 
 export function PlayerCard({ player }: { player: PlayerCardData }) {
@@ -8,13 +9,15 @@ export function PlayerCard({ player }: { player: PlayerCardData }) {
     <Link href={`/players/${player.id}`} className="card card-hover block p-4">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-base-700 text-sm font-bold text-slate-200">
-            {player.shirtNumber}
-          </span>
+          <PlayerAvatar name={player.name} teamId={player.teamId} imageUrl={player.imageUrl} size={44} />
           <div>
-            <div className="font-semibold text-slate-100">{player.name}</div>
+            <div className="font-semibold text-slate-100">
+              {player.name}
+              {player.shirtNumber ? <span className="ml-1.5 text-xs text-slate-500">#{player.shirtNumber}</span> : null}
+            </div>
             <div className="text-xs text-slate-500">
-              {player.team?.flag} {player.team?.name ?? player.teamId} · {POSITION_LABELS[player.position]}
+              {player.team?.name ?? player.teamId} · {POSITION_LABELS[player.position]}
+              {player.club ? ` · ${player.club}` : ""}
             </div>
           </div>
         </div>

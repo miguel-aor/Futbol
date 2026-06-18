@@ -19,16 +19,47 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { INGEST_CONFIG, SOURCE_URLS, type SourceUrl } from "../src/data/source-urls";
+import { INGEST_CONFIG, SOURCE_URLS, type SourceKind, type SourceUrl } from "../src/data/source-urls";
 import {
   extractJsonCandidatesFromHtml,
   normalizeMatch,
   normalizeTeam,
+  parseScores365Sections,
+  type Scores365Section,
 } from "../src/lib/data-providers/normalizers";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const RAW_DIR = path.join(ROOT, "data", "snapshots", "365scores", "raw");
 const NORM_DIR = path.join(ROOT, "data", "snapshots", "365scores", "normalized");
+
+// Subcarpetas por entidad (subtabs de 365Scores).
+const RAW_SUBDIRS = ["matches", "teams", "players", "competitions", "referees", "coaches"] as const;
+const NORM_SUBDIRS = ["matches", "teams", "players", "reports"] as const;
+
+/** Subcarpeta raw segun el tipo de entidad. */
+function rawSubdir(kind: SourceKind): string {
+  switch (kind) {
+    case "match": return "matches";
+    case "team": return "teams";
+    case "player": return "players";
+    case "referee": return "referees";
+    case "coach": return "coaches";
+    case "competition":
+    case "unknown":
+    default: return "competitions";
+  }
+}
+
+/** Subcarpeta normalized segun el tipo de entidad. */
+function normSubdir(kind: SourceKind): string {
+  switch (kind) {
+    case "match": return "matches";
+    case "team": return "teams";
+    case "player": return "players";
+    // competition / referee / coach / unknown -> reportes agregados
+    default: return "reports";
+  }
+}
 
 interface UrlResult {
   id: string;
@@ -52,6 +83,26 @@ function nowIso() {
 async function ensureDirs() {
   await fs.mkdir(RAW_DIR, { recursive: true });
   await fs.mkdir(NORM_DIR, { recursive: true });
+  // Estructura por entidad + .gitkeep para versionar carpetas vacias.
+  for (const sub of RAW_SUBDIRS) {
+    const d = path.join(RAW_DIR, sub);
+    await fs.mkdir(d, { recursive: true });
+    await ensureGitkeep(d);
+  }
+  for (const sub of NORM_SUBDIRS) {
+    const d = path.join(NORM_DIR, sub);
+    await fs.mkdir(d, { recursive: true });
+    await ensureGitkeep(d);
+  }
+}
+
+async function ensureGitkeep(dir: string) {
+  const f = path.join(dir, ".gitkeep");
+  try {
+    await fs.access(f);
+  } catch {
+    await fs.writeFile(f, "", "utf8");
+  }
 }
 
 /** Devuelve true si existe un raw reciente dentro del TTL de cache. */
@@ -89,8 +140,8 @@ async function fetchPublic(url: string): Promise<{ body: string; contentType: st
 
 async function processUrl(src: SourceUrl): Promise<UrlResult> {
   const result: UrlResult = { id: src.id, url: src.url, ok: false, fromCache: false, warnings: [] };
-  const rawFile = path.join(RAW_DIR, `${src.id}.raw.json`);
-  const normFile = path.join(NORM_DIR, `${src.id}.json`);
+  const rawFile = path.join(RAW_DIR, rawSubdir(src.kind), `${src.id}.raw.json`);
+  const normFile = path.join(NORM_DIR, normSubdir(src.kind), `${src.id}.json`);
   const capturedAt = nowIso();
 
   let body: string | null = null;
@@ -124,8 +175,9 @@ async function processUrl(src: SourceUrl): Promise<UrlResult> {
   // --- Extraccion y normalizacion (best-effort) ---
   try {
     const ctx = { source: "365scores" as const, capturedAt, origin: src.url };
-    const teams: unknown[] = [];
-    const matches: unknown[] = [];
+    const teamsMap = new Map<string, unknown>();
+    const matchesMap = new Map<string, unknown>();
+    let sectionsFound: Scores365Section[] = [];
 
     if (body) {
       const isJson = contentType.includes("application/json") || body.trim().startsWith("{");
@@ -137,29 +189,36 @@ async function processUrl(src: SourceUrl): Promise<UrlResult> {
         );
       }
 
-      // TODO: navegar `candidates` con la estructura real confirmada de
-      // 365Scores y empujar a `teams`/`matches`. Por ahora solo se intenta
-      // normalizar objetos que ya parezcan equipos/partidos sueltos.
+      // 1) Parser de subtabs estilo 365Scores (games/competitors/secciones).
+      const parsed = parseScores365Sections(candidates, ctx);
+      sectionsFound = parsed.sectionsFound;
+      parsed.teams.forEach((t) => teamsMap.set(t.id, t));
+      parsed.matches.forEach((m) => matchesMap.set(m.id, m));
+      result.warnings.push(...parsed.warnings);
+
+      // 2) Fallback: objetos sueltos que ya parezcan equipos/partidos.
       for (const c of candidates) {
         const t = normalizeTeam(c, ctx);
-        if (t.ok && t.data) teams.push(t.data);
+        if (t.ok && t.data) teamsMap.set(t.data.id, t.data);
         const m = normalizeMatch(c, ctx);
-        if (m.ok && m.data) matches.push(m.data);
-        result.warnings.push(...t.warnings, ...m.warnings);
+        if (m.ok && m.data) matchesMap.set(m.data.id, m.data);
       }
     }
 
+    const teams = [...teamsMap.values()];
+    const matches = [...matchesMap.values()];
     const snapshot = {
       id: src.id,
       source: "365scores",
       kind: src.kind,
       origin: src.url,
       capturedAt,
+      sectionsFound,
       counts: { teams: teams.length, matches: matches.length, players: 0, opportunities: 0 },
       teams,
       matches,
       note:
-        "Snapshot experimental. Si teams/matches estan vacios, el parsing real de 365Scores aun no esta conectado (ver TODO en normalizers.ts). La app sigue funcionando con mock data.",
+        "Snapshot experimental. sectionsFound lista las subtabs detectadas. Si teams/matches estan vacios, el parsing fino de 365Scores aun no esta conectado (ver TODO en normalizers.ts). La app sigue funcionando con mock data.",
     };
     await fs.writeFile(normFile, JSON.stringify(snapshot, null, 2), "utf8");
     result.normalizedFile = path.relative(ROOT, normFile);

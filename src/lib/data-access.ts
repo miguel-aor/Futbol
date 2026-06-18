@@ -6,14 +6,26 @@
 import "server-only";
 import { getActiveBundle } from "./data-providers/providerRegistry";
 import { rankOpportunities, estimatePlayerProp, ALL_PLAYER_PROP_TYPES } from "./prediction";
+import {
+  buildMatchIntelligenceReport,
+  buildTeamIntelligenceProfile,
+  calculateOpponentSimilarity,
+  getRelevantHistoricalMatches,
+  type IntelligenceContext,
+} from "./prediction/intelligence";
 import type {
   DataBundle,
   GroupStanding,
+  HistoricalMatch,
+  HistoricalMatchQuery,
   Match,
+  MatchIntelligenceReport,
   Opportunity,
   Player,
   PlayerProp,
+  QualityLevel,
   Team,
+  TeamIntelligenceProfile,
 } from "./data-providers/types";
 
 export interface MatchSummary {
@@ -42,9 +54,28 @@ export interface TeamMini {
   confederation: Team["confederation"];
 }
 
+/** Flags de inteligencia para filtros avanzados del dashboard. */
+export interface OpportunityIntel {
+  refereeKnown: boolean;
+  dataQuality: QualityLevel;
+  backedByLast10: boolean;
+  modelTrendAgree: boolean;
+  neutralVenue: boolean;
+  official: boolean;
+  evenMatchup: boolean;
+}
+
 export interface OpportunityView extends Opportunity {
   match: MatchSummary | null;
   player: { id: string; name: string; teamId: string } | null;
+  /** Metadatos de inteligencia (presentes en getOpportunityViews). */
+  intel?: OpportunityIntel;
+}
+
+function opportunityQuality(sampleSize: number, confidence: Opportunity["confidence"]): QualityLevel {
+  if (sampleSize >= 12 && confidence === "alta") return "alta";
+  if (sampleSize >= 8 && confidence !== "baja") return "media";
+  return "baja";
 }
 
 function teamMini(t: Team): TeamMini {
@@ -137,10 +168,23 @@ export async function getOpportunityViews(): Promise<OpportunityView[]> {
   const views = bundle.opportunities.map((o) => {
     const m = matchById.get(o.matchId);
     const player = o.playerId ? playersById.get(o.playerId) : null;
+    const home = m ? teamsById.get(m.homeTeamId) : null;
+    const away = m ? teamsById.get(m.awayTeamId) : null;
+    const evenMatchup = home && away ? calculateOpponentSimilarity(home, away) >= 0.6 : false;
+    const intel: OpportunityIntel = {
+      refereeKnown: Boolean(m?.refereeId),
+      dataQuality: opportunityQuality(o.sampleSize, o.confidence),
+      backedByLast10: o.sampleSize >= 10,
+      modelTrendAgree: o.edge > 0 && o.confidence !== "baja",
+      neutralVenue: m?.neutralVenue ?? false,
+      official: m ? m.fixtureType !== "amistoso" : false,
+      evenMatchup,
+    };
     return {
       ...o,
       match: m ? toMatchSummary(m, teamsById) : null,
       player: player ? { id: player.id, name: player.name, teamId: player.teamId } : null,
+      intel,
     };
   });
   return rankOpportunities(views);
@@ -316,4 +360,47 @@ export async function getBestPicksByCategory(): Promise<BestPicks> {
     cards: firstOf(["total_cards"]),
     player: ops.find((o) => o.playerId != null) ?? null,
   };
+}
+
+// ---------------------------------------------------------------------
+// World Cup Intelligence Mapping
+// ---------------------------------------------------------------------
+
+/** Arma el contexto de inteligencia desde el bundle activo. */
+function intelCtx(bundle: DataBundle): IntelligenceContext {
+  return {
+    teams: bundle.teams,
+    players: bundle.players,
+    coaches: bundle.coaches,
+    referees: bundle.referees,
+    historicalMatches: bundle.historicalMatches,
+    matches: bundle.matches,
+  };
+}
+
+/** Perfil de inteligencia de una seleccion. */
+export async function getTeamIntelligence(teamId: string): Promise<TeamIntelligenceProfile | null> {
+  const { bundle } = await ctx();
+  return buildTeamIntelligenceProfile(teamId, intelCtx(bundle));
+}
+
+/** Reporte de inteligencia de un partido. */
+export async function getMatchIntelligence(matchId: string): Promise<MatchIntelligenceReport | null> {
+  const { bundle } = await ctx();
+  return buildMatchIntelligenceReport(matchId, intelCtx(bundle));
+}
+
+/** Partidos historicos relevantes de una seleccion (con filtros). */
+export async function getTeamHistory(
+  teamId: string,
+  options: HistoricalMatchQuery = {},
+): Promise<HistoricalMatch[]> {
+  const { bundle } = await ctx();
+  return getRelevantHistoricalMatches(teamId, options, intelCtx(bundle));
+}
+
+/** Mapa id -> etiqueta ligera de seleccion (para listas historicas). */
+export async function getTeamLabels(): Promise<Record<string, { name: string; flag: string; code: string }>> {
+  const { bundle } = await ctx();
+  return Object.fromEntries(bundle.teams.map((t) => [t.id, { name: t.name, flag: t.flag, code: t.code }]));
 }

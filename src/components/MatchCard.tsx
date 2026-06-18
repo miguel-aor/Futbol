@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { MatchSummary } from "@/lib/data-access";
 import { DataSourceBadge } from "./badges";
+import { TeamFlag } from "./worldcup/TeamFlag";
 import { FIXTURE_LABELS, formatDateTime } from "@/lib/format";
 
 export function MatchCard({ match }: { match: MatchSummary }) {
@@ -23,8 +24,8 @@ export function MatchCard({ match }: { match: MatchSummary }) {
       </div>
 
       <div className="space-y-2">
-        <TeamRow flag={match.home.flag} name={match.home.name} score={match.homeScore} finished={finished} />
-        <TeamRow flag={match.away.flag} name={match.away.name} score={match.awayScore} finished={finished} />
+        <TeamRow teamId={match.home.id} name={match.home.name} score={match.homeScore} finished={finished} />
+        <TeamRow teamId={match.away.id} name={match.away.name} score={match.awayScore} finished={finished} />
       </div>
 
       <div className="mt-3 flex items-center justify-between border-t border-base-700/60 pt-2 text-xs text-slate-500">
@@ -36,12 +37,12 @@ export function MatchCard({ match }: { match: MatchSummary }) {
 }
 
 function TeamRow({
-  flag,
+  teamId,
   name,
   score,
   finished,
 }: {
-  flag: string;
+  teamId: string;
   name: string;
   score: number | null;
   finished: boolean;
@@ -49,11 +50,11 @@ function TeamRow({
   return (
     <div className="flex items-center justify-between">
       <span className="flex items-center gap-2 text-sm font-medium text-slate-100">
-        <span className="text-lg">{flag}</span>
+        <TeamFlag teamId={teamId} size={20} title={name} />
         {name}
       </span>
       {finished ? (
-        <span className="text-base font-bold text-slate-100">{score ?? "-"}</span>
+        <span className="text-base font-bold tabular-nums text-slate-100">{score ?? "-"}</span>
       ) : null}
     </div>
   );

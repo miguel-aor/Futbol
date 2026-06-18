@@ -1,14 +1,15 @@
 // =====================================================================
 // CALENDARIO REAL del Mundial 2026 - fase de grupos (72 partidos).
-// Fuente: ESPN (match schedule) + Wikipedia. Capturado el 2026-06-17.
+// Fuente: ESPN (match schedule) + Wikipedia + 365Scores/Milenio (resultados
+// del 17 jun). Capturado el 2026-06-18.
 //
-// Los resultados de la jornada 1 (11-16 jun + Portugal-RD Congo el 17)
-// son REALES. El resto estan programados (score null) y la app les
-// calcula prediccion. La hora exacta de algunos partidos es aproximada.
+// La jornada 1 (11-17 jun) esta COMPLETA con resultados REALES. La jornada 2
+// (desde el 18 jun) esta programada (score null) y la app le calcula
+// prediccion. La hora exacta de algunos partidos es aproximada.
 // =====================================================================
 
 /** Timestamp de captura de estos datos (publicos). */
-export const DATA_CAPTURED_AT = "2026-06-17T18:30:00.000Z";
+export const DATA_CAPTURED_AT = "2026-06-18T12:00:00.000Z";
 
 /** Sedes reales del Mundial 2026. */
 export const VENUES: Record<string, { venue: string; city: string }> = {
@@ -86,10 +87,9 @@ export const WORLD_CUP_FIXTURES: FixtureSeed[] = [
   f("wc-J-1", "J", "arg", "alg", "2026-06-16", 20, "kansas-city", 3, 0),
   f("wc-J-2", "J", "aut", "jor", "2026-06-16", 22, "bay-area", 3, 1),
   f("wc-K-1", "K", "por", "cod", "2026-06-17", 16, "houston", 1, 1),
-  // June 17 restantes: aun no jugados al momento de captura (18:30Z).
-  f("wc-L-1", "L", "eng", "cro", "2026-06-17", 20, "dallas"),
-  f("wc-L-2", "L", "gha", "pan", "2026-06-17", 23, "toronto"),
-  f("wc-K-2", "K", "uzb", "col", "2026-06-18", 1, "mexico-city"),
+  f("wc-L-1", "L", "eng", "cro", "2026-06-17", 20, "dallas", 4, 2),
+  f("wc-L-2", "L", "gha", "pan", "2026-06-17", 23, "toronto", 1, 0),
+  f("wc-K-2", "K", "uzb", "col", "2026-06-18", 1, "mexico-city", 1, 3),
 
   // ---- Jornada 2 (programada) ----
   f("wc-A-3", "A", "cze", "rsa", "2026-06-18", 16, "atlanta"),

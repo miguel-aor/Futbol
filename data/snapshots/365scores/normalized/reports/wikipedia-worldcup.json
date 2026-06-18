@@ -1,0 +1,41 @@
+{
+  "id": "wikipedia-worldcup",
+  "source": "365scores",
+  "kind": "competition",
+  "origin": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup",
+  "capturedAt": "2026-06-18T09:13:50.937Z",
+  "sectionsFound": [],
+  "counts": {
+    "teams": 1,
+    "matches": 0,
+    "players": 0,
+    "opportunities": 0
+  },
+  "teams": [
+    {
+      "id": "2026-fifa-world-cup",
+      "name": "2026 FIFA World Cup",
+      "code": "202",
+      "flag": "🏳️",
+      "confederation": "UEFA",
+      "groupId": null,
+      "fifaRanking": 99,
+      "recentForm": {
+        "last5": [],
+        "goalsFor": 0,
+        "goalsAgainst": 0,
+        "avgCorners": 0,
+        "avgCards": 0,
+        "avgShots": 0,
+        "avgShotsOnTarget": 0,
+        "volatility": 0.5
+      },
+      "attackStrength": 1.3,
+      "defenseStrength": 1.3,
+      "source": "365scores",
+      "updatedAt": "2026-06-18T09:13:50.937Z"
+    }
+  ],
+  "matches": [],
+  "note": "Snapshot experimental. sectionsFound lista las subtabs detectadas. Si teams/matches estan vacios, el parsing fino de 365Scores aun no esta conectado (ver TODO en normalizers.ts). La app sigue funcionando con mock data."
+}

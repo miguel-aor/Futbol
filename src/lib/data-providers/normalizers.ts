@@ -145,6 +145,7 @@ export function normalizeMatch(
     status: "scheduled",
     homeScore: asNumber(base.homeScore),
     awayScore: asNumber(base.awayScore),
+    refereeId: asString(base.refereeId),
     prediction: neutralPrediction(),
     trends: [],
     headToHead: [],
@@ -177,7 +178,163 @@ export function extractJsonCandidatesFromHtml(html: string): unknown[] {
       }
     }
   }
-  // TODO: una vez confirmada la estructura, navegar el candidato correcto
-  // y mapear sus partidos/equipos con normalizeMatch / normalizeTeam.
   return candidates;
+}
+
+// =====================================================================
+// Parsing EXPERIMENTAL de subtabs de 365Scores.
+//
+// 365Scores suele exponer su estado en objetos con claves como `games`,
+// `competitors`, `lineups`, `statistics`, `standings`, `events`, `odds`,
+// `h2h`/`headToHead`, `news`. Esta funcion NO asume la estructura exacta
+// (puede cambiar): BUSCA esas secciones de forma tolerante en cualquier
+// nivel de los candidatos JSON y reporta que encontro. Donde la forma no
+// esta confirmada se deja TODO; nunca lanza, siempre cae a vacio.
+// =====================================================================
+
+/** Secciones (subtabs) que se intentan detectar por partido/competicion. */
+export type Scores365Section =
+  | "matchPage"
+  | "lineups"
+  | "stats"
+  | "groups"
+  | "headToHead"
+  | "odds"
+  | "events"
+  | "playerStats"
+  | "teamForm"
+  | "standings"
+  | "news";
+
+/** Mapa clave-de-payload -> subtab. Tentativo (ver nota arriba). */
+const SECTION_KEYS: Record<Scores365Section, string[]> = {
+  matchPage: ["game", "games", "match"],
+  lineups: ["lineups", "lineup", "formations"],
+  stats: ["statistics", "stats"],
+  groups: ["groups", "group"],
+  headToHead: ["headToHead", "h2h", "previousMeetings"],
+  odds: ["odds", "bookmakers", "lines"],
+  events: ["events", "incidents", "timeline"],
+  playerStats: ["playerStatistics", "topPerformers", "players"],
+  teamForm: ["form", "recentForm", "lastMatches"],
+  standings: ["standings", "tableRows", "table"],
+  news: ["news", "articles", "stories"],
+};
+
+export interface Scores365ParseResult {
+  matches: Match[];
+  teams: Team[];
+  /** Secciones (subtabs) detectadas en el payload. */
+  sectionsFound: Scores365Section[];
+  warnings: string[];
+}
+
+/** Indica si un objeto contiene alguna de las claves dadas (recursivo, acotado). */
+function findKeysDeep(value: unknown, keys: string[], depth = 0): boolean {
+  if (depth > 6 || value == null || typeof value !== "object") return false;
+  const obj = value as Record<string, unknown>;
+  for (const k of keys) {
+    if (k in obj && obj[k] != null) return true;
+  }
+  for (const v of Object.values(obj)) {
+    if (Array.isArray(v)) {
+      for (const item of v) if (findKeysDeep(item, keys, depth + 1)) return true;
+    } else if (typeof v === "object") {
+      if (findKeysDeep(v, keys, depth + 1)) return true;
+    }
+  }
+  return false;
+}
+
+/** Recolecta arrays bajo cualquiera de las claves dadas (recursivo, acotado). */
+function collectArrays(value: unknown, keys: string[], out: unknown[], depth = 0): void {
+  if (depth > 6 || value == null || typeof value !== "object") return;
+  const obj = value as Record<string, unknown>;
+  for (const k of keys) {
+    const v = obj[k];
+    if (Array.isArray(v)) out.push(...v);
+  }
+  for (const v of Object.values(obj)) {
+    if (Array.isArray(v)) {
+      for (const item of v) collectArrays(item, keys, out, depth + 1);
+    } else if (typeof v === "object") {
+      collectArrays(v, keys, out, depth + 1);
+    }
+  }
+}
+
+/** Normaliza un "game" estilo 365Scores (competitors anidados) a Match. */
+function normalizeScores365Game(
+  raw: unknown,
+  ctx: { source: DataSource; capturedAt: string; origin: string },
+): NormalizationResult<Match> {
+  const base = (raw ?? {}) as Record<string, unknown>;
+  const home = (base.homeCompetitor ?? base.home) as Record<string, unknown> | undefined;
+  const away = (base.awayCompetitor ?? base.away) as Record<string, unknown> | undefined;
+  // Aplana al shape que entiende normalizeMatch.
+  const flat = {
+    id: base.id ?? base.gameId,
+    homeTeamId: home?.id ?? base.homeCompetitorId,
+    awayTeamId: away?.id ?? base.awayCompetitorId,
+    kickoff: base.startTime ?? base.kickoff ?? base.startTimeStr,
+    competition: base.competitionName ?? base.competition,
+    venue: base.venue ?? base.stadium,
+    homeScore: home?.score ?? base.homeScore,
+    awayScore: away?.score ?? base.awayScore,
+  };
+  return normalizeMatch(flat, ctx);
+}
+
+/**
+ * Intenta parsear las subtabs de 365Scores desde candidatos JSON.
+ * Best-effort: detecta secciones presentes y normaliza games/competitors.
+ */
+export function parseScores365Sections(
+  candidates: unknown[],
+  ctx: { source: DataSource; capturedAt: string; origin: string },
+): Scores365ParseResult {
+  const warnings: string[] = [];
+  const sectionsFound: Scores365Section[] = [];
+  const matches: Match[] = [];
+  const teams: Team[] = [];
+
+  for (const candidate of candidates) {
+    for (const section of Object.keys(SECTION_KEYS) as Scores365Section[]) {
+      if (!sectionsFound.includes(section) && findKeysDeep(candidate, SECTION_KEYS[section])) {
+        sectionsFound.push(section);
+      }
+    }
+
+    // Games -> Match.
+    const games: unknown[] = [];
+    collectArrays(candidate, SECTION_KEYS.matchPage, games);
+    for (const g of games) {
+      const r = normalizeScores365Game(g, ctx);
+      if (r.ok && r.data) matches.push(r.data);
+    }
+
+    // Competitors -> Team.
+    const competitors: unknown[] = [];
+    collectArrays(candidate, ["competitors", "teams"], competitors);
+    for (const c of competitors) {
+      const r = normalizeTeam(c, ctx);
+      if (r.ok && r.data) teams.push(r.data);
+    }
+  }
+
+  if (sectionsFound.length === 0) {
+    warnings.push(
+      "No se detectaron subtabs de 365Scores (matchPage/lineups/stats/standings/...). " +
+        "La estructura puede haber cambiado: revisar SECTION_KEYS y conectar parsing fino (TODO).",
+    );
+  } else {
+    warnings.push(`Subtabs detectadas: ${sectionsFound.join(", ")}.`);
+  }
+  if (matches.length === 0 && teams.length === 0) {
+    warnings.push("Secciones presentes pero sin games/competitors mapeables aun (parsing fino pendiente).");
+  }
+
+  // Dedup por id.
+  const dedup = <T extends { id: string }>(arr: T[]) => [...new Map(arr.map((x) => [x.id, x])).values()];
+  return { matches: dedup(matches), teams: dedup(teams), sectionsFound, warnings };
 }

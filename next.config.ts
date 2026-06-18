@@ -9,6 +9,13 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: process.cwd(),
   // El scraping experimental NUNCA corre en build. Solo via scripts manuales.
   reactStrictMode: true,
+  images: {
+    // Banderas via FlagCDN (SVG/PNG). Fotos de jugadores opcionales.
+    remotePatterns: [
+      { protocol: "https", hostname: "flagcdn.com" },
+      { protocol: "https", hostname: "upload.wikimedia.org" },
+    ],
+  },
   eslint: {
     // El build de Railway no debe romperse por warnings de lint.
     ignoreDuringBuilds: false,

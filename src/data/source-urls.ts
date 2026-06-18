@@ -7,11 +7,21 @@
 // Si una URL deja de ser legible, el script registra el error y continua.
 // =====================================================================
 
+/** Entidades que la ingesta puede capturar (subtabs de 365Scores). */
+export type SourceKind =
+  | "match"
+  | "team"
+  | "competition"
+  | "player"
+  | "referee"
+  | "coach"
+  | "unknown";
+
 export interface SourceUrl {
   /** Identificador estable usado para nombrar snapshots. */
   id: string;
   /** Tipo de entidad esperada para guiar el normalizador. */
-  kind: "match" | "team" | "competition" | "player" | "unknown";
+  kind: SourceKind;
   url: string;
   /** Notas para el desarrollador sobre que se espera extraer. */
   note?: string;

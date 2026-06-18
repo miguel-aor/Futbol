@@ -11,6 +11,7 @@ const LINKS = [
   { href: "/worldcup", label: "Mundial" },
   { href: "/teams", label: "Selecciones" },
   { href: "/players", label: "Jugadores" },
+  { href: "/stats", label: "Estadisticas" },
   { href: "/methodology", label: "Metodologia" },
 ];
 

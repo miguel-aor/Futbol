@@ -1,0 +1,64 @@
+{
+  "id": "espn-worldcup-schedule",
+  "source": "365scores",
+  "kind": "competition",
+  "origin": "https://www.espn.com/soccer/story/_/id/48939282/2026-fifa-world-cup-fixtures-results-match-schedule-group-stage-knockout-rounds-bracket",
+  "capturedAt": "2026-06-18T09:13:50.935Z",
+  "sectionsFound": [],
+  "counts": {
+    "teams": 2,
+    "matches": 0,
+    "players": 0,
+    "opportunities": 0
+  },
+  "teams": [
+    {
+      "id": "espn",
+      "name": "ESPN",
+      "code": "ESP",
+      "flag": "🏳️",
+      "confederation": "UEFA",
+      "groupId": null,
+      "fifaRanking": 99,
+      "recentForm": {
+        "last5": [],
+        "goalsFor": 0,
+        "goalsAgainst": 0,
+        "avgCorners": 0,
+        "avgCards": 0,
+        "avgShots": 0,
+        "avgShotsOnTarget": 0,
+        "volatility": 0.5
+      },
+      "attackStrength": 1.3,
+      "defenseStrength": 1.3,
+      "source": "365scores",
+      "updatedAt": "2026-06-18T09:13:50.935Z"
+    },
+    {
+      "id": "flavors-of-the-game-with-bobby-flay:-world-cup-favorites",
+      "name": "Flavors of the game with Bobby Flay: World Cup favorites",
+      "code": "FLA",
+      "flag": "🏳️",
+      "confederation": "UEFA",
+      "groupId": null,
+      "fifaRanking": 99,
+      "recentForm": {
+        "last5": [],
+        "goalsFor": 0,
+        "goalsAgainst": 0,
+        "avgCorners": 0,
+        "avgCards": 0,
+        "avgShots": 0,
+        "avgShotsOnTarget": 0,
+        "volatility": 0.5
+      },
+      "attackStrength": 1.3,
+      "defenseStrength": 1.3,
+      "source": "365scores",
+      "updatedAt": "2026-06-18T09:13:50.935Z"
+    }
+  ],
+  "matches": [],
+  "note": "Snapshot experimental. sectionsFound lista las subtabs detectadas. Si teams/matches estan vacios, el parsing fino de 365Scores aun no esta conectado (ver TODO en normalizers.ts). La app sigue funcionando con mock data."
+}

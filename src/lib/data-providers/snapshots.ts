@@ -20,10 +20,24 @@ export async function readJsonFile<T>(file: string): Promise<T | null> {
   }
 }
 
+/**
+ * Lista .json en un directorio de forma RECURSIVA (incluye subcarpetas por
+ * entidad: matches/, teams/, players/, reports/, etc.). Tolerante: si el
+ * directorio no existe devuelve []. Ignora archivos .gitkeep.
+ */
 export async function listJsonFiles(dir: string): Promise<string[]> {
   try {
-    const entries = await fs.readdir(dir);
-    return entries.filter((f) => f.endsWith(".json")).map((f) => path.join(dir, f));
+    const out: string[] = [];
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        out.push(...(await listJsonFiles(full)));
+      } else if (entry.isFile() && entry.name.endsWith(".json")) {
+        out.push(full);
+      }
+    }
+    return out;
   } catch {
     return [];
   }

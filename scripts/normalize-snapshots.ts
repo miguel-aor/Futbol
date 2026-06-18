@@ -19,13 +19,27 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const RAW_DIR = path.join(ROOT, "data", "snapshots", "365scores", "raw");
 const NORM_DIR = path.join(ROOT, "data", "snapshots", "365scores", "normalized");
 
-async function listRaw(): Promise<string[]> {
+/** Lista *.raw.json de forma recursiva (subcarpetas por entidad). */
+async function listRaw(dir: string = RAW_DIR): Promise<string[]> {
   try {
-    const files = await fs.readdir(RAW_DIR);
-    return files.filter((f) => f.endsWith(".raw.json")).map((f) => path.join(RAW_DIR, f));
+    const out: string[] = [];
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) out.push(...(await listRaw(full)));
+      else if (entry.isFile() && entry.name.endsWith(".raw.json")) out.push(full);
+    }
+    return out;
   } catch {
     return [];
   }
+}
+
+/** Subcarpeta normalized segun la subcarpeta raw de origen. */
+function normSubdirFor(rawFile: string): string {
+  const parent = path.basename(path.dirname(rawFile));
+  if (parent === "matches" || parent === "teams" || parent === "players") return parent;
+  return "reports";
 }
 
 async function main() {
@@ -68,7 +82,9 @@ async function main() {
         warnings += t.warnings.length + m.warnings.length;
       }
 
-      const out = path.join(NORM_DIR, `${id}.json`);
+      const outDir = path.join(NORM_DIR, normSubdirFor(file));
+      await fs.mkdir(outDir, { recursive: true });
+      const out = path.join(outDir, `${id}.json`);
       await fs.writeFile(
         out,
         JSON.stringify(

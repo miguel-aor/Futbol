@@ -86,4 +86,52 @@ body {
   .label-dim {
     @apply text-xs font-medium uppercase tracking-wide text-slate-400;
   }
+
+  /* ---- Estilo Mundial 2026 ---- */
+  .wc-card {
+    @apply rounded-2xl border border-white/10 bg-wc-card/80 shadow-wc-card backdrop-blur-md;
+  }
+  .wc-card-hover {
+    @apply transition-all duration-200 hover:border-wc-gold/40 hover:bg-wc-card2/90 hover:shadow-wc-gold;
+  }
+  /* Borde brillante tipo broadcast (gradiente dorado-morado-azul). */
+  .wc-ring {
+    @apply relative;
+  }
+  .wc-ring::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 rounded-2xl;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(214, 177, 94, 0.6), rgba(124, 58, 237, 0.35), rgba(37, 99, 235, 0.35));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  .wc-gold-text {
+    @apply bg-gradient-to-r from-wc-gold via-amber-200 to-wc-gold bg-clip-text text-transparent;
+  }
+  .wc-divider {
+    @apply h-px w-full bg-wc-gold-line opacity-60;
+  }
+  .wc-glow-gold {
+    @apply ring-1 ring-wc-gold/50 shadow-wc-gold;
+  }
+}
+
+/* Animacion ligera para cards/skeletons (respeta reduced-motion arriba). */
+@keyframes wc-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.wc-fade-up {
+  animation: wc-fade-up 0.25s ease-out both;
+}
+@keyframes wc-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.wc-skeleton {
+  background: linear-gradient(90deg, #11131a 25%, #181b24 37%, #11131a 63%);
+  background-size: 800px 100%;
+  animation: wc-shimmer 1.4s infinite linear;
 }

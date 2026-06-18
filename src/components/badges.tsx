@@ -1,4 +1,10 @@
-import type { ConfidenceLabel, DataSource, Recommendation } from "@/lib/data-providers/types";
+import type {
+  ConfidenceLabel,
+  DataQualityScore,
+  DataSource,
+  QualityLevel,
+  Recommendation,
+} from "@/lib/data-providers/types";
 import { SOURCE_LABELS, formatEdge, formatPercent } from "@/lib/format";
 
 export function ProbabilityBadge({ probability }: { probability: number }) {
@@ -40,6 +46,32 @@ export function RecommendationBadge({ recommendation }: { recommendation: Recomm
     evitar: "bg-edge-neg/15 text-edge-neg",
   };
   return <span className={`chip capitalize ${map[recommendation]}`}>{recommendation}</span>;
+}
+
+const QUALITY_CLS: Record<QualityLevel, string> = {
+  alta: "bg-edge-pos/15 text-edge-pos",
+  media: "bg-edge-mid/15 text-edge-mid",
+  baja: "bg-edge-neg/15 text-edge-neg",
+};
+
+/** Badge de calidad de datos (alta/media/baja) con score y advertencias. */
+export function DataQualityBadge({
+  quality,
+  showScore = true,
+}: {
+  quality: DataQualityScore;
+  showScore?: boolean;
+}) {
+  const title = quality.warnings.length
+    ? quality.warnings.join(" · ")
+    : "Calidad de datos del analisis";
+  return (
+    <span className={`chip ${QUALITY_CLS[quality.level]}`} title={title}>
+      <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+      Datos: {quality.level}
+      {showScore ? ` · ${Math.round(quality.finalScore * 100)}` : ""}
+    </span>
+  );
 }
 
 export function DataSourceBadge({ source, updatedAt }: { source: DataSource; updatedAt?: string }) {
