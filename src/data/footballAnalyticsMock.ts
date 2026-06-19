@@ -85,122 +85,60 @@ export const METRIC_AVAILABILITY: MetricAvailability[] = [
 ];
 
 // --------------------------------------------------------------------- //
-// Equipos (ratings Elo/SPI demo)
+// Equipos — las 48 selecciones del Mundial 2026, derivadas de la fuente
+// central WORLD_CUP_TEAMS (ranking FIFA). Los ratings Elo/ataque/defensa y los
+// promedios de goles se derivan del ranking FIFA con una curva determinista,
+// para que TODOS los modelos (Poisson, Elo/SPI, Monte Carlo, comparador)
+// funcionen con cualquiera de las 48, no solo un puñado destacado.
 // --------------------------------------------------------------------- //
-export const MOCK_TEAMS: Team[] = [
-  {
-    id: "fra",
-    name: "Francia",
-    country: "Francia",
+import { WORLD_CUP_TEAMS } from "@/data/worldcup-teams";
+
+const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+
+/** Forma reciente determinista (sin azar) según la fuerza del equipo. */
+function deriveRecentForm(rank: number, salt: number): Array<"W" | "D" | "L"> {
+  // pWin baja con el ranking; el salt desempata patrones entre equipos similares.
+  const pWin = clamp(0.78 - (rank - 1) * 0.007, 0.2, 0.8);
+  const seq: Array<"W" | "D" | "L"> = [];
+  for (let i = 0; i < 5; i++) {
+    const r = ((rank * 17 + salt * 31 + i * 13) % 100) / 100;
+    if (r < pWin) seq.push("W");
+    else if (r < pWin + 0.22) seq.push("D");
+    else seq.push("L");
+  }
+  return seq;
+}
+
+/** Convierte el ranking FIFA (1 = mejor) en el perfil de rating del equipo. */
+function teamRatingsFromRank(rank: number) {
+  const eloRating = Math.round(clamp(2110 - (rank - 1) * 5.1, 1640, 2110));
+  const offensiveRating = Math.round(clamp(91 - (rank - 1) * 0.46, 54, 92));
+  const defensiveRating = Math.round(clamp(90 - (rank - 1) * 0.45, 53, 91));
+  const goalsForAvg = Number(clamp(1.0 + (offensiveRating - 54) / 38 * 1.6, 0.8, 2.6).toFixed(2));
+  const goalsAgainstAvg = Number(clamp(1.7 - (defensiveRating - 53) / 38 * 1.0, 0.6, 1.9).toFixed(2));
+  const ratingHistory = Array.from({ length: 8 }, (_, i) =>
+    Math.round(eloRating - (7 - i) * clamp((50 - rank) * 0.4, -6, 8)),
+  );
+  return { eloRating, offensiveRating, defensiveRating, goalsForAvg, goalsAgainstAvg, ratingHistory };
+}
+
+export const MOCK_TEAMS: Team[] = WORLD_CUP_TEAMS.map((t, i) => {
+  const r = teamRatingsFromRank(t.fifaRanking);
+  return {
+    id: t.id,
+    name: t.name,
+    country: t.name,
     league: "Selecciones",
-    eloRating: 2085,
-    offensiveRating: 89,
-    defensiveRating: 86,
-    recentForm: ["W", "W", "D", "W", "W"],
-    ratingHistory: [2010, 2025, 2040, 2052, 2061, 2070, 2078, 2085],
-    goalsForAvg: 2.3,
-    goalsAgainstAvg: 0.8,
+    eloRating: r.eloRating,
+    offensiveRating: r.offensiveRating,
+    defensiveRating: r.defensiveRating,
+    recentForm: deriveRecentForm(t.fifaRanking, i),
+    ratingHistory: r.ratingHistory,
+    goalsForAvg: r.goalsForAvg,
+    goalsAgainstAvg: r.goalsAgainstAvg,
     ...DEMO,
-  },
-  {
-    id: "bra",
-    name: "Brasil",
-    country: "Brasil",
-    league: "Selecciones",
-    eloRating: 2065,
-    offensiveRating: 90,
-    defensiveRating: 83,
-    recentForm: ["W", "D", "W", "W", "L"],
-    ratingHistory: [2030, 2038, 2049, 2055, 2058, 2061, 2068, 2065],
-    goalsForAvg: 2.4,
-    goalsAgainstAvg: 1.0,
-    ...DEMO,
-  },
-  {
-    id: "arg",
-    name: "Argentina",
-    country: "Argentina",
-    league: "Selecciones",
-    eloRating: 2095,
-    offensiveRating: 88,
-    defensiveRating: 87,
-    recentForm: ["W", "W", "W", "D", "W"],
-    ratingHistory: [2050, 2060, 2068, 2075, 2082, 2088, 2092, 2095],
-    goalsForAvg: 2.2,
-    goalsAgainstAvg: 0.7,
-    ...DEMO,
-  },
-  {
-    id: "esp",
-    name: "España",
-    country: "España",
-    league: "Selecciones",
-    eloRating: 2050,
-    offensiveRating: 87,
-    defensiveRating: 84,
-    recentForm: ["W", "W", "D", "W", "D"],
-    ratingHistory: [2000, 2012, 2024, 2031, 2038, 2044, 2048, 2050],
-    goalsForAvg: 2.1,
-    goalsAgainstAvg: 0.9,
-    ...DEMO,
-  },
-  {
-    id: "eng",
-    name: "Inglaterra",
-    country: "Inglaterra",
-    league: "Selecciones",
-    eloRating: 2030,
-    offensiveRating: 85,
-    defensiveRating: 85,
-    recentForm: ["D", "W", "W", "D", "W"],
-    ratingHistory: [1995, 2004, 2012, 2018, 2022, 2026, 2029, 2030],
-    goalsForAvg: 2.0,
-    goalsAgainstAvg: 0.9,
-    ...DEMO,
-  },
-  {
-    id: "ger",
-    name: "Alemania",
-    country: "Alemania",
-    league: "Selecciones",
-    eloRating: 2010,
-    offensiveRating: 86,
-    defensiveRating: 80,
-    recentForm: ["W", "L", "W", "D", "W"],
-    ratingHistory: [1960, 1972, 1985, 1992, 1998, 2003, 2008, 2010],
-    goalsForAvg: 2.2,
-    goalsAgainstAvg: 1.1,
-    ...DEMO,
-  },
-  {
-    id: "por",
-    name: "Portugal",
-    country: "Portugal",
-    league: "Selecciones",
-    eloRating: 2025,
-    offensiveRating: 86,
-    defensiveRating: 82,
-    recentForm: ["W", "W", "L", "W", "D"],
-    ratingHistory: [1980, 1990, 2000, 2008, 2014, 2019, 2023, 2025],
-    goalsForAvg: 2.1,
-    goalsAgainstAvg: 1.0,
-    ...DEMO,
-  },
-  {
-    id: "mex",
-    name: "México",
-    country: "México",
-    league: "Selecciones",
-    eloRating: 1905,
-    offensiveRating: 80,
-    defensiveRating: 78,
-    recentForm: ["W", "D", "L", "W", "D"],
-    ratingHistory: [1880, 1886, 1892, 1896, 1899, 1902, 1904, 1905],
-    goalsForAvg: 1.7,
-    goalsAgainstAvg: 1.2,
-    ...DEMO,
-  },
-];
+  };
+});
 
 export function getTeam(id: string): Team | undefined {
   return MOCK_TEAMS.find((t) => t.id === id);
