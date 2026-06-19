@@ -249,12 +249,13 @@ function bumpRisk(r: RiskLevel, by = 1): RiskLevel {
   return RANK_RISK[Math.min(2, RISK_RANK[r] + by)];
 }
 
-/** Riesgo de una pick individual. */
+/** Riesgo de una pick individual. `riskBump` (capa de realismo) sube el nivel. */
 export function calculatePickRisk(opts: {
   marketType: MarketType;
   edge: number;
   reliability: string;
   isDemo: boolean;
+  riskBump?: number;
 }): RiskLevel {
   let r = marketVolatility(opts.marketType);
   // Datos demo / baja confiabilidad suben el riesgo de BAJO a MEDIO (no a alto):
@@ -262,19 +263,33 @@ export function calculatePickRisk(opts: {
   if ((opts.isDemo || opts.reliability === "demo" || opts.reliability === "low") && r === "low")
     r = "medium";
   if (opts.edge < -0.02) r = "high";
+  if (opts.riskBump) r = bumpRisk(r, opts.riskBump);
   return r;
 }
 
-/** Rating cualitativo de la pick. */
-export function calculatePickRating(edge: number, expectedValue: number, risk: RiskLevel): PickRating {
+/**
+ * Rating cualitativo de la pick. Con la capa de realismo:
+ *  - `forceAvoid` → "avoid" (pick irreal / partido no resuelto).
+ *  - una pick solo es "strong_value" si además los modelos coinciden y no hay
+ *    flags de peligro.
+ */
+export function calculatePickRating(
+  edge: number,
+  expectedValue: number,
+  risk: RiskLevel,
+  realism?: { forceAvoid?: boolean; hasDanger?: boolean; modelAgreement?: number },
+): PickRating {
+  if (realism?.forceAvoid) return "avoid";
   if (expectedValue <= 0) return edge < -0.01 ? "avoid" : "fair_line";
-  if (edge >= 0.07 && risk !== "high") return "strong_value";
-  if (edge >= 0.025) return "positive_value";
+  const agree = realism?.modelAgreement ?? 1;
+  const strongOk = risk !== "high" && !realism?.hasDanger && agree >= 0.6;
+  if (edge >= 0.07 && strongOk) return "strong_value";
+  if (edge >= 0.025 && !realism?.hasDanger) return "positive_value";
   if (Math.abs(edge) < 0.025) return "fair_line";
   return "risky";
 }
 
-/** Score de confianza 0-100. */
+/** Score de confianza 0-100, ahora con realismo, coincidencia de modelos y desnivel. */
 export function calculateConfidenceScore(opts: {
   edge: number;
   expectedValue: number;
@@ -282,6 +297,10 @@ export function calculateConfidenceScore(opts: {
   isDemo: boolean;
   marketType: MarketType;
   risk: RiskLevel;
+  /** Penalización 0-45 de la capa de realismo. */
+  realismPenalty?: number;
+  /** Coincidencia entre modelos 0-1 (1 = total acuerdo). */
+  modelAgreement?: number;
 }): number {
   let s = 50;
   s += clamp(opts.edge, -0.2, 0.2) * 180; // ±36
@@ -291,7 +310,41 @@ export function calculateConfidenceScore(opts: {
   if (opts.isDemo) s -= 6;
   if (opts.reliability === "high") s += 6;
   if (opts.reliability === "low" || opts.reliability === "demo") s -= 6;
+  // Coincidencia de modelos: ±10 alrededor de 0.5.
+  if (opts.modelAgreement != null) s += (opts.modelAgreement - 0.5) * 20;
+  // Penalización por realismo (unders irreales, mismatch, sin alineación…).
+  s -= opts.realismPenalty ?? 0;
   return Math.round(Math.min(100, Math.max(0, s)));
+}
+
+const FINAL_RISK_PENALTY: Record<RiskLevel, number> = { low: 0, medium: 8, high: 20 };
+
+/**
+ * Score final de valor (0-100) para el ranking. No depende solo del EV: integra
+ * edge, confianza, riesgo, coincidencia de modelos, realismo y confiabilidad.
+ * Una pick con EV positivo pero poco realista NO debe llegar al top.
+ */
+export function calculateFinalValueScore(opts: {
+  edge: number;
+  expectedValue: number;
+  confidenceScore: number;
+  risk: RiskLevel;
+  modelAgreement?: number;
+  realismPenalty?: number;
+  reliability: string;
+  forceAvoid?: boolean;
+}): number {
+  if (opts.forceAvoid) return 0;
+  let s = 0;
+  s += clamp(opts.expectedValue, -0.5, 0.6) * 55; // EV domina pero acotado
+  s += clamp(opts.edge, -0.2, 0.25) * 90; // edge
+  s += (opts.confidenceScore - 50) * 0.5; // confianza relativa
+  s -= FINAL_RISK_PENALTY[opts.risk];
+  if (opts.modelAgreement != null) s += (opts.modelAgreement - 0.5) * 18;
+  s -= opts.realismPenalty ?? 0;
+  if (opts.reliability === "high") s += 4;
+  if (opts.reliability === "low" || opts.reliability === "demo") s -= 4;
+  return Number(Math.min(100, Math.max(0, s + 40)).toFixed(1)); // +40 base para centrar
 }
 
 // ---------------------------------------------------------------------
@@ -361,15 +414,26 @@ export function calculateBetSlipRisk(picks: BetSlipPick[]): RiskLevel {
   return r;
 }
 
-/** Ordena picks por valor (EV → edge → confianza → menor riesgo). */
-export function rankBestValuePicks<T extends { expectedValue: number; edge: number; confidenceScore: number; riskLevel: RiskLevel }>(
-  picks: T[],
-): T[] {
+/**
+ * Ordena picks por valor. Si existe `finalValueScore` (motor realista) manda ese;
+ * luego confianza, EV, edge y menor riesgo. Así una pick con EV positivo pero
+ * poco realista (penalizada) no llega al top.
+ */
+export function rankBestValuePicks<
+  T extends {
+    expectedValue: number;
+    edge: number;
+    confidenceScore: number;
+    riskLevel: RiskLevel;
+    finalValueScore?: number;
+  },
+>(picks: T[]): T[] {
   return [...picks].sort(
     (a, b) =>
+      (b.finalValueScore ?? -1) - (a.finalValueScore ?? -1) ||
+      b.confidenceScore - a.confidenceScore ||
       b.expectedValue - a.expectedValue ||
       b.edge - a.edge ||
-      b.confidenceScore - a.confidenceScore ||
       RISK_RANK[a.riskLevel] - RISK_RANK[b.riskLevel],
   );
 }

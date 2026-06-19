@@ -14,12 +14,16 @@ import {
   calculateExpectedValue,
   calculateNoVigProbability,
   calculatePickRating,
+  calculateFinalValueScore,
   calculatePickRisk,
   estimateModelProbability,
   maxCorrelationRisk,
   modelsFor,
   rankBestValuePicks,
 } from "@/lib/betBuilderModels";
+import { getTeamStrengthContext } from "@/lib/teamStrength";
+import { assessRealism, explainPick } from "@/lib/bet/realismChecks";
+import { calculateModelAgreement } from "@/lib/bet/modelAgreement";
 import type {
   BetMarket,
   BetSelection,
@@ -103,13 +107,52 @@ export function evaluateMarket(
   });
   const edge = calculateEdge(modelProbability, implied);
   const expectedValue = calculateExpectedValue(modelProbability, decimalOdds);
+
+  // --- Capa realista: fuerza de selección, sanity checks y coincidencia ---
+  const ctx = getTeamStrengthContext(params.homeId, params.awayId);
+  const matchResolved = Boolean(params.homeId) && Boolean(params.awayId) && params.homeId !== "home";
+  const realism = assessRealism({
+    marketType: m.marketType,
+    selection: m.selection,
+    line: m.line,
+    americanOdds: m.americanOdds,
+    source: m.source,
+    isDemo: m.isDemo,
+    reliability: m.reliability,
+    homeId: params.homeId,
+    awayId: params.awayId,
+    homeName: params.homeName,
+    awayName: params.awayName,
+    teamId: m.teamId,
+    modelProbability,
+    matchResolved,
+    ctx,
+  });
+  const agreement = calculateModelAgreement({
+    marketType: m.marketType,
+    selection: m.selection,
+    modelProbability,
+    homeId: params.homeId,
+    awayId: params.awayId,
+    homeName: params.homeName,
+    awayName: params.awayName,
+    teamId: m.teamId,
+    ctx,
+  });
+
   const riskLevel = calculatePickRisk({
     marketType: m.marketType,
     edge,
     reliability: m.reliability,
     isDemo: m.isDemo,
+    riskBump: realism.riskBump,
   });
-  const rating = calculatePickRating(edge, expectedValue, riskLevel);
+  const hasDanger = realism.flags.some((f) => f.severity === "danger");
+  const rating = calculatePickRating(edge, expectedValue, riskLevel, {
+    forceAvoid: realism.forceAvoid,
+    hasDanger,
+    modelAgreement: agreement.score,
+  });
   const confidenceScore = calculateConfidenceScore({
     edge,
     expectedValue,
@@ -117,7 +160,28 @@ export function evaluateMarket(
     isDemo: m.isDemo,
     marketType: m.marketType,
     risk: riskLevel,
+    realismPenalty: realism.confidencePenalty,
+    modelAgreement: agreement.score,
   });
+  const finalValueScore = calculateFinalValueScore({
+    edge,
+    expectedValue,
+    confidenceScore,
+    risk: riskLevel,
+    modelAgreement: agreement.score,
+    realismPenalty: realism.confidencePenalty,
+    reliability: m.reliability,
+    forceAvoid: realism.forceAvoid,
+  });
+  const explanation = explainPick({
+    selection: m.selection,
+    marketType: m.marketType,
+    edge,
+    rating,
+    ctx,
+    flags: realism.flags,
+  });
+
   return {
     id: `sel-${m.id}`,
     marketId: m.id,
@@ -143,6 +207,12 @@ export function evaluateMarket(
     reliability: m.reliability,
     isDemo: m.isDemo,
     models: modelsFor(m.marketType),
+    finalValueScore,
+    modelAgreement: agreement.score,
+    modelAgreementLabel: agreement.label,
+    strengthGap: ctx.gap,
+    realismFlags: realism.flags,
+    explanation,
   };
 }
 
@@ -175,6 +245,9 @@ export function selectionToSlipPick(s: BetSelection): BetSlipPick {
     correlationTags: s.correlationTags,
     isDemo: s.isDemo,
     source: s.source,
+    finalValueScore: s.finalValueScore,
+    realismFlags: s.realismFlags,
+    explanation: s.explanation,
   };
 }
 

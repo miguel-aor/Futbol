@@ -134,6 +134,25 @@ export interface BetSelection {
   isDemo: boolean;
   /** Modelos que alimentaron la estimación (para "fuente/motor"). */
   models: string[];
+  // --- Motor realista (opcionales; presentes en picks evaluadas) ---
+  /** Score final 0-100 para el ranking (integra realismo y coincidencia). */
+  finalValueScore?: number;
+  /** Coincidencia entre modelos 0-1. */
+  modelAgreement?: number;
+  modelAgreementLabel?: string;
+  /** Diferencia de nivel local−visitante (puntos de fuerza). */
+  strengthGap?: number;
+  /** Flags de realismo (mismatch, under irreal, sin alineación, etc.). */
+  realismFlags?: RealismFlagInfo[];
+  /** Explicación corta legible de la pick. */
+  explanation?: string;
+}
+
+export interface RealismFlagInfo {
+  code: string;
+  label: string;
+  note: string;
+  severity: "info" | "warn" | "danger";
 }
 
 export interface BetSlipPick {
@@ -155,6 +174,9 @@ export interface BetSlipPick {
   correlationTags: string[];
   isDemo: boolean;
   source: BetSource;
+  finalValueScore?: number;
+  realismFlags?: RealismFlagInfo[];
+  explanation?: string;
 }
 
 export interface BetSlipSummary {

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import type {
   BetSource,
   PickRating,
+  RealismFlagInfo,
   Reliability,
   RiskLevel,
 } from "@/lib/bet/types";
@@ -71,6 +72,50 @@ const RISK_STYLE: Record<RiskLevel, { cls: string; label: string }> = {
 
 export function RiskBadge({ risk }: { risk: RiskLevel }) {
   return <span className={`chip ${RISK_STYLE[risk].cls}`}>{RISK_STYLE[risk].label}</span>;
+}
+
+/** Score final de valor (0-100) usado en el ranking. */
+export function ScorePill({ score }: { score: number }) {
+  const cls = score >= 60 ? "bg-wc-green/15 text-wc-green" : score >= 45 ? "bg-wc-gold/15 text-wc-gold" : "bg-white/5 text-wc-muted";
+  return (
+    <span className={`chip font-bold tabular-nums ${cls}`} title="Score final de valor (EV, edge, confianza, riesgo, coincidencia y realismo)">
+      {score.toFixed(0)}
+    </span>
+  );
+}
+
+/** Coincidencia entre modelos (Poisson vs Elo). */
+export function AgreementBadge({ score, label }: { score?: number; label?: string }) {
+  if (score == null) return null;
+  const cls = score >= 0.75 ? "bg-wc-green/15 text-wc-green" : score >= 0.45 ? "bg-amber-400/15 text-amber-300" : "bg-wc-red/15 text-wc-red";
+  return (
+    <span className={`chip tabular-nums ${cls}`} title={label ?? "Coincidencia entre modelos"}>
+      Modelos {Math.round(score * 100)}%
+    </span>
+  );
+}
+
+const FLAG_STYLE: Record<RealismFlagInfo["severity"], string> = {
+  info: "bg-white/5 text-wc-muted border border-white/10",
+  warn: "bg-amber-400/15 text-amber-300",
+  danger: "bg-wc-red/15 text-wc-red",
+};
+
+/** Badges compactos de los flags de realismo. */
+export function RealismFlagBadges({ flags, max = 3 }: { flags?: RealismFlagInfo[]; max?: number }) {
+  if (!flags?.length) return null;
+  const shown = flags.slice(0, max);
+  const extra = flags.length - shown.length;
+  return (
+    <span className="inline-flex flex-wrap gap-1">
+      {shown.map((f) => (
+        <span key={f.code} className={`chip ${FLAG_STYLE[f.severity]}`} title={f.note}>
+          {f.label}
+        </span>
+      ))}
+      {extra > 0 ? <span className="chip bg-white/5 text-wc-muted" title={flags.slice(max).map((f) => f.label).join(", ")}>+{extra}</span> : null}
+    </span>
+  );
 }
 
 const SOURCE_DOT: Record<BetSource, string> = {
