@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Field, Select } from "@/components/analytics/primitives";
 import type { BetSelection } from "@/lib/bet/types";
 import { PickTable } from "./PickTable";
@@ -22,6 +22,29 @@ export function ImportOddsClient() {
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [touched, setTouched] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const loadFile = async (file: File) => {
+    const text = await file.text();
+    setContent(text);
+    setFileName(file.name);
+    setSaved(false);
+    // Autodetecta formato por extensión / contenido.
+    const isJson = /\.json$/i.test(file.name) || /^\s*[[{]/.test(text);
+    setFormat(isJson ? "json" : "csv");
+  };
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) void loadFile(file);
+  };
+
+  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) void loadFile(file);
+  };
 
   const runImport = async () => {
     setLoading(true);
@@ -84,13 +107,46 @@ export function ImportOddsClient() {
           <Field label="Formato">
             <Select value={format} onChange={(v) => setFormat(v as "csv" | "json")} options={[{ value: "csv", label: "CSV" }, { value: "json", label: "JSON" }]} />
           </Field>
-          <button
-            type="button"
-            onClick={() => setContent(EXAMPLE_CSV)}
-            className="min-h-[40px] rounded-lg border border-white/10 px-3 py-2 text-sm text-wc-muted hover:bg-white/5"
-          >
-            Cargar ejemplo CSV
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="min-h-[40px] rounded-lg border border-white/10 px-3 py-2 text-sm text-wc-text hover:bg-white/5"
+            >
+              Subir archivo…
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setContent(EXAMPLE_CSV);
+                setFormat("csv");
+                setFileName("");
+              }}
+              className="min-h-[40px] rounded-lg border border-white/10 px-3 py-2 text-sm text-wc-muted hover:bg-white/5"
+            >
+              Cargar ejemplo CSV
+            </button>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,.json,text/csv,application/json"
+            onChange={onFileChange}
+            className="hidden"
+          />
+        </div>
+
+        <div
+          onDrop={onDrop}
+          onDragOver={(e) => e.preventDefault()}
+          onClick={() => fileInputRef.current?.click()}
+          className="cursor-pointer rounded-lg border border-dashed border-white/15 bg-white/[0.02] px-4 py-3 text-center text-xs text-wc-muted hover:border-wc-gold/40 hover:bg-white/[0.04]"
+        >
+          {fileName ? (
+            <span className="text-wc-green">Archivo cargado: {fileName} · puedes editarlo abajo antes de importar.</span>
+          ) : (
+            <>Arrastra aquí un archivo <strong className="text-wc-text">.csv</strong> o <strong className="text-wc-text">.json</strong>, o haz clic para elegirlo.</>
+          )}
         </div>
         <textarea
           value={content}
