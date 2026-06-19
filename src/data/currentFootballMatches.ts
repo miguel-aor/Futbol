@@ -12,8 +12,10 @@
 export const REFERENCE_DATE = "2026-06-19";
 export const REFERENCE_TIMEZONE = "America/Monterrey";
 export const MONTERREY_UTC_OFFSET_HOURS = -6;
-/** "Ahora" simulado en UTC (12:00 Monterrey = 18:00 UTC). */
-export const REFERENCE_NOW_UTC = "2026-06-19T18:00:00.000Z";
+/** "Ahora" simulado en UTC (08:00 Monterrey = 14:00 UTC). Antes de los partidos
+ *  de la tarde del 19 jun, para que sigan siendo elegibles (Escocia-Marruecos
+ *  16:00 UTC, Brasil-Haití 19:00 UTC, etc.). */
+export const REFERENCE_NOW_UTC = "2026-06-19T14:00:00.000Z";
 export const MATCHES_LAST_UPDATED = "2026-06-19T12:00:00-06:00";
 
 export type MatchStatus =
