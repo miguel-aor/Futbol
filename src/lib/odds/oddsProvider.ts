@@ -13,9 +13,10 @@ import { rankBestValuePicks } from "@/lib/betBuilderModels";
 import type { BetSelection } from "@/lib/bet/types";
 import {
   importOddsAsSelections,
+  type ImportOddsResult,
   type MatchContext,
 } from "./importedOddsProvider";
-import type { OddsFeedSelection, OddsProviderInfo } from "./types";
+import type { ImportMetrics, OddsFeedSelection, OddsProviderInfo, UnmatchedOdd } from "./types";
 
 /** Proveedores disponibles y su estado. La API solo se habilita si hay base. */
 export function getEnabledOddsProviders(): OddsProviderInfo[] {
@@ -36,24 +37,33 @@ export function getEnabledOddsProviders(): OddsProviderInfo[] {
   ];
 }
 
-/** Validación mínima de una selección de feed. */
+/** Validación mínima de una selección de feed: momio válido y partido identificable
+ *  (por matchId o por nombres de equipo, que el resolver intentará mapear). */
 export function validateOddsSelection(s: OddsFeedSelection): boolean {
-  return Boolean(s.matchId) && Number.isFinite(s.americanOdds) && s.americanOdds !== 0;
+  const hasMatchRef = Boolean(s.matchId) || Boolean(s.homeTeam && s.awayTeam);
+  return hasMatchRef && Number.isFinite(s.americanOdds) && s.americanOdds !== 0;
 }
 
-/** Convierte un feed de momios en BetSelections evaluadas por el modelo. */
+/** Convierte un feed de momios en BetSelections evaluadas por el modelo real. */
 export function convertOddsFeedToBetSelections(
   feed: OddsFeedSelection[],
-  resolveParams: (matchId: string) => MatchContext | null,
-): { selections: BetSelection[]; warnings: string[] } {
-  return importOddsAsSelections(feed.filter(validateOddsSelection), resolveParams);
+  resolveMatch: (odd: OddsFeedSelection) => MatchContext | null,
+): ImportOddsResult {
+  return importOddsAsSelections(feed.filter(validateOddsSelection), resolveMatch);
 }
 
-/** Value picks a partir de un feed: evalúa + ordena por valor. */
+export interface ValuePicksFromFeed {
+  picks: BetSelection[];
+  warnings: string[];
+  metrics: ImportMetrics;
+  unmatched: UnmatchedOdd[];
+}
+
+/** Value picks a partir de un feed: resuelve partido, evalúa con modelo real y ordena. */
 export function calculateValuePicksFromOddsFeed(
   feed: OddsFeedSelection[],
-  resolveParams: (matchId: string) => MatchContext | null,
-): { picks: BetSelection[]; warnings: string[] } {
-  const { selections, warnings } = convertOddsFeedToBetSelections(feed, resolveParams);
-  return { picks: rankBestValuePicks(selections), warnings };
+  resolveMatch: (odd: OddsFeedSelection) => MatchContext | null,
+): ValuePicksFromFeed {
+  const { selections, warnings, metrics, unmatched } = convertOddsFeedToBetSelections(feed, resolveMatch);
+  return { picks: rankBestValuePicks(selections), warnings, metrics, unmatched };
 }

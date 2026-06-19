@@ -76,6 +76,7 @@ export function RiskBadge({ risk }: { risk: RiskLevel }) {
 const SOURCE_DOT: Record<BetSource, string> = {
   Demo: "bg-amber-400",
   "Manual input": "bg-sky-400",
+  "Manual screenshot": "bg-cyan-400",
   "Imported CSV": "bg-teal-400",
   "Imported JSON": "bg-teal-400",
   "365Scores": "bg-fuchsia-400",

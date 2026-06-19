@@ -161,6 +161,7 @@ export function selectionToSlipPick(s: BetSelection): BetSlipPick {
     selectionId: s.id,
     matchId: s.matchId,
     matchName: s.matchName,
+    externalMatchId: s.externalMatchId ?? null,
     marketType: s.marketType,
     selection: s.selection,
     line: s.line,

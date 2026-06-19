@@ -54,6 +54,7 @@ export type MarketType =
 export type BetSource =
   | "Demo"
   | "Manual input"
+  | "Manual screenshot"
   | "Imported CSV"
   | "Imported JSON"
   | "365Scores"
@@ -109,6 +110,8 @@ export interface BetSelection {
   marketId: string;
   matchId: string;
   matchName: string;
+  /** ID original del proveedor cuando la pick viene de momios importados. */
+  externalMatchId?: string | null;
   category: MarketCategory;
   marketType: MarketType;
   label: string;
@@ -138,6 +141,7 @@ export interface BetSlipPick {
   selectionId: string;
   matchId: string;
   matchName: string;
+  externalMatchId?: string | null;
   marketType: MarketType;
   selection: string;
   line: number | null;

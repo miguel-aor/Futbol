@@ -50,6 +50,13 @@ export interface OddsFeedSelection {
   id: string;
   marketId: string;
   matchId: string;
+  /** Nombres de equipos tal como vinieron en el feed (para resolver el partido). */
+  homeTeam: string | null;
+  awayTeam: string | null;
+  /** Kickoff ISO si el feed lo trae (para resolver por cercanía). */
+  kickoff: string | null;
+  /** ID original del proveedor; se conserva tras resolver al matchId canónico. */
+  externalMatchId: string | null;
   marketType: MarketType;
   selection: string;
   team: string | null;
@@ -66,4 +73,21 @@ export interface OddsFeedSelection {
   isManual: boolean;
   isDemo: boolean;
   isImported: boolean;
+}
+
+/** Métricas del proceso de importación (para UI y validación). */
+export interface ImportMetrics {
+  totalImported: number;
+  resolvedMatches: number;
+  unmatchedMatches: number;
+  selectionsReadyForModel: number;
+  selectionsSkipped: number;
+}
+
+/** Un partido importado que NO se pudo resolver contra el fixture interno. */
+export interface UnmatchedOdd {
+  externalMatchId: string;
+  homeTeam: string | null;
+  awayTeam: string | null;
+  count: number;
 }

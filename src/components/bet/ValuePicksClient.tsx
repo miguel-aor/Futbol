@@ -28,7 +28,12 @@ export function ValuePicksClient() {
       .catch(() => {});
     try {
       const raw = window.localStorage.getItem("imported-picks");
-      if (raw) setImported(JSON.parse(raw) as BetSelection[]);
+      if (raw) {
+        // Defensa: descartar picks neutrales legadas (partido no resuelto) que
+        // se hubieran guardado antes del fix de resolución de partidos.
+        const parsed = (JSON.parse(raw) as BetSelection[]).filter((p) => p.matchName !== "Local vs Visitante");
+        setImported(parsed);
+      }
     } catch {
       /* ignore */
     }

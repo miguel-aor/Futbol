@@ -9,7 +9,16 @@ export function PickTable({ rows }: { rows: BetSelection[] }) {
   const { add, has } = useBetSlip();
 
   const columns: Column<BetSelection>[] = [
-    { key: "match", label: "Partido", render: (r) => <span className="text-wc-muted">{r.matchName}</span> },
+    {
+      key: "match",
+      label: "Partido",
+      render: (r) => (
+        <span className="text-wc-muted">
+          {r.matchName}
+          {r.externalMatchId ? <span className="ml-1 text-[10px] text-wc-muted/60">#{r.externalMatchId}</span> : null}
+        </span>
+      ),
+    },
     { key: "market", label: "Mercado", render: (r) => <span className="text-wc-muted">{r.label}</span> },
     { key: "pick", label: "Pick", render: (r) => <span className="font-medium">{r.selection}</span> },
     { key: "line", label: "Línea", align: "right", render: (r) => (r.line == null ? "—" : r.line) },
