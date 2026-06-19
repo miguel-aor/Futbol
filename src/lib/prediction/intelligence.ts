@@ -506,7 +506,7 @@ function computeDataQuality(args: {
   );
   const warnings: string[] = [];
   if (args.sampleSize < 6) warnings.push("Muestra de partidos historicos limitada.");
-  if (!args.hasReferee) warnings.push("Sin arbitro designado: ajustes de tarjetas/faltas aproximados.");
+  if (!args.hasReferee) warnings.push("El árbitro aún no está confirmado. Las proyecciones disciplinarias usan promedio del torneo/equipos.");
   if (args.source === "mock") warnings.push("Stats y probabilidades provienen del modelo (no feed oficial).");
   return {
     completeness,
@@ -707,7 +707,10 @@ export function buildMatchIntelligenceReport(
   const awayProfile = buildTeamIntelligenceProfile(away.id, ctx);
   if (!homeProfile || !awayProfile) return null;
 
-  const referee = match.refereeId ? ctx.referees.find((r) => r.id === match.refereeId) ?? null : null;
+  // Solo se usa el árbitro si la designación está CONFIRMADA por fuente oficial.
+  // Un árbitro demo/no confirmado nunca alimenta el modelo disciplinario.
+  const refereeRaw = match.refereeId ? ctx.referees.find((r) => r.id === match.refereeId) ?? null : null;
+  const referee = refereeRaw?.isConfirmed ? refereeRaw : null;
   const homeCoach = ctx.coaches.find((c) => c.teamId === home.id) ?? null;
   const awayCoach = ctx.coaches.find((c) => c.teamId === away.id) ?? null;
 
@@ -801,7 +804,7 @@ export function buildMatchIntelligenceReport(
     const fair = 1 / clamp(finalProb, 0.02, 0.98);
     const refReason = referee
       ? calculateRefereeImpact(referee).explanation
-      : "Sin arbitro designado: estimacion por promedio.";
+      : "Árbitro no confirmado: estimación por promedio del torneo/equipos.";
     picks.push(
       pickFor(
         "Tarjetas O/U 4.5", pickOver ? "Over 4.5 tarjetas" : "Under 4.5 tarjetas", finalProb,

@@ -133,6 +133,25 @@ export function detectUnsupportedMarketRisk(input: RealismInput): RealismFlag | 
   return null;
 }
 
+const DISCIPLINARY: MarketType[] = [
+  "cards", "team_total_cards", "player_cards", "penalty_awarded", "team_total_fouls", "player_fouls", "player_fouls_drawn",
+];
+
+/**
+ * Riesgo por árbitro no confirmado en mercados disciplinarios. La app no tiene
+ * designación oficial conectada → estos mercados usan promedio del torneo/equipos
+ * y no pueden apoyarse en estadísticas de un árbitro específico.
+ */
+export function detectRefereeRisk(input: RealismInput): RealismFlag | null {
+  if (!DISCIPLINARY.includes(input.marketType)) return null;
+  return {
+    code: "referee_unconfirmed",
+    label: "Árbitro no confirmado",
+    note: "Sin designación arbitral oficial; la proyección disciplinaria usa promedios, no un árbitro específico. Riesgo mayor.",
+    severity: "warn",
+  };
+}
+
 /** Marca origen de momios manuales/importados (válido, pero se muestra). */
 export function detectSourceFlag(source: BetSource): RealismFlag | null {
   if (source === "Manual screenshot" || source === "Manual input")
@@ -148,6 +167,7 @@ const PENALTY: Record<string, number> = {
   unrealistic_under: 28,
   mismatch_trap: 22,
   no_lineup: 24,
+  referee_unconfirmed: 12,
   extreme_line: 10,
   low_data: 10,
   volatile_market: 8,
@@ -159,6 +179,7 @@ const RISK_BUMP: Record<string, number> = {
   unrealistic_under: 2,
   mismatch_trap: 1,
   no_lineup: 1,
+  referee_unconfirmed: 1,
   extreme_line: 1,
   volatile_market: 1,
 };
@@ -180,6 +201,7 @@ export function assessRealism(input: RealismInput): RealismAssessment {
   push(detectUnrealisticUnder(input));
   push(detectMismatchTrap(input));
   push(detectUnsupportedMarketRisk(input));
+  push(detectRefereeRisk(input));
   push(detectExtremeLine(input.americanOdds));
   push(detectLowDataRisk(input));
   push(detectSourceFlag(input.source));

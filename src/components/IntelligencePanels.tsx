@@ -200,6 +200,13 @@ export function PerformanceWindowGrid({ window: w }: { window: PerformanceWindow
 // ---------------------------------------------------------------------
 // Árbitro
 // ---------------------------------------------------------------------
+const REF_RELIABILITY_BADGE: Record<string, { cls: string; label: string }> = {
+  confirmed: { cls: "bg-emerald-500/15 text-emerald-300", label: "Confirmado" },
+  reported: { cls: "bg-sky-500/15 text-sky-300", label: "Reportado" },
+  unconfirmed: { cls: "bg-amber-500/15 text-amber-300", label: "Sin verificar" },
+  demo: { cls: "bg-base-700/60 text-slate-400", label: "Demo" },
+};
+
 export function RefereeCard({ referee, impact }: { referee: Referee; impact: RefereeImpact }) {
   const stat = (label: string, value: string) => (
     <div className="flex items-baseline justify-between border-b border-base-800/50 pb-1 text-sm">
@@ -207,6 +214,7 @@ export function RefereeCard({ referee, impact }: { referee: Referee; impact: Ref
       <span className="tabular-nums font-semibold text-slate-200">{value}</span>
     </div>
   );
+  const rel = REF_RELIABILITY_BADGE[referee.reliability] ?? REF_RELIABILITY_BADGE.unconfirmed;
   return (
     <div className="card p-5">
       <div className="mb-3 flex items-center justify-between gap-2">
@@ -214,7 +222,10 @@ export function RefereeCard({ referee, impact }: { referee: Referee; impact: Ref
           <div className="font-semibold text-slate-100">{referee.name}</div>
           <div className="text-xs text-slate-500">{referee.nationality}</div>
         </div>
-        <span className="chip bg-base-700/60 capitalize text-slate-300">{referee.gameFlowStyle}</span>
+        <div className="flex flex-col items-end gap-1">
+          <span className={`chip ${rel.cls}`}>{rel.label}</span>
+          <span className="chip bg-base-700/60 capitalize text-slate-300">{referee.gameFlowStyle}</span>
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-2">
         {stat("Amarillas/partido", referee.yellowCardsPerMatch.toFixed(2))}
@@ -229,6 +240,29 @@ export function RefereeCard({ referee, impact }: { referee: Referee; impact: Ref
         <span className="chip bg-base-800/60">Faltas ×{impact.foulsMultiplier}</span>
         <span className="chip bg-base-800/60">Penal ×{impact.penaltyMultiplier}</span>
       </div>
+      <div className="mt-2 text-[11px] text-slate-500">
+        Fuente: {referee.source} · Actualizado: {referee.lastUpdated}
+      </div>
+    </div>
+  );
+}
+
+/** Tarjeta cuando NO hay designación arbitral confirmada (no se inventa nombre). */
+export function RefereeUnconfirmedCard() {
+  return (
+    <div className="card p-5">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <div className="font-semibold text-slate-100">Árbitro no confirmado</div>
+        <span className={`chip ${REF_RELIABILITY_BADGE.unconfirmed.cls}`}>Sin verificar</span>
+      </div>
+      <p className="rounded-lg bg-base-900/60 p-3 text-sm text-slate-400">
+        La designación arbitral todavía no está verificada. El modelo usa promedios del torneo, equipos y mercado,
+        no estadísticas de un árbitro específico.
+      </p>
+      <p className="mt-2 text-xs text-amber-300/90">
+        Las proyecciones disciplinarias (tarjetas/faltas/penales) tienen mayor riesgo hasta que se confirme la
+        designación por fuente oficial (FIFA Match Centre).
+      </p>
     </div>
   );
 }

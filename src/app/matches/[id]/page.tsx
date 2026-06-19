@@ -15,6 +15,7 @@ import {
   MatchPickCard,
   PerformanceWindowGrid,
   RefereeCard,
+  RefereeUnconfirmedCard,
 } from "@/components/IntelligencePanels";
 import { MARKET_BY_KEY } from "@/data/markets";
 import {
@@ -27,7 +28,7 @@ import {
 } from "@/lib/format";
 import type { OpportunityView } from "@/lib/data-access";
 import { calculateCoachImpact } from "@/lib/prediction/intelligence";
-import { ArrowLeftIcon, CardIcon, ClockIcon, CompassIcon, PinIcon, StadiumIcon } from "@/components/icons";
+import { ArrowLeftIcon, ClockIcon, CompassIcon, PinIcon, StadiumIcon } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -211,7 +212,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const tabArbitro = report?.referee && report.refereeImpact ? (
     <RefereeCard referee={report.referee} impact={report.refereeImpact} />
   ) : (
-    <EmptyState title="Sin árbitro designado" message="El ajuste de tarjetas/faltas usa el promedio." icon={<CardIcon className="h-6 w-6" />} />
+    <RefereeUnconfirmedCard />
   );
 
   const tabEntrenadores = report && (report.homeCoach || report.awayCoach) ? (

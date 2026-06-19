@@ -19,7 +19,7 @@ import type {
 } from "@/lib/data-providers/types";
 import { clamp, hashSeed, round, seededRng } from "@/lib/prediction/math";
 import { WORLD_CUP_COACHES } from "./worldcup-coaches";
-import { WORLD_CUP_REFEREES } from "./worldcup-referees";
+import { CONFIRMED_REFEREE_ASSIGNMENTS, WORLD_CUP_REFEREES } from "./worldcup-referees";
 import { DATA_CAPTURED_AT } from "./worldcup-fixtures";
 
 const TS = DATA_CAPTURED_AT;
@@ -105,15 +105,20 @@ export function buildReferees(): Referee[] {
       gameFlowStyle: seed.style,
       source: "mock",
       lastUpdated: TS,
+      // El pool es REFERENCIA demo; sus métricas no son de un árbitro designado.
+      isConfirmed: false,
+      reliability: "demo",
     };
   });
 }
 
-/** Asigna de forma determinista un arbitro del pool a un partido. */
-export function assignRefereeId(matchId: string, refereeCount: number): string | null {
-  if (refereeCount === 0) return null;
-  const idx = hashSeed("assign-" + matchId) % refereeCount;
-  return WORLD_CUP_REFEREES[idx]?.id ?? null;
+/**
+ * Devuelve el árbitro de un partido SOLO si hay designación oficial confirmada.
+ * Sin fuente confiable → null (la app muestra "Árbitro no confirmado"). No se
+ * inventa ni se asigna por hash/nacionalidad. `_refereeCount` se ignora.
+ */
+export function assignRefereeId(matchId: string, _refereeCount?: number): string | null {
+  return CONFIRMED_REFEREE_ASSIGNMENTS[matchId]?.refereeId ?? null;
 }
 
 // ---------------------------------------------------------------------

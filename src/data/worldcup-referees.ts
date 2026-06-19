@@ -9,7 +9,7 @@
 // cardTendency: 0.8 (muestra pocas) .. 1.3 (muestra muchas).
 // =====================================================================
 
-import type { RefereeStyle } from "@/lib/data-providers/types";
+import type { RefereeReliability, RefereeStyle } from "@/lib/data-providers/types";
 
 export interface RefereeSeed {
   id: string;
@@ -18,6 +18,25 @@ export interface RefereeSeed {
   style: RefereeStyle;
   cardTendency: number;
 }
+
+/**
+ * Designaciones arbitrales CONFIRMADAS por fuente oficial (matchId → árbitro).
+ * VACÍO por ahora: FIFA aún no publica designaciones para estos partidos, así
+ * que NINGÚN partido tiene árbitro asignado y la app muestra "Árbitro no
+ * confirmado". Cuando FIFA designe, agregar aquí { matchId: { refereeId,
+ * source, reliability } } y la app lo usará automáticamente.
+ */
+export interface ConfirmedRefereeAssignment {
+  refereeId: string;
+  source: string;
+  reliability: Extract<RefereeReliability, "confirmed" | "reported">;
+  lastUpdated: string;
+}
+
+export const CONFIRMED_REFEREE_ASSIGNMENTS: Record<string, ConfirmedRefereeAssignment> = {
+  // Ejemplo (cuando haya designación oficial):
+  // "wc-C-4": { refereeId: "ref-turpin", source: "FIFA Match Centre", reliability: "confirmed", lastUpdated: "2026-06-18" },
+};
 
 /** Pool de arbitros (referencia publica). */
 export const WORLD_CUP_REFEREES: RefereeSeed[] = [

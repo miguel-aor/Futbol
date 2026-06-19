@@ -410,6 +410,9 @@ export interface CoachImpact {
 // Arbitro
 // ---------------------------------------------------------------------
 
+/** Confiabilidad de la designación arbitral. */
+export type RefereeReliability = "confirmed" | "reported" | "unconfirmed" | "demo";
+
 /** Arbitro de un partido. */
 export interface Referee {
   id: string;
@@ -425,6 +428,9 @@ export interface Referee {
   gameFlowStyle: RefereeStyle;
   source: DataSource;
   lastUpdated: string;
+  /** true solo si la designación viene de fuente oficial/confiable. */
+  isConfirmed: boolean;
+  reliability: RefereeReliability;
 }
 
 /** Ajustes de mercado derivados del perfil del arbitro. */
