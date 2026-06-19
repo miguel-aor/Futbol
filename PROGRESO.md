@@ -2,6 +2,10 @@
 
 > Documento de continuidad. Resume **qué se hizo, cómo está armado y qué falta**
 > para poder retomar en otra sesión. Última actualización: **17 jun 2026**.
+>
+> **Fuentes de datos reales (cómo conseguirlas):** ver [`FUENTES-DATOS.md`](FUENTES-DATOS.md)
+> — Opta Analyst, Wikipedia, ESPN, openfootball, martj42; método WebSearch→WebFetch,
+> verificación cruzada, y logs en `data/worldcup-2026/sources-log.json`.
 
 ---
 

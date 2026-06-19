@@ -3,13 +3,14 @@
 // Fuente: ESPN (match schedule) + Wikipedia + 365Scores/Milenio (resultados
 // del 17 jun). Capturado el 2026-06-18.
 //
-// La jornada 1 (11-17 jun) esta COMPLETA con resultados REALES. La jornada 2
-// (desde el 18 jun) esta programada (score null) y la app le calcula
-// prediccion. La hora exacta de algunos partidos es aproximada.
+// La jornada 1 (11-17 jun) esta COMPLETA con resultados REALES. De la jornada 2
+// ya se jugaron los GRUPOS A y B (18 jun, resultados reales); el resto sigue
+// programado (score null) y la app le calcula prediccion. Captura 19 jun 2026.
+// Fuentes: Wikipedia (2026 FIFA World Cup Group A/B), ESPN, World Soccer Talk.
 // =====================================================================
 
 /** Timestamp de captura de estos datos (publicos). */
-export const DATA_CAPTURED_AT = "2026-06-18T12:00:00.000Z";
+export const DATA_CAPTURED_AT = "2026-06-19T18:00:00.000Z";
 
 /** Sedes reales del Mundial 2026. */
 export const VENUES: Record<string, { venue: string; city: string }> = {
@@ -91,11 +92,14 @@ export const WORLD_CUP_FIXTURES: FixtureSeed[] = [
   f("wc-L-2", "L", "gha", "pan", "2026-06-17", 23, "toronto", 1, 0),
   f("wc-K-2", "K", "uzb", "col", "2026-06-18", 1, "mexico-city", 1, 3),
 
-  // ---- Jornada 2 (programada) ----
-  f("wc-A-3", "A", "cze", "rsa", "2026-06-18", 16, "atlanta"),
-  f("wc-B-3", "B", "sui", "bih", "2026-06-18", 18, "los-angeles"),
-  f("wc-B-4", "B", "can", "qat", "2026-06-18", 22, "vancouver"),
-  f("wc-A-4", "A", "mex", "kor", "2026-06-19", 1, "guadalajara"),
+  // ---- Jornada 2 ----
+  // Grupos A y B YA JUGADOS (resultados reales, 18 jun 2026; fuentes:
+  // Wikipedia 2026 FIFA World Cup Group A/B, ESPN, World Soccer Talk).
+  f("wc-A-3", "A", "cze", "rsa", "2026-06-18", 16, "atlanta", 1, 1),
+  f("wc-B-3", "B", "sui", "bih", "2026-06-18", 18, "los-angeles", 4, 1),
+  f("wc-B-4", "B", "can", "qat", "2026-06-18", 22, "vancouver", 6, 0),
+  f("wc-A-4", "A", "mex", "kor", "2026-06-19", 1, "guadalajara", 1, 0),
+  // Resto de la jornada 2 (programada):
   f("wc-D-3", "D", "usa", "aus", "2026-06-19", 22, "seattle"),
   f("wc-C-3", "C", "sco", "mar", "2026-06-19", 16, "boston"),
   f("wc-C-4", "C", "bra", "hai", "2026-06-19", 19, "philadelphia"),

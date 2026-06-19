@@ -10,25 +10,29 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Paleta dashboard deportivo premium, dark mode primero.
+        // Paleta unificada estilo Mundial 2026 (negro/dorado, broadcast).
+        // base-* se remapeó a los tonos near-black del Mundial para que TODO
+        // el sitio (no solo /worldcup) comparta la misma estética.
         base: {
-          950: "#070b14",
-          900: "#0b1120",
-          850: "#0f1729",
-          800: "#141d33",
-          700: "#1e293f",
-          600: "#2a3a55",
+          950: "#07070A",
+          900: "#0C0D13",
+          850: "#11131A",
+          800: "#181B24",
+          700: "#23262F",
+          600: "#313640",
         },
         edge: {
-          pos: "#22c55e",
+          pos: "#00A86B",
           mid: "#f59e0b",
-          neg: "#ef4444",
+          neg: "#E63946",
         },
+        // brand-* ahora es el dorado del Mundial (antes era verde). Sustituye
+        // el acento verde por dorado en navbar, links, chips y botones.
         brand: {
-          DEFAULT: "#16a34a",
-          400: "#34d399",
-          500: "#10b981",
-          600: "#059669",
+          DEFAULT: "#D6B15E",
+          400: "#E7C77C",
+          500: "#D6B15E",
+          600: "#C19A4C",
         },
         // Paleta estilo Mundial 2026 (transmision deportiva premium).
         wc: {

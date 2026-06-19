@@ -8,8 +8,8 @@
 
 html,
 body {
-  background-color: #070b14;
-  color: #e2e8f0;
+  background-color: #07070A;
+  color: #E6E8EE;
 }
 
 body {
@@ -23,14 +23,14 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b1120;
+  background: #0C0D13;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293f;
+  background: #23262F;
   border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2a3a55;
+  background: #313640;
 }
 
 @layer base {
@@ -46,7 +46,7 @@ body {
   button:focus-visible,
   select:focus-visible,
   [tabindex]:focus-visible {
-    outline: 2px solid #34d399;
+    outline: 2px solid #D6B15E;
     outline-offset: 2px;
     border-radius: 6px;
   }

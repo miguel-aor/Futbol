@@ -10,6 +10,7 @@ import type {
   DataBundle,
   Group,
   GroupStanding,
+  HistoricalMatch,
   Match,
   Opportunity,
   Player,
@@ -433,6 +434,69 @@ function buildStandings(matches: Match[]): Record<string, GroupStanding[]> {
   return standings;
 }
 
+/**
+ * Convierte los partidos del Mundial YA JUGADOS (resultados reales de la
+ * jornada 1) en `HistoricalMatch`, para que las ventanas "ultimos 5/10/20" y
+ * la forma reciente de la capa Intelligence tomen en cuenta lo realmente
+ * ocurrido en el torneo, no solo los historicos sinteticos.
+ *
+ * Como `getRelevantHistoricalMatches` ordena por fecha descendente, estos
+ * partidos (11-18 jun) entran al frente de las ventanas recientes. Sus stats
+ * finas (corners/tiros/faltas) se aproximan porque no se publican por partido;
+ * el xG real no esta disponible (null). El marcador y W/D/L SI son reales.
+ */
+function buildWorldCupPlayedAsHistorical(): HistoricalMatch[] {
+  const approxStats = (goals: number) => ({
+    shots: 6 + goals * 3,
+    sot: 2 + goals,
+    corners: 4 + goals,
+    cards: 2,
+    fouls: 12,
+  });
+  return WORLD_CUP_FIXTURES.filter(
+    (fx) => fx.homeScore != null && fx.awayScore != null,
+  ).map((fx) => {
+    const hs = fx.homeScore as number;
+    const as = fx.awayScore as number;
+    const h = approxStats(hs);
+    const a = approxStats(as);
+    return {
+      id: `wc-hist-${fx.id}`,
+      date: fx.kickoff,
+      homeTeam: fx.homeId,
+      awayTeam: fx.awayId,
+      competition: "Mundial 2026",
+      matchType: "mundial",
+      isRelevantToWorldCupTeam: true,
+      homeScore: hs,
+      awayScore: as,
+      stats: {
+        homeCorners: h.corners,
+        awayCorners: a.corners,
+        homeCards: h.cards,
+        awayCards: a.cards,
+        homeShots: h.shots,
+        awayShots: a.shots,
+        homeShotsOnTarget: h.sot,
+        awayShotsOnTarget: a.sot,
+        homeFouls: h.fouls,
+        awayFouls: a.fouls,
+        homePossession: 50,
+        homeXg: null,
+        awayXg: null,
+      },
+      lineups: null,
+      events: [],
+      odds: null,
+      refereeId: null,
+      venue: VENUES[fx.venueId]?.venue ?? "",
+      source: "manual",
+      sourceUrl: null,
+      ingestedAt: DATA_CAPTURED_AT,
+    };
+  });
+}
+
 /** Construye el DataBundle completo desde mock. */
 export function buildMockBundle(): DataBundle {
   const teams = WORLD_CUP_TEAMS.map(buildTeam);
@@ -449,7 +513,12 @@ export function buildMockBundle(): DataBundle {
   const standings = buildStandings(matches);
   const coaches = buildCoaches(teams);
   const referees = buildReferees();
-  const historicalMatches = buildHistoricalMatches(teams);
+  // Partidos reales ya jugados del Mundial + historicos sinteticos. Los reales
+  // van primero y, al ordenarse por fecha desc, lideran las ventanas recientes.
+  const historicalMatches = [
+    ...buildWorldCupPlayedAsHistorical(),
+    ...buildHistoricalMatches(teams),
+  ];
 
   return {
     meta: {

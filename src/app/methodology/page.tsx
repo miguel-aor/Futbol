@@ -1,70 +1,70 @@
-import { SectionTitle } from "@/components/primitives";
+import type { Metadata } from "next";
+import { DisclaimerBar } from "@/components/bet/ui";
 
-export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "Metodología · Cómo se calcula el valor",
+  description: "Probabilidad modelo, momio implícito, edge, EV, confianza, riesgo, correlación y rol de la IA.",
+};
 
-const CONCEPTS: { term: string; desc: string }[] = [
-  { term: "Probabilidad del modelo", desc: "Estimacion (0-100%) de que ocurra un evento, calculada con un modelo Poisson sobre fuerzas ofensivas/defensivas, forma reciente y contexto del partido." },
-  { term: "Cuota justa", desc: "La cuota decimal que reflejaria exactamente la probabilidad del modelo, sin margen. Se calcula como 1 / probabilidad." },
-  { term: "Cuota de mercado", desc: "Cuota de referencia MOCK (simulada con un margen tipico). No proviene de ninguna casa de apuestas ni es una invitacion a apostar." },
-  { term: "Edge", desc: "Valor esperado por unidad: probabilidad x cuota_mercado - 1. Positivo (verde) sugiere valor segun el modelo; negativo (rojo) sugiere evitar." },
-  { term: "Hit rate", desc: "Porcentaje de veces que un prop se ha cumplido en los ultimos 5, ultimos 10 y la temporada internacional. Es historico, no una garantia." },
-  { term: "Confianza", desc: "Etiqueta (baja / media / alta) que combina el edge, el tamano de muestra y la volatilidad. Mayor muestra y menor volatilidad elevan la confianza." },
-  { term: "Forma reciente", desc: "Resumen de los ultimos resultados (W/D/L) y promedios de goles, corners, tarjetas y tiros de la seleccion." },
-  { term: "Volatilidad", desc: "Que tan disperso/impredecible es un rendimiento. Alta volatilidad reduce la confianza aunque el edge sea positivo." },
-  { term: "Fuente de datos", desc: "De donde viene cada dato: mock (generado), snapshot manual (importado a mano) o snapshot 365Scores experimental (recopilado con un script manual)." },
+const ITEMS: Array<{ term: string; def: string }> = [
+  { term: "Probabilidad del modelo", def: "Estimación de que ocurra un evento según modelos estadísticos (Elo/SPI, Poisson/Dixon-Coles, xG, Monte Carlo, conteo y scouting). Es una estimación, no una certeza." },
+  { term: "Momio implícito", def: "La probabilidad que implica el momio ofrecido. +200 ≈ 33.3%, −150 ≈ 60%. Incluye el margen de la casa." },
+  { term: "Cuota justa (no-vig)", def: "Probabilidad sin el margen de la casa, normalizando ambos lados de un mercado de dos resultados." },
+  { term: "Edge", def: "Diferencia entre la probabilidad del modelo y la implícita. Edge positivo sugiere valor estadístico." },
+  { term: "Expected Value (EV)", def: "Valor esperado por unidad apostada: probModelo × (decimal − 1) − (1 − probModelo). EV positivo = valor estimado a favor." },
+  { term: "Confianza", def: "Score 0-100 que combina edge, EV, calidad/origen del dato, volatilidad del mercado y riesgo. No es probabilidad de acertar." },
+  { term: "Riesgo", def: "Nivel (bajo/medio/alto) según volatilidad del mercado, muestra, origen del dato y correlación." },
+  { term: "Correlación en parley", def: "Cuando dos picks dependen entre sí (ej. over goles + ambos anotan), la probabilidad combinada no se multiplica de forma ingenua: se penaliza y se avisa." },
 ];
 
 export default function MethodologyPage() {
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-100">Metodologia</h1>
-        <p className="mt-1 max-w-2xl text-sm text-slate-500">
-          Como leer las metricas de esta herramienta y que significan.
+        <h1 className="text-2xl font-bold text-wc-text">Metodología</h1>
+        <p className="text-sm text-wc-muted">Qué significan las métricas que ves en cada pick y ticket.</p>
+      </div>
+
+      <DisclaimerBar />
+
+      <dl className="space-y-3">
+        {ITEMS.map((it) => (
+          <div key={it.term} className="wc-card p-4">
+            <dt className="text-sm font-semibold text-wc-gold">{it.term}</dt>
+            <dd className="mt-1 text-sm text-wc-muted">{it.def}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="wc-card p-4">
+        <h2 className="text-sm font-semibold text-wc-gold">Fuentes de datos</h2>
+        <p className="mt-1 text-sm text-wc-muted">
+          Cada dato lleva su <strong>fuente</strong> y <strong>confiabilidad</strong>. Cuando hay datos reales
+          (calendario y resultados del Mundial), se usan y se marcan; cuando son de ejemplo, se muestran como{" "}
+          <strong>Demo data</strong>; si capturas un momio a mano, queda como <strong>Manual input</strong>. No se
+          afirma que un dato viene de 365Scores si no fue verificado ahí.
         </p>
       </div>
 
-      <section className="card border-amber-500/30 bg-amber-500/5 p-5">
-        <h2 className="font-semibold text-amber-300">Aviso importante</h2>
-        <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-slate-300">
-          <li>Esto es una herramienta de analisis. No garantiza resultados.</li>
-          <li>No es consejo financiero ni de inversion.</li>
-          <li>No es una casa de apuestas y no incluye enlaces a apuestas.</li>
-          <li>Es un prototipo interno de investigacion, no un producto comercial.</li>
-          <li>Los datos pueden venir de mock data, snapshots manuales o recopilacion experimental.</li>
-        </ul>
-      </section>
-
-      <section>
-        <SectionTitle title="Conceptos" />
-        <div className="grid gap-3 md:grid-cols-2">
-          {CONCEPTS.map((c) => (
-            <div key={c.term} className="card p-4">
-              <div className="font-semibold text-brand-400">{c.term}</div>
-              <p className="mt-1 text-sm text-slate-400">{c.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="card p-5">
-        <h2 className="font-semibold text-slate-100">Sobre las fuentes de datos</h2>
-        <p className="mt-2 text-sm text-slate-400">
-          Los <strong className="text-slate-200">grupos, el calendario y los resultados ya jugados</strong> del
-          Mundial 2026 son <strong className="text-slate-200">reales</strong>, tomados de fuentes publicas
-          (ESPN / Wikipedia) y capturados con fecha y hora (badge &quot;Snapshot manual&quot;). Las
-          <strong className="text-slate-200"> plantillas de jugadores, las stats y todas las predicciones</strong> son
-          generadas por el modelo (badge &quot;Mock&quot;) y sirven para llenar el analisis.
+      <div className="wc-card p-4">
+        <h2 className="text-sm font-semibold text-wc-gold">Fuentes de momios</h2>
+        <p className="mt-1 text-sm text-wc-muted">
+          Los momios pueden provenir de captura manual, importación CSV/JSON o una API autorizada de odds. La
+          aplicación <strong>no realiza scraping</strong> ni automatiza acceso a casas de apuestas. Cada pick
+          muestra su fuente y confiabilidad. Solo se generan picks de{" "}
+          <strong>partidos próximos por jugar</strong>; los finalizados alimentan el modelo como histórico.
         </p>
-        <p className="mt-2 text-sm text-slate-400">
-          Los datos NO son en vivo segundo a segundo: son un <strong className="text-slate-200">snapshot</strong> con
-          su marca de tiempo. La actualizacion (incluido el seguimiento de partidos en curso) se hace de forma
-          manual reejecutando la ingesta
-          <code className="mx-1 rounded bg-base-900 px-1.5 py-0.5 text-xs text-slate-300">npm run ingest:365</code>,
-          que respeta rate limit y cache, nunca corre durante el build ni en cada request, y si falla la app sigue
-          funcionando con los datos guardados.
+      </div>
+
+      <div className="wc-card p-4">
+        <h2 className="text-sm font-semibold text-wc-gold">Rol del AI Parlay Generator</h2>
+        <p className="mt-1 text-sm text-wc-muted">
+          El AI Parlay Generator no inventa picks ni calcula las probabilidades base. Primero se generan
+          combinaciones con modelos estadísticos locales y después la IA ayuda a explicar, clasificar y resumir
+          los tickets según EV, edge, confianza, riesgo y correlación. Si la IA no está disponible, se usa un
+          ranking local.
         </p>
-      </section>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,2498 @@
+[
+  {
+    "teamId": "mex",
+    "teamName": "Mexico",
+    "group": "A",
+    "matchesPlayedWC": 2,
+    "weights": {
+      "currentWorldCup": 0.65,
+      "recentNationalTeam": 0.2,
+      "eloRanking": 0.1,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 47.19101123595506,
+        "defense": 100,
+        "weight": 0.65,
+        "hasRealData": true,
+        "note": "2 partido(s) jugado(s): 3 GF / 0 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 87,
+        "defense": 87,
+        "weight": 0.2,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 87,
+        "defense": 87,
+        "weight": 0.1,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #14"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 59.8,
+    "blendedDefense": 95.9,
+    "expectedGoalsFor": 1.9,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "can",
+    "teamName": "Canada",
+    "group": "B",
+    "matchesPlayedWC": 2,
+    "weights": {
+      "currentWorldCup": 0.65,
+      "recentNationalTeam": 0.2,
+      "eloRanking": 0.1,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 100,
+        "defense": 100,
+        "weight": 0.65,
+        "hasRealData": true,
+        "note": "2 partido(s) jugado(s): 7 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 74,
+        "defense": 74,
+        "weight": 0.2,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 74,
+        "defense": 74,
+        "weight": 0.1,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #27"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 91.8,
+    "blendedDefense": 91.8,
+    "expectedGoalsFor": 2.92,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "sui",
+    "teamName": "Suiza",
+    "group": "B",
+    "matchesPlayedWC": 2,
+    "weights": {
+      "currentWorldCup": 0.65,
+      "recentNationalTeam": 0.2,
+      "eloRanking": 0.1,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 78.65168539325843,
+        "defense": 79.46428571428571,
+        "weight": 0.65,
+        "hasRealData": true,
+        "note": "2 partido(s) jugado(s): 5 GF / 2 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 82,
+        "defense": 82,
+        "weight": 0.2,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 82,
+        "defense": 82,
+        "weight": 0.1,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #19"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 79.7,
+    "blendedDefense": 80.3,
+    "expectedGoalsFor": 2.53,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "kor",
+    "teamName": "Corea del Sur",
+    "group": "A",
+    "matchesPlayedWC": 2,
+    "weights": {
+      "currentWorldCup": 0.65,
+      "recentNationalTeam": 0.2,
+      "eloRanking": 0.1,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 79.46428571428571,
+        "weight": 0.65,
+        "hasRealData": true,
+        "note": "2 partido(s) jugado(s): 2 GF / 2 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 79,
+        "defense": 79,
+        "weight": 0.2,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 79,
+        "defense": 79,
+        "weight": 0.1,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #22"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 46.5,
+    "blendedDefense": 79.3,
+    "expectedGoalsFor": 1.48,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "cze",
+    "teamName": "Chequia",
+    "group": "A",
+    "matchesPlayedWC": 2,
+    "weights": {
+      "currentWorldCup": 0.65,
+      "recentNationalTeam": 0.2,
+      "eloRanking": 0.1,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 52.976190476190474,
+        "weight": 0.65,
+        "hasRealData": true,
+        "note": "2 partido(s) jugado(s): 2 GF / 3 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 59,
+        "defense": 59,
+        "weight": 0.2,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 59,
+        "defense": 59,
+        "weight": 0.1,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #42"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 40.2,
+    "blendedDefense": 54.9,
+    "expectedGoalsFor": 1.28,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "rsa",
+    "teamName": "Sudafrica",
+    "group": "A",
+    "matchesPlayedWC": 2,
+    "weights": {
+      "currentWorldCup": 0.65,
+      "recentNationalTeam": 0.2,
+      "eloRanking": 0.1,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 15.730337078651685,
+        "defense": 52.976190476190474,
+        "weight": 0.65,
+        "hasRealData": true,
+        "note": "2 partido(s) jugado(s): 1 GF / 3 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 43,
+        "defense": 43,
+        "weight": 0.2,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 43,
+        "defense": 43,
+        "weight": 0.1,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #58"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 24.3,
+    "blendedDefense": 49.8,
+    "expectedGoalsFor": 0.77,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "bih",
+    "teamName": "Bosnia y Herzegovina",
+    "group": "B",
+    "matchesPlayedWC": 2,
+    "weights": {
+      "currentWorldCup": 0.65,
+      "recentNationalTeam": 0.2,
+      "eloRanking": 0.1,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 31.785714285714285,
+        "weight": 0.65,
+        "hasRealData": true,
+        "note": "2 partido(s) jugado(s): 2 GF / 5 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 26,
+        "defense": 26,
+        "weight": 0.2,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 26,
+        "defense": 26,
+        "weight": 0.1,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #75"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 29.7,
+    "blendedDefense": 30,
+    "expectedGoalsFor": 0.95,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "qat",
+    "teamName": "Catar",
+    "group": "B",
+    "matchesPlayedWC": 2,
+    "weights": {
+      "currentWorldCup": 0.65,
+      "recentNationalTeam": 0.2,
+      "eloRanking": 0.1,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 15.730337078651685,
+        "defense": 22.704081632653057,
+        "weight": 0.65,
+        "hasRealData": true,
+        "note": "2 partido(s) jugado(s): 1 GF / 7 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 65,
+        "defense": 65,
+        "weight": 0.2,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 65,
+        "defense": 65,
+        "weight": 0.1,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #36"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 31.3,
+    "blendedDefense": 36.1,
+    "expectedGoalsFor": 0.99,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "ger",
+    "teamName": "Alemania",
+    "group": "E",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 100,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 7 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 92,
+        "defense": 92,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 92,
+        "defense": 92,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #9"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 96.2,
+    "blendedDefense": 85.4,
+    "expectedGoalsFor": 3.06,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "swe",
+    "teamName": "Suecia",
+    "group": "F",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 100,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 5 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 68,
+        "defense": 68,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 68,
+        "defense": 68,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #33"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 84.8,
+    "blendedDefense": 74,
+    "expectedGoalsFor": 2.7,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "arg",
+    "teamName": "Argentina",
+    "group": "J",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 94.38202247191012,
+        "defense": 100,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 3 GF / 0 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 100,
+        "defense": 100,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 100,
+        "defense": 100,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #1"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 97,
+    "blendedDefense": 100,
+    "expectedGoalsFor": 3.08,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "usa",
+    "teamName": "Estados Unidos",
+    "group": "D",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 100,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 4 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 85,
+        "defense": 85,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 85,
+        "defense": 85,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #16"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 92.9,
+    "blendedDefense": 82.1,
+    "expectedGoalsFor": 2.95,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "nor",
+    "teamName": "Noruega",
+    "group": "I",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 100,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 4 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 73,
+        "defense": 73,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 73,
+        "defense": 73,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #28"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 87.2,
+    "blendedDefense": 76.4,
+    "expectedGoalsFor": 2.77,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "aus",
+    "teamName": "Australia",
+    "group": "D",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 62.92134831460674,
+        "defense": 100,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 2 GF / 0 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 76,
+        "defense": 76,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 76,
+        "defense": 76,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #25"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 69.1,
+    "blendedDefense": 88.6,
+    "expectedGoalsFor": 2.2,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "aut",
+    "teamName": "Austria",
+    "group": "J",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 94.38202247191012,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 3 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 77,
+        "defense": 77,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 77,
+        "defense": 77,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #24"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 86.1,
+    "blendedDefense": 78.3,
+    "expectedGoalsFor": 2.74,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "col",
+    "teamName": "Colombia",
+    "group": "K",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 94.38202247191012,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 3 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 88,
+        "defense": 88,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 88,
+        "defense": 88,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #13"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 91.4,
+    "blendedDefense": 83.5,
+    "expectedGoalsFor": 2.9,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "fra",
+    "teamName": "Francia",
+    "group": "I",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 94.38202247191012,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 3 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 98,
+        "defense": 98,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 98,
+        "defense": 98,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #3"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 96.1,
+    "blendedDefense": 88.2,
+    "expectedGoalsFor": 3.05,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "eng",
+    "teamName": "Inglaterra",
+    "group": "L",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 100,
+        "defense": 39.732142857142854,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 4 GF / 2 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 97,
+        "defense": 97,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 97,
+        "defense": 97,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #4"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 98.6,
+    "blendedDefense": 66.9,
+    "expectedGoalsFor": 3.13,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "civ",
+    "teamName": "Costa de Marfil",
+    "group": "E",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 100,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 0 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 61,
+        "defense": 61,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 61,
+        "defense": 61,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #40"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 45.5,
+    "blendedDefense": 81.5,
+    "expectedGoalsFor": 1.44,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "sco",
+    "teamName": "Escocia",
+    "group": "C",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 100,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 0 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 62,
+        "defense": 62,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 62,
+        "defense": 62,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #39"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 45.9,
+    "blendedDefense": 82,
+    "expectedGoalsFor": 1.46,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "gha",
+    "teamName": "Ghana",
+    "group": "L",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 100,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 0 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 28,
+        "defense": 28,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 28,
+        "defense": 28,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #73"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 29.8,
+    "blendedDefense": 65.9,
+    "expectedGoalsFor": 0.95,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "ksa",
+    "teamName": "Arabia Saudita",
+    "group": "H",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 41,
+        "defense": 41,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 41,
+        "defense": 41,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #60"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 36,
+    "blendedDefense": 61.2,
+    "expectedGoalsFor": 1.14,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "bel",
+    "teamName": "Belgica",
+    "group": "G",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 93,
+        "defense": 93,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 93,
+        "defense": 93,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #8"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 60.6,
+    "blendedDefense": 85.9,
+    "expectedGoalsFor": 1.93,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "bra",
+    "teamName": "Brasil",
+    "group": "C",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 96,
+        "defense": 96,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 96,
+        "defense": 96,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #5"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 62,
+    "blendedDefense": 87.3,
+    "expectedGoalsFor": 1.97,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "cpv",
+    "teamName": "Cabo Verde",
+    "group": "H",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 0,
+        "defense": 100,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 0 GF / 0 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 31,
+        "defense": 31,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 31,
+        "defense": 31,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #70"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 14.7,
+    "blendedDefense": 67.3,
+    "expectedGoalsFor": 0.47,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "egy",
+    "teamName": "Egipto",
+    "group": "G",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 71,
+        "defense": 71,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 71,
+        "defense": 71,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #30"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 50.2,
+    "blendedDefense": 75.5,
+    "expectedGoalsFor": 1.6,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "esp",
+    "teamName": "Espana",
+    "group": "H",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 0,
+        "defense": 100,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 0 GF / 0 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 99,
+        "defense": 99,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 99,
+        "defense": 99,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #2"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 46.9,
+    "blendedDefense": 99.5,
+    "expectedGoalsFor": 1.49,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "irn",
+    "teamName": "Iran",
+    "group": "G",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 62.92134831460674,
+        "defense": 39.732142857142854,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 2 GF / 2 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 81,
+        "defense": 81,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 81,
+        "defense": 81,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #20"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 71.5,
+    "blendedDefense": 59.3,
+    "expectedGoalsFor": 2.27,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "jpn",
+    "teamName": "Japon",
+    "group": "F",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 62.92134831460674,
+        "defense": 39.732142857142854,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 2 GF / 2 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 83,
+        "defense": 83,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 83,
+        "defense": 83,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #18"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 72.4,
+    "blendedDefense": 60.2,
+    "expectedGoalsFor": 2.3,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "mar",
+    "teamName": "Marruecos",
+    "group": "C",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 89,
+        "defense": 89,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 89,
+        "defense": 89,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #12"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 58.7,
+    "blendedDefense": 84,
+    "expectedGoalsFor": 1.87,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "nzl",
+    "teamName": "Nueva Zelanda",
+    "group": "G",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 62.92134831460674,
+        "defense": 39.732142857142854,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 2 GF / 2 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 25,
+        "defense": 25,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 25,
+        "defense": 25,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #86"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 45,
+    "blendedDefense": 32.8,
+    "expectedGoalsFor": 1.43,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "ned",
+    "teamName": "Paises Bajos",
+    "group": "F",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 62.92134831460674,
+        "defense": 39.732142857142854,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 2 GF / 2 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 94,
+        "defense": 94,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 94,
+        "defense": 94,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #7"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 77.6,
+    "blendedDefense": 65.4,
+    "expectedGoalsFor": 2.47,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "por",
+    "teamName": "Portugal",
+    "group": "K",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 95,
+        "defense": 95,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 95,
+        "defense": 95,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #6"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 61.6,
+    "blendedDefense": 86.8,
+    "expectedGoalsFor": 1.96,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "cod",
+    "teamName": "RD Congo",
+    "group": "K",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 45,
+        "defense": 45,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 45,
+        "defense": 45,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #56"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 37.9,
+    "blendedDefense": 63.1,
+    "expectedGoalsFor": 1.2,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "uru",
+    "teamName": "Uruguay",
+    "group": "H",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 86,
+        "defense": 86,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 86,
+        "defense": 86,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #15"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 57.3,
+    "blendedDefense": 82.6,
+    "expectedGoalsFor": 1.82,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "ecu",
+    "teamName": "Ecuador",
+    "group": "E",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 0,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 0 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 78,
+        "defense": 78,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 78,
+        "defense": 78,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #23"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 36.9,
+    "blendedDefense": 78.8,
+    "expectedGoalsFor": 1.17,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "hai",
+    "teamName": "Haiti",
+    "group": "C",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 0,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 0 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 25,
+        "defense": 25,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 25,
+        "defense": 25,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #83"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 11.8,
+    "blendedDefense": 53.7,
+    "expectedGoalsFor": 0.38,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "pan",
+    "teamName": "Panama",
+    "group": "L",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 0,
+        "defense": 79.46428571428571,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 0 GF / 1 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 70,
+        "defense": 70,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 70,
+        "defense": 70,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #31"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 33.2,
+    "blendedDefense": 75,
+    "expectedGoalsFor": 1.05,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "cro",
+    "teamName": "Croacia",
+    "group": "L",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 62.92134831460674,
+        "defense": 19.866071428571427,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 2 GF / 4 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 91,
+        "defense": 91,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 91,
+        "defense": 91,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #10"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 76.2,
+    "blendedDefense": 53.6,
+    "expectedGoalsFor": 2.42,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "jor",
+    "teamName": "Jordania",
+    "group": "J",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 26.488095238095237,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 3 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 37,
+        "defense": 37,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 37,
+        "defense": 37,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #64"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 34.1,
+    "blendedDefense": 31.5,
+    "expectedGoalsFor": 1.08,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "sen",
+    "teamName": "Senegal",
+    "group": "I",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 26.488095238095237,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 3 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 84,
+        "defense": 84,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 84,
+        "defense": 84,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #17"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 56.3,
+    "blendedDefense": 53.7,
+    "expectedGoalsFor": 1.79,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "tur",
+    "teamName": "Turquia",
+    "group": "D",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 0,
+        "defense": 39.732142857142854,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 0 GF / 2 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 75,
+        "defense": 75,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 75,
+        "defense": 75,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #26"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 35.5,
+    "blendedDefense": 56.4,
+    "expectedGoalsFor": 1.13,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "uzb",
+    "teamName": "Uzbekistan",
+    "group": "K",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 26.488095238095237,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 3 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 47,
+        "defense": 47,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 47,
+        "defense": 47,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #54"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 38.8,
+    "blendedDefense": 36.2,
+    "expectedGoalsFor": 1.23,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "alg",
+    "teamName": "Argelia",
+    "group": "J",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 0,
+        "defense": 26.488095238095237,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 0 GF / 3 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 64,
+        "defense": 64,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 64,
+        "defense": 64,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #37"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 30.3,
+    "blendedDefense": 44.3,
+    "expectedGoalsFor": 0.96,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "irq",
+    "teamName": "Irak",
+    "group": "I",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 19.866071428571427,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 4 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 44,
+        "defense": 44,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 44,
+        "defense": 44,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #57"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 37.4,
+    "blendedDefense": 31.3,
+    "expectedGoalsFor": 1.19,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "par",
+    "teamName": "Paraguay",
+    "group": "D",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 19.866071428571427,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 4 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 66,
+        "defense": 66,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 66,
+        "defense": 66,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #35"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 47.8,
+    "blendedDefense": 41.7,
+    "expectedGoalsFor": 1.52,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "tun",
+    "teamName": "Tunez",
+    "group": "F",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 15.892857142857142,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 5 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 60,
+        "defense": 60,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 60,
+        "defense": 60,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #41"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 45,
+    "blendedDefense": 36.8,
+    "expectedGoalsFor": 1.43,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  },
+  {
+    "teamId": "cuw",
+    "teamName": "Curazao",
+    "group": "E",
+    "matchesPlayedWC": 1,
+    "weights": {
+      "currentWorldCup": 0.5,
+      "recentNationalTeam": 0.3,
+      "eloRanking": 0.15,
+      "clubPlayerForm": 0.05
+    },
+    "layers": [
+      {
+        "label": "Forma en este Mundial",
+        "attack": 31.46067415730337,
+        "defense": 11.352040816326529,
+        "weight": 0.5,
+        "hasRealData": true,
+        "note": "1 partido(s) jugado(s): 1 GF / 7 GC"
+      },
+      {
+        "label": "Forma reciente (pre-Mundial)",
+        "attack": 25,
+        "defense": 25,
+        "weight": 0.3,
+        "hasRealData": false,
+        "note": "Sin feed real de amistosos/eliminatorias; se usa baseline de ranking"
+      },
+      {
+        "label": "Elo / ranking FIFA",
+        "attack": 25,
+        "defense": 25,
+        "weight": 0.15,
+        "hasRealData": true,
+        "note": "Ranking FIFA aprox. #82"
+      },
+      {
+        "label": "Forma de club (jugadores)",
+        "attack": null,
+        "defense": null,
+        "weight": 0.05,
+        "hasRealData": false,
+        "note": "Aplica a props individuales; a nivel equipo no se usa (null)"
+      }
+    ],
+    "blendedAttack": 28.4,
+    "blendedDefense": 17.8,
+    "expectedGoalsFor": 0.9,
+    "source": "Snapshot",
+    "sourceUrl": "in-repo:src/data/worldcup-fixtures.ts (snapshot público; J1 + J2 grupos A/B reales; Wikipedia/ESPN/World Soccer Talk, captura 2026-06-19)",
+    "collectedAt": "2026-06-19T18:00:00.000Z"
+  }
+]

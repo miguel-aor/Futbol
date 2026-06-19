@@ -1,0 +1,92 @@
+[
+  {
+    "script": "sync-openfootball-worldcup",
+    "source": "openfootball/worldcup",
+    "sourceUrl": "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json",
+    "status": "ok",
+    "records": null,
+    "collectedAt": "2026-06-19T07:15:40.345Z",
+    "note": "Remoto disponible (no se sobrescribe el snapshot verificado)."
+  },
+  {
+    "script": "sync-openfootball-worldcup",
+    "source": "in-repo snapshot (worldcup-fixtures)",
+    "sourceUrl": "src/data/worldcup-fixtures.ts",
+    "status": "fallback",
+    "records": 72,
+    "collectedAt": "2026-06-19T07:15:40.345Z",
+    "note": "Grupos A–L reales. 24 partidos de jornada 1."
+  },
+  {
+    "script": "collect-playerstats-football",
+    "source": "PlayerStats.Football",
+    "sourceUrl": null,
+    "status": "unavailable",
+    "records": 0,
+    "collectedAt": "2026-06-19T07:15:41.067Z",
+    "note": "Stats objetivo: totalShots, shotsOnTarget, tackles, passes, keyPasses, foulsCommitted, foulsDrawn, interceptions, yellowCards, redCards, assists, xG, saves, clearances. Sin datos verificados → arreglos vacíos (null por stat al conectar, nunca 0)."
+  },
+  {
+    "script": "collect-365scores-worldcup",
+    "source": "365Scores World Cup 2026",
+    "sourceUrl": null,
+    "status": "unavailable",
+    "records": 0,
+    "collectedAt": "2026-06-19T07:15:41.525Z",
+    "note": "Sin API pública verificada. Validación pendiente de: goals, xG+assists, ratings, tacklesWonPerGame, interceptionsPerGame, cards, saves, cleanSheets. No se marca ningún dato como 365Scores."
+  },
+  {
+    "script": "build-team-elo-history",
+    "source": "martj42/international_results",
+    "sourceUrl": "https://raw.githubusercontent.com/martj42/international_results/master/results.csv",
+    "status": "ok",
+    "records": 48,
+    "collectedAt": "2026-06-19T07:15:42.006Z",
+    "note": "CSV histórico disponible (parsing fino pendiente)."
+  },
+  {
+    "script": "build-current-worldcup-form",
+    "source": "Snapshot (worldcup-fixtures)",
+    "sourceUrl": "src/data/worldcup-fixtures.ts",
+    "status": "ok",
+    "records": 48,
+    "collectedAt": "2026-06-19T07:15:42.920Z",
+    "note": "48 equipos ya jugaron; stats avanzados (xG, tiros, etc.) = null (no publicados por partido)."
+  },
+  {
+    "script": "build-prediction-features",
+    "source": "derived (tournament-form + ranking)",
+    "sourceUrl": "src/lib/worldcup-2026/prediction-features.ts",
+    "status": "ok",
+    "records": 48,
+    "collectedAt": "2026-06-19T07:15:43.403Z",
+    "note": "Pesos: <2 partidos → WC 0.50; ≥2 partidos → WC 0.65. 8 equipos con peso alto."
+  },
+  {
+    "script": "build-player-prop-features",
+    "source": "derived (player-aggregate-stats)",
+    "sourceUrl": "data/worldcup-2026/player-aggregate-stats.json",
+    "status": "skipped",
+    "records": 0,
+    "collectedAt": "2026-06-19T07:15:43.872Z",
+    "note": "Sin agregados de jugador; nada que derivar."
+  },
+  {
+    "script": "validate-worldcup-data",
+    "source": "validation",
+    "sourceUrl": null,
+    "status": "ok",
+    "records": 72,
+    "collectedAt": "2026-06-19T07:15:44.885Z",
+    "note": "partidos=72 (jugados=28) · equipos con partidos=48 · features=48 · problemas=0"
+  },
+  {
+    "script": "build-match-events",
+    "source": "Wikipedia / ESPN (verificado)",
+    "sourceUrl": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_A",
+    "status": "ok",
+    "records": 4,
+    "collectedAt": "2026-06-19T07:23:50.079Z",
+    "note": "14 goles y 14 tarjetas reales (J2 grupos A/B). Tiros/asistencias por jugador = null (no publicados)."
+  }
+]

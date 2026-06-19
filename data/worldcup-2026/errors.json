@@ -1,0 +1,23 @@
+[
+  {
+    "script": "collect-playerstats-football",
+    "source": "PlayerStats.Football",
+    "sourceUrl": null,
+    "message": "Fuente no configurada (define PLAYERSTATS_FOOTBALL_BASE).",
+    "collectedAt": "2026-06-19T07:15:41.067Z"
+  },
+  {
+    "script": "collect-365scores-worldcup",
+    "source": "365Scores World Cup 2026",
+    "sourceUrl": null,
+    "message": "Fuente de validación no disponible/no verificada en este entorno.",
+    "collectedAt": "2026-06-19T07:15:41.525Z"
+  },
+  {
+    "script": "build-player-prop-features",
+    "source": "player-aggregate-stats",
+    "sourceUrl": "data/worldcup-2026/player-aggregate-stats.json",
+    "message": "Sin datos de jugador (capa PlayerStats.Football vacía).",
+    "collectedAt": "2026-06-19T07:15:43.872Z"
+  }
+]

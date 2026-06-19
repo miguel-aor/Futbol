@@ -1,8 +1,9 @@
 // =====================================================================
 // ESTADISTICAS REALES del Mundial 2026 — solo lo ya ocurrido.
 //
-// Lideres del torneo tras la JORNADA 1 (primera fecha de grupos, 11-17
-// jun 2026; 24 partidos jugados). Datos REALES verificados en la web:
+// Lideres del torneo: JORNADA 1 completa + JORNADA 2 de los grupos A y B
+// (28 partidos jugados, captura 19 jun 2026). Datos REALES verificados en la
+// web (J2 A/B: Wikipedia 2026 FIFA World Cup Group A/B + ESPN):
 //   - Goleadores / asistencias: crónicas y tablas oficiales (FIFA, NBC,
 //     Sky, medios) + box scores de ESPN/Opta.
 //   - Tiros / tiros a puerta / faltas: tabla de stats de FOX Sports.
@@ -31,9 +32,10 @@ export interface RealLeaderboard {
   entries: StatEntry[];
 }
 
-export const TOURNAMENT_STATS_AS_OF = "2026-06-18";
+export const TOURNAMENT_STATS_AS_OF = "2026-06-19";
 
 export const TOURNAMENT_STATS_SOURCES = [
+  "Wikipedia (Group A/B)",
   "FIFA.com",
   "FOX Sports (stats)",
   "ESPN / Opta (The Analyst)",
@@ -47,9 +49,10 @@ export const REAL_LEADERBOARDS: RealLeaderboard[] = [
     key: "scorers",
     label: "Máximos goleadores",
     unit: "goles",
-    note: "Tras la jornada 1. Bota de Oro provisional.",
+    note: "J1 + J2 grupos A/B. Bota de Oro provisional: Messi y Jonathan David (hat-trick vs Catar) con 3.",
     entries: [
       { name: "Lionel Messi", teamId: "arg", country: "Argentina", value: 3 },
+      { name: "Jonathan David", teamId: "can", country: "Canadá", value: 3 },
       { name: "Kylian Mbappé", teamId: "fra", country: "Francia", value: 2 },
       { name: "Erling Haaland", teamId: "nor", country: "Noruega", value: 2 },
       { name: "Harry Kane", teamId: "eng", country: "Inglaterra", value: 2 },
@@ -57,6 +60,8 @@ export const REAL_LEADERBOARDS: RealLeaderboard[] = [
       { name: "Folarin Balogun", teamId: "usa", country: "Estados Unidos", value: 2 },
       { name: "Yasin Ayari", teamId: "swe", country: "Suecia", value: 2 },
       { name: "Elijah Just", teamId: "nzl", country: "Nueva Zelanda", value: 2 },
+      { name: "Johan Manzambi", teamId: "sui", country: "Suiza", value: 2 },
+      { name: "Cyle Larin", teamId: "can", country: "Canadá", value: 2 },
       { name: "Vinícius Júnior", teamId: "bra", country: "Brasil", value: 1 },
       { name: "Jude Bellingham", teamId: "eng", country: "Inglaterra", value: 1 },
       { name: "Marcus Rashford", teamId: "eng", country: "Inglaterra", value: 1 },
@@ -64,7 +69,13 @@ export const REAL_LEADERBOARDS: RealLeaderboard[] = [
       { name: "Viktor Gyökeres", teamId: "swe", country: "Suecia", value: 1 },
       { name: "Raúl Jiménez", teamId: "mex", country: "México", value: 1 },
       { name: "Julián Quiñones", teamId: "mex", country: "México", value: 1 },
-      { name: "Cyle Larin", teamId: "can", country: "Canadá", value: 1 },
+      { name: "Luis Romo", teamId: "mex", country: "México", value: 1 },
+      { name: "Rubén Vargas", teamId: "sui", country: "Suiza", value: 1 },
+      { name: "Granit Xhaka", teamId: "sui", country: "Suiza", value: 1 },
+      { name: "Michal Sadílek", teamId: "cze", country: "Chequia", value: 1 },
+      { name: "Teboho Mokoena", teamId: "rsa", country: "Sudáfrica", value: 1 },
+      { name: "Ermin Mahmić", teamId: "bih", country: "Bosnia", value: 1 },
+      { name: "Nathan Saliba", teamId: "can", country: "Canadá", value: 1 },
       { name: "Virgil van Dijk", teamId: "ned", country: "Países Bajos", value: 1 },
       { name: "Ismael Saibari", teamId: "mar", country: "Marruecos", value: 1 },
       { name: "Luis Díaz", teamId: "col", country: "Colombia", value: 1 },
@@ -79,7 +90,7 @@ export const REAL_LEADERBOARDS: RealLeaderboard[] = [
     key: "assists",
     label: "Máximas asistencias",
     unit: "asistencias",
-    note: "Tras la jornada 1. Asistencias menos corroboradas que goles.",
+    note: "J1 + J2 grupos A/B (asistencias de la J2 por Opta Analyst).",
     entries: [
       { name: "Chris Wood", teamId: "nzl", country: "Nueva Zelanda", value: 2 },
       { name: "Alexander Isak", teamId: "swe", country: "Suecia", value: 2 },
@@ -90,6 +101,12 @@ export const REAL_LEADERBOARDS: RealLeaderboard[] = [
       { name: "Michael Olise", teamId: "fra", country: "Francia", value: 1 },
       { name: "Luis Díaz", teamId: "col", country: "Colombia", value: 1 },
       { name: "Hannibal Mejbri", teamId: "tun", country: "Túnez", value: 1 },
+      { name: "Jonathan David", teamId: "can", country: "Canadá", value: 1 },
+      { name: "Tajon Buchanan", teamId: "can", country: "Canadá", value: 1 },
+      { name: "Cyle Larin", teamId: "can", country: "Canadá", value: 1 },
+      { name: "Nathan Saliba", teamId: "can", country: "Canadá", value: 1 },
+      { name: "Rubén Vargas", teamId: "sui", country: "Suiza", value: 1 },
+      { name: "Alexandr Sojka", teamId: "cze", country: "Chequia", value: 1 },
     ],
   },
   {

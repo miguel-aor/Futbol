@@ -17,8 +17,8 @@ export default function StatsPage() {
         <div>
           <h1 className="text-2xl font-bold text-wc-text">Estadísticas</h1>
           <p className="text-sm text-wc-muted">
-            Líderes reales del torneo tras la jornada 1: goleadores, asistencias, tiros, tiros a puerta, faltas y
-            entradas.
+            Líderes reales del torneo: jornada 1 completa + jornada 2 de los grupos A y B. Goleadores,
+            asistencias, tiros, tiros a puerta, faltas y entradas.
           </p>
         </div>
         <span className="chip border border-white/10 bg-white/5 text-wc-muted">
@@ -27,9 +27,12 @@ export default function StatsPage() {
       </div>
 
       <p className="wc-card p-3 text-xs text-wc-muted">
-        Números <span className="text-wc-gold">reales</span> de lo ya jugado (24 partidos). Goles y asistencias por
-        crónicas/Opta; tiros, tiros a puerta y faltas de la tabla de FOX Sports; entradas con cobertura limitada
-        (pocas fuentes las publican por jugador). Valores bajos = un solo partido por selección. Fuentes:{" "}
+        Números <span className="text-wc-gold">reales</span> de lo ya jugado (28 partidos: J1 completa + J2 de
+        los grupos A y B). <span className="text-wc-gold">Goleadores</span> y{" "}
+        <span className="text-wc-gold">asistencias</span> ya incluyen la J2 de A/B (Opta Analyst/Wikipedia; ej.
+        Jonathan David, hat-trick + asistencia vs Catar). Tiros, tiros a puerta, faltas y entradas{" "}
+        <span className="text-wc-gold">por jugador</span> siguen solo tras la J1 (esas tablas individuales aún
+        no se publican para la J2; sí hay totales de equipo por partido en Analytics). Fuentes:{" "}
         {TOURNAMENT_STATS_SOURCES.join(" · ")}.
       </p>
 
