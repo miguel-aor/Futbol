@@ -173,6 +173,7 @@ export function selectionToSlipPick(s: BetSelection): BetSlipPick {
     riskLevel: s.riskLevel,
     correlationTags: s.correlationTags,
     isDemo: s.isDemo,
+    source: s.source,
   };
 }
 

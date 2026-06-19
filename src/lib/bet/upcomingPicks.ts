@@ -13,6 +13,7 @@
 
 import { computeWorldCupMatches } from "@/lib/worldcup-2026/tournament-form";
 import { predictMatchup } from "@/lib/worldcup-2026/prediction-features";
+import { buildPlaydoitSelections, hasPlaydoitOdds } from "@/data/playdoitOdds";
 import { getUpcomingEligibleMatches } from "./eligibility";
 import { evaluateMarket } from "./buildPicks";
 import type { BetMarket, BetSelection, MarketType, MatchModelParams } from "./types";
@@ -82,6 +83,13 @@ export function buildUpcomingValuePicks(limit = 8): BetSelection[] {
       ...DEFAULT_LAMBDAS,
     };
     const name = `${m.homeName} vs ${m.awayName}`;
+
+    // Si hay momios de referencia (capturas del usuario), usarlos en lugar de
+    // los momios demo sintéticos.
+    if (hasPlaydoitOdds(m.id)) {
+      out.push(...buildPlaydoitSelections(m.id, params, name));
+      continue;
+    }
 
     specsFor(params).forEach((spec, i) => {
       const base: BetMarket = {

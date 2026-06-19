@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import type {
   BetSource,
   PickRating,
@@ -76,6 +76,8 @@ export function RiskBadge({ risk }: { risk: RiskLevel }) {
 const SOURCE_DOT: Record<BetSource, string> = {
   Demo: "bg-amber-400",
   "Manual input": "bg-sky-400",
+  "Imported CSV": "bg-teal-400",
+  "Imported JSON": "bg-teal-400",
   "365Scores": "bg-fuchsia-400",
   Model: "bg-emerald-400",
   Fallback: "bg-blue-400",
@@ -136,6 +138,56 @@ export function DisclaimerBar({ compact = false }: { compact?: boolean }) {
       Las predicciones son <strong>estimaciones estadísticas</strong>, no garantizan resultados y no constituyen
       consejo financiero. Sin enlaces a casas de apuestas.
     </p>
+  );
+}
+
+/**
+ * Input de momio AMERICANO. Usa type="text" (no "number") para permitir el
+ * signo "+" (los inputs numéricos del navegador no dejan escribir "+200").
+ * Acepta "+200", "-150" o "200"; al perder foco normaliza el signo.
+ */
+export function AmericanOddsInput({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (n: number) => void;
+}) {
+  const fmt = (n: number) => (n > 0 ? `+${n}` : `${n}`);
+  const [text, setText] = useState(fmt(value));
+  const lastEmitted = useRef<number>(value);
+
+  // Refleja cambios EXTERNOS del valor (p. ej. autollenado) sin pisar lo que
+  // el usuario está escribiendo (solo si el valor difiere del último emitido).
+  useEffect(() => {
+    if (value !== lastEmitted.current) {
+      lastEmitted.current = value;
+      setText(fmt(value));
+    }
+  }, [value]);
+
+  const handle = (raw: string) => {
+    if (!/^[+-]?\d*$/.test(raw)) return; // solo signo opcional + dígitos
+    setText(raw);
+    if (/^[+-]?\d+$/.test(raw)) {
+      lastEmitted.current = Number(raw);
+      onChange(Number(raw));
+    }
+  };
+
+  return (
+    <input
+      type="text"
+      inputMode="numeric"
+      value={text}
+      onChange={(e) => handle(e.target.value)}
+      onBlur={() => {
+        if (!/^[+-]?\d+$/.test(text) || text === "+" || text === "-") setText(fmt(value));
+        else setText(fmt(Number(text)));
+      }}
+      placeholder="+150 / -120"
+      className="w-full rounded-lg border border-white/10 bg-wc-card px-3 py-2 text-sm tabular-nums text-wc-text placeholder:text-wc-muted/60 focus:border-wc-gold focus:outline-none focus:ring-1 focus:ring-wc-gold/40"
+    />
   );
 }
 

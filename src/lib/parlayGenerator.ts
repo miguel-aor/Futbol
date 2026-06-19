@@ -112,6 +112,8 @@ function buildCandidate(picks: BetSlipPick[]): ParlayCandidate {
   if (correlationRisk === "high") warnings.push("Correlación alta entre picks.");
   if (strategy === "player_props") warnings.push("Props de jugador: dependen de titularidad y minutos.");
   if (picks.some((p) => p.isDemo)) warnings.push("Incluye datos demo.");
+  if (new Set(picks.map((p) => p.source)).size > 1)
+    warnings.push("Combina fuentes con distinta confiabilidad.");
   if (picks.length >= 5) warnings.push("Parlay largo (5): alta volatilidad.");
   if (ev <= 0) warnings.push("EV estimado no positivo (anti-parlay).");
 

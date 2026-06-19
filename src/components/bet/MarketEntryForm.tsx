@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Field, NumberInput, Select, TextInput } from "@/components/analytics/primitives";
 import { evaluateMarket } from "@/lib/bet/buildPicks";
 import { createManualQuote, oddsQuoteToMarket, ODDS_MANUAL_NOTICE } from "@/lib/bet/oddsProvider";
+import { findPlaydoitOdds } from "@/data/playdoitOdds";
 import {
   getDefaultLambda,
   getDefaultLineForMarket,
@@ -21,6 +22,7 @@ import {
 import type { MarketCategory, MarketType, MatchModelParams } from "@/lib/bet/types";
 import { useBetSlip } from "./BetSlipProvider";
 import {
+  AmericanOddsInput,
   BetSourceBadge,
   EdgeBadge,
   EVBadge,
@@ -67,7 +69,7 @@ export function MarketEntryForm({ match }: { match: BuilderMatch }) {
     setLambda(getDefaultLambda(marketType, match, match.params.homeId));
     if (players.length) setPlayerId(players[0].id);
     const opts = getMarketSelectionOptions(marketType, match);
-    setSelection(opts[0] ?? "Over");
+    setSelection(opts[0] ?? "Más de");
   }, [marketType, match, players]);
 
   const needsLine = marketRequiresLine(marketType);
@@ -79,13 +81,12 @@ export function MarketEntryForm({ match }: { match: BuilderMatch }) {
   const selectionOptions = getMarketSelectionOptions(marketType, match, teamName);
   const isScorer = marketType === "anytime_goalscorer" || marketType === "first_goalscorer";
 
-  // Construye la pick final (selección legible + teamId/playerId/lambda).
-  const evaluated = useMemo(() => {
+  // Construye la selección final (texto legible + teamId/lambda).
+  const built = useMemo(() => {
     const label = getMarketTypeOptions(category).find((o) => o.value === marketType)?.label ?? marketType;
     let finalSelection = selection;
     let finalTeamId: string | undefined;
     let finalLambda: number | null = null;
-
     if (needsPlayer) {
       const pname = playerName || "Jugador";
       finalSelection = isScorer ? pname : `${pname} ${selection} ${line}`;
@@ -93,53 +94,49 @@ export function MarketEntryForm({ match }: { match: BuilderMatch }) {
     } else if (needsTeam) {
       finalTeamId = teamId;
       finalSelection =
-        marketType === "team_win_either_half"
-          ? `${teamName} gana alguna mitad`
-          : `${teamName} ${selection} ${line}`;
+        marketType === "team_win_either_half" ? `${teamName} gana alguna mitad` : `${teamName} ${selection} ${line}`;
       finalLambda = lambda;
     } else {
-      // Mercados de partido
       if (marketType === "match_result" || marketType === "asian_handicap") {
         if (selection === match.params.awayName) finalTeamId = match.params.awayId;
         else if (selection === match.params.homeName) finalTeamId = match.params.homeId;
       }
       finalSelection = needsLine ? `${selection} ${line}` : selection;
     }
+    return { label, finalSelection, finalTeamId, finalLambda };
+  }, [category, marketType, selection, line, lambda, teamId, teamName, playerName, needsLine, needsPlayer, needsTeam, isScorer, match]);
 
+  // Autollenar el momio de referencia (capturas PlayDoit) si existe la selección.
+  const [loadedOdds, setLoadedOdds] = useState(false);
+  useEffect(() => {
+    const found = findPlaydoitOdds(match.id, marketType, built.finalSelection, needsLine ? line : null);
+    setLoadedOdds(found != null);
+    if (found != null) setAmericanOdds(found);
+  }, [match.id, marketType, built.finalSelection, needsLine, line]);
+
+  const evaluated = useMemo(() => {
     const quote = createManualQuote(
       {
         matchId: match.id,
         marketType,
-        selection: finalSelection,
+        selection: built.finalSelection,
         line: needsLine ? line : null,
         americanOdds,
-        label,
-        modelLambda: needsLambda ? finalLambda : null,
+        label: built.label,
+        modelLambda: needsLambda ? built.finalLambda : null,
         playerId: needsPlayer && players.find((p) => p.id === playerId) ? playerId : undefined,
-        teamId: finalTeamId,
+        teamId: built.finalTeamId,
       },
       new Date().toISOString(),
     );
-    return evaluateMarket(oddsQuoteToMarket(quote, `manual-${match.id}`), match.params, match.name);
-  }, [
-    category,
-    marketType,
-    selection,
-    line,
-    americanOdds,
-    lambda,
-    teamId,
-    teamName,
-    playerId,
-    playerName,
-    players,
-    needsLine,
-    needsTeam,
-    needsPlayer,
-    needsLambda,
-    isScorer,
-    match,
-  ]);
+    // Id único por selección (no solo por partido) para poder agregar varias
+    // picks del mismo partido al ticket sin que se traten como duplicadas.
+    const slug = `${marketType}-${built.finalSelection}-${needsLine ? line : ""}`
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    return evaluateMarket(oddsQuoteToMarket(quote, `manual-${match.id}-${slug}`), match.params, match.name);
+  }, [built, americanOdds, match, needsLine, line, needsLambda, needsPlayer, players, playerId, marketType]);
 
   const canAdd = match.eligible !== false;
 
@@ -200,13 +197,20 @@ export function MarketEntryForm({ match }: { match: BuilderMatch }) {
               />
             </Field>
             <Field label="Momio americano">
-              <NumberInput value={americanOdds} onChange={setAmericanOdds} step={5} />
+              <AmericanOddsInput value={americanOdds} onChange={setAmericanOdds} />
             </Field>
           </div>
         ) : (
           <Field label="Momio americano">
-            <NumberInput value={americanOdds} onChange={setAmericanOdds} step={5} />
+            <AmericanOddsInput value={americanOdds} onChange={setAmericanOdds} />
           </Field>
+        )}
+        {loadedOdds ? (
+          <p className="text-[11px] text-wc-green">
+            Momio cargado de referencia (capturas PlayDoit). Puedes ajustarlo a mano.
+          </p>
+        ) : (
+          <p className="text-[11px] text-wc-muted/70">Sin momio de referencia para esta selección; captúralo a mano.</p>
         )}
 
         {needsLambda ? (

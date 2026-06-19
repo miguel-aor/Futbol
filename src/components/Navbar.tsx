@@ -17,6 +17,7 @@ const LINKS = [
 // Secundario: el análisis estadístico profundo (motor interno) queda aquí,
 // fuera del flujo principal de picks.
 const RESEARCH = [
+  { href: "/importar", label: "Importar momios" },
   { href: "/analytics", label: "Analytics (modelos)" },
   { href: "/worldcup", label: "Mundial 2026" },
   { href: "/stats", label: "Estadísticas" },

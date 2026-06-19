@@ -41,3 +41,6 @@ yarn-error.log*
 # editor
 .vscode/
 .idea/
+
+# Capturas de referencia (no parte de la app)
+/Play do it/

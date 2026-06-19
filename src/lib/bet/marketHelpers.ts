@@ -183,7 +183,7 @@ export function getMarketSelectionOptions(
     case "first_goalscorer":
       return []; // la "selección" es el jugador
     default:
-      return ["Over", "Under"]; // totales y props con línea
+      return ["Más de", "Menos de"]; // totales y props con línea
   }
 }
 

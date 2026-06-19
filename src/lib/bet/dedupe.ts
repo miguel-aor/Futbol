@@ -21,6 +21,7 @@ function norm(s: string): string {
 export function sourceRank(s: BetSource): number {
   if (s === "365Scores") return 0;
   if (s === "Fallback") return 0; // API autorizada genérica
+  if (s === "Imported CSV" || s === "Imported JSON") return 1;
   if (s === "Manual input") return 2;
   if (s === "Demo") return 3;
   return 4;

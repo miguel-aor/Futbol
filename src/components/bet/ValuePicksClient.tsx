@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Field, Select } from "@/components/analytics/primitives";
 import { buildValuePicks, selectionToSlipPick } from "@/lib/bet/buildPicks";
@@ -18,19 +19,30 @@ export function ValuePicksClient() {
   // Demo USA (local) + value picks de los próximos 8 partidos (API, server).
   const demoUsa = useMemo(() => buildValuePicks(), []);
   const [upcoming, setUpcoming] = useState<BetSelection[]>([]);
+  const [imported, setImported] = useState<BetSelection[]>([]);
   useEffect(() => {
     let active = true;
     fetch("/api/value-picks?limit=8")
       .then((r) => r.json())
       .then((j) => active && j?.ok && setUpcoming(j.data as BetSelection[]))
       .catch(() => {});
+    try {
+      const raw = window.localStorage.getItem("imported-picks");
+      if (raw) setImported(JSON.parse(raw) as BetSelection[]);
+    } catch {
+      /* ignore */
+    }
     return () => {
       active = false;
     };
   }, []);
-  // Real (upcoming) primero → prevalece sobre el demo en duplicados.
-  const all = useMemo(() => dedupeSelections([...upcoming, ...demoUsa]), [upcoming, demoUsa]);
+  // Prioridad en duplicados: importado > upcoming(demo) > demo USA.
+  const all = useMemo(
+    () => dedupeSelections([...imported, ...upcoming, ...demoUsa]),
+    [imported, upcoming, demoUsa],
+  );
   const [category, setCategory] = useState<MarketCategory | "all">("all");
+  const [source, setSource] = useState<"all" | "imported" | "manual" | "demo">("all");
   const [minConf, setMinConf] = useState(0);
   const [minEdge, setMinEdge] = useState(-20);
   const [maxRisk, setMaxRisk] = useState<RiskLevel>("high");
@@ -41,6 +53,9 @@ export function ValuePicksClient() {
   const filtered = useMemo(() => {
     let rows = all.filter((p) => {
       if (category !== "all" && p.category !== category) return false;
+      if (source === "imported" && !p.source.startsWith("Imported")) return false;
+      if (source === "manual" && p.source !== "Manual input") return false;
+      if (source === "demo" && p.source !== "Demo") return false;
       if (p.confidenceScore < minConf) return false;
       if (p.edge * 100 < minEdge) return false;
       if (RISK_RANK[p.riskLevel] > RISK_RANK[maxRisk]) return false;
@@ -56,7 +71,7 @@ export function ValuePicksClient() {
     };
     rows = [...rows].sort(sorters[sort]);
     return sort === "ev" ? rankBestValuePicks(rows) : rows;
-  }, [all, category, minConf, minEdge, maxRisk, onlyReal, sort]);
+  }, [all, category, source, minConf, minEdge, maxRisk, onlyReal, sort]);
 
   const pool = useMemo(() => filtered.map(selectionToSlipPick), [filtered]);
 
@@ -71,13 +86,21 @@ export function ValuePicksClient() {
             modelo.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => setShowParlays((v) => !v)}
-          className="min-h-[40px] rounded-lg bg-wc-gold/15 px-4 py-2 text-sm font-semibold text-wc-gold hover:bg-wc-gold/25"
-        >
-          {showParlays ? "Ocultar parleys" : "Generar parleys"}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/importar"
+            className="min-h-[40px] rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold text-wc-text hover:bg-white/5"
+          >
+            Importar momios
+          </Link>
+          <button
+            type="button"
+            onClick={() => setShowParlays((v) => !v)}
+            className="min-h-[40px] rounded-lg bg-wc-gold/15 px-4 py-2 text-sm font-semibold text-wc-gold hover:bg-wc-gold/25"
+          >
+            {showParlays ? "Ocultar parleys" : "Generar parleys"}
+          </button>
+        </div>
       </div>
 
       <DisclaimerBar compact />
@@ -85,6 +108,9 @@ export function ValuePicksClient() {
       <div className="wc-card grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
         <Field label="Mercado">
           <Select value={category} onChange={(v) => setCategory(v as MarketCategory | "all")} options={[{ value: "all", label: "Todos" }, { value: "match", label: "Partido" }, { value: "team", label: "Equipo" }, { value: "player", label: "Jugador" }]} />
+        </Field>
+        <Field label="Fuente">
+          <Select value={source} onChange={(v) => setSource(v as "all" | "imported" | "manual" | "demo")} options={[{ value: "all", label: "Todas" }, { value: "imported", label: "Imported CSV/JSON" }, { value: "manual", label: "Manual input" }, { value: "demo", label: "Demo" }]} />
         </Field>
         <Field label="Ordenar por">
           <Select value={sort} onChange={(v) => setSort(v as Sort)} options={[{ value: "ev", label: "Mejor EV" }, { value: "edge", label: "Mayor edge" }, { value: "confidence", label: "Mayor confianza" }, { value: "risk", label: "Menor riesgo" }, { value: "odds", label: "Momio más alto" }]} />

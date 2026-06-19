@@ -51,7 +51,14 @@ export type MarketType =
   | "player_passes"
   | "goalkeeper_saves";
 
-export type BetSource = "Demo" | "Manual input" | "365Scores" | "Model" | "Fallback";
+export type BetSource =
+  | "Demo"
+  | "Manual input"
+  | "Imported CSV"
+  | "Imported JSON"
+  | "365Scores"
+  | "Model"
+  | "Fallback";
 export type Reliability = "high" | "medium" | "low" | "demo";
 
 /** Parámetros del modelo para estimar la probabilidad de un mercado. */
@@ -143,6 +150,7 @@ export interface BetSlipPick {
   riskLevel: RiskLevel;
   correlationTags: string[];
   isDemo: boolean;
+  source: BetSource;
 }
 
 export interface BetSlipSummary {
