@@ -61,9 +61,10 @@ function lambdasFrom(home: TeamRecentMatchStats | null, away: TeamRecentMatchSta
   // Atajadas del portero = tiros a puerta que enfrenta (genera el rival) menos goles.
   const savesHome = h ? avg(a?.shotsOnTarget ?? sotAway, h.shotsOnTargetAgainst) : 3;
   const savesAway = a ? avg(h?.shotsOnTarget ?? sotHome, a.shotsOnTargetAgainst) : 3;
-  // Tarjetas: mezcla de amarillas recientes (1 partido) con la base del torneo.
+  // Tarjetas: mezcla de amarillas recientes (1 partido, peso 60%) con la base
+  // del torneo (40%). Partidos recientes limpios → mercado de tarjetas moderado.
   const recentCards = (h?.yellowCards ?? 0) + (h?.redCards ?? 0) + (a?.yellowCards ?? 0) + (a?.redCards ?? 0);
-  const cardsTotal = h || a ? avg(recentCards, baseCards) : baseCards;
+  const cardsTotal = h || a ? recentCards * 0.6 + baseCards * 0.4 : baseCards;
   const xgHome = h ? avg(h.xg, a?.xgAgainst ?? h.xg) : 1.3;
   const xgAway = a ? avg(a.xg, h?.xgAgainst ?? a.xg) : 1.1;
   return { cornersHome, cornersAway, cornersTotal: cornersHome + cornersAway, shotsHome, shotsAway, sotHome, sotAway, savesHome, savesAway, cardsTotal, xgHome, xgAway };

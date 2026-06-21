@@ -12,6 +12,7 @@ import { computeWorldCupMatches } from "@/lib/worldcup-2026/tournament-form";
 import { predictMatchup } from "@/lib/worldcup-2026/prediction-features";
 import { calculateMatchOutcomeProbabilities, generateScoreMatrix } from "@/lib/footballModels";
 import { calculateRecentContextBoosts } from "./todayContextModel";
+import { getTodayMatchContext } from "./statScreenshotContext";
 
 export interface ExactScoreProbability {
   homeGoals: number;
@@ -64,12 +65,20 @@ export function calculateExactScoreMatrix(matchId: string): ExactScoreResult | n
 
   const notes: string[] = [];
   const boosts = calculateRecentContextBoosts(matchId);
+  const ctx = getTodayMatchContext(matchId);
   const hasRecentContext = Boolean(boosts);
-  if (boosts) {
-    // Ajusta el xG base con el xG de contexto reciente (peso 45%).
-    xgHome = Number((xgHome * 0.55 + boosts.lambdas.xgHome * 0.45).toFixed(2));
-    xgAway = Number((xgAway * 0.55 + boosts.lambdas.xgAway * 0.45).toFixed(2));
-    notes.push(`xG ajustado por contexto reciente (365Scores): ${m.homeName} ${xgHome} / ${m.awayName} ${xgAway}.`);
+  if (boosts && ctx) {
+    // Ajusta el xG base con el xG de contexto reciente (peso 50%). Se usa el xG y
+    // el VOLUMEN, no los goles reales: un 0-0 con xG alto no debe bajar el lambda.
+    xgHome = Number((xgHome * 0.5 + boosts.lambdas.xgHome * 0.5).toFixed(2));
+    xgAway = Number((xgAway * 0.5 + boosts.lambdas.xgAway * 0.5).toFixed(2));
+    // Regresión de definición: si un equipo generó mucho xG pero anotó por debajo
+    // (mala definición / varianza), se espera regresión AL ALZA, no a la baja.
+    const bump = (s: { xg: number; scoreFor: number } | null) =>
+      s && s.xg - s.scoreFor >= 1 ? Math.min(0.15, (s.xg - s.scoreFor) * 0.06) : 0;
+    xgHome = Number((xgHome * (1 + bump(ctx.homeStats))).toFixed(2));
+    xgAway = Number((xgAway * (1 + bump(ctx.awayStats))).toFixed(2));
+    notes.push(`xG ajustado por contexto reciente (365Scores, usa xG/volumen no goles): ${m.homeName} ${xgHome} / ${m.awayName} ${xgAway}.`);
   } else {
     notes.push(`xG del modelo base: ${m.homeName} ${xgHome} / ${m.awayName} ${xgAway}.`);
   }

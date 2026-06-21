@@ -115,15 +115,29 @@ export function evaluateMarket(
   const contextNotes: string[] = [];
   let modelProbability = baseProbability;
   let contextDirection: "boost" | "penalty" | null = null;
+  const lowSample = Boolean(recent); // contexto = 1 muestra
   if (recent) {
     const nudge = scenarioVolumeNudge(m, params);
-    // Peso del contexto: alto en props de volumen donde la base no tiene lambda
-    // informativa (tiros/atajadas → base por defecto poco fiable); bajo donde la
-    // base ya es sólida (goles/BTTS/corners/tarjetas).
-    const baseUninformative =
-      m.modelLambda == null && ["team_shots", "team_shots_on_target", "goalkeeper_saves"].includes(m.marketType);
-    const w = baseUninformative ? 0.7 : 0.15;
-    modelProbability = Math.min(0.99, Math.max(0.01, baseProbability * (1 - w) + recent.prob * w + nudge));
+    // Peso del contexto por mercado:
+    //  - 0.70 en props de volumen sin lambda informativa (tiros/atajadas);
+    //  - 0.60 en tarjetas (la base del torneo infla; lo reciente manda más);
+    //  - 0.15 donde la base ya es sólida (goles/BTTS/corners).
+    const volProps = m.modelLambda == null && ["team_shots", "team_shots_on_target", "goalkeeper_saves"].includes(m.marketType);
+    const cardsMkt = ["cards", "team_total_cards"].includes(m.marketType);
+    const w = volProps ? 0.7 : cardsMkt ? 0.7 : 0.15;
+    let blended = baseProbability * (1 - w) + recent.prob * w + nudge;
+
+    // Calibración por sample size + varianza: en mercados volátiles, con una sola
+    // muestra, encoge la probabilidad hacia 0.5 para no sobreconfiar.
+    const volatile = [
+      "corners", "team_total_corners", "cards", "team_total_cards", "offsides", "team_total_fouls",
+      "team_shots", "team_shots_on_target", "goalkeeper_saves",
+    ].includes(m.marketType) || m.marketType.startsWith("player_") || m.marketType.includes("goalscorer");
+    if (volatile) {
+      const keep = lowSample ? 0.7 : 0.85; // conserva 70% de la desviación con 1 muestra
+      blended = 0.5 + (blended - 0.5) * keep;
+    }
+    modelProbability = Math.min(0.99, Math.max(0.01, blended));
     contextNotes.push(...recent.notes);
     contextDirection = modelProbability >= baseProbability + 0.01 ? "boost" : modelProbability <= baseProbability - 0.01 ? "penalty" : null;
   }
@@ -195,7 +209,7 @@ export function evaluateMarket(
     hasDanger,
     modelAgreement: agreement.score,
   });
-  const confidenceScore = calculateConfidenceScore({
+  let confidenceScore = calculateConfidenceScore({
     edge,
     expectedValue,
     reliability: m.reliability,
@@ -205,6 +219,12 @@ export function evaluateMarket(
     realismPenalty: realism.confidencePenalty + sampleSizePenalty,
     modelAgreement: agreement.score,
   });
+  // Caps de confianza por mercado volátil / muestra baja / sin stats de árbitro.
+  const refStatsLoaded = refAssignment?.referee?.yellowCardsPerMatch != null;
+  if (lowSample && ["corners", "team_total_corners"].includes(m.marketType))
+    confidenceScore = Math.min(confidenceScore, 75);
+  if (["cards", "team_total_cards", "player_cards"].includes(m.marketType) && !refStatsLoaded)
+    confidenceScore = Math.min(confidenceScore, 60);
   const finalValueScore = calculateFinalValueScore({
     edge,
     expectedValue,
