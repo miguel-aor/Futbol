@@ -24,6 +24,11 @@ function fairAmerican(p: number): number {
   return q >= 0.5 ? Math.round((-100 * q) / (1 - q)) : Math.round((100 * (1 - q)) / q);
 }
 
+/** Muestra una línea over .5 como threshold entero tal como la casa: 3.5 → "4+". */
+function plus(line: number | null): string {
+  return line == null ? "+" : `${Math.ceil(line)}+`;
+}
+
 function paramsFor(matchId: string): { params: MatchModelParams; name: string } | null {
   const m = computeWorldCupMatches().find((x) => x.id === matchId);
   if (!m) return null;
@@ -109,12 +114,14 @@ export function buildMatchProjectionPicks(matchId: string): BetSelection[] {
     { group: "btts", category: "match", marketType: "both_teams_score", lines: [null], sel: () => "Sí" },
     { group: "btts_no", category: "match", marketType: "both_teams_score", lines: [null], sel: () => "No" },
     { group: "team_goals", category: "team", marketType: "team_total_goals", teamId: favId, lines: [1.5, 2.5], sel: (l) => `${favName} Más de ${l}` },
-    { group: "clean_sheet", category: "team", marketType: "team_total_goals", teamId: dogId, lines: [0.5], sel: (l) => `${fav === "home" ? params.awayName : params.homeName} Menos de ${l}` },
-    { group: "corners_eq", category: "team", marketType: "team_total_corners", teamId: favId, lines: [4.5, 5.5, 6.5, 7.5], sel: (l) => `${favName} Más de ${l}` },
-    { group: "corners_tot", category: "match", marketType: "corners", lines: [8.5, 9.5, 10.5], sel: (l) => `Más de ${l}` },
-    { group: "tiros_eq", category: "team", marketType: "team_shots", teamId: favId, lines: [9.5, 11.5, 13.5], sel: (l) => `${favName} Más de ${l}` },
-    { group: "sot_eq", category: "team", marketType: "team_shots_on_target", teamId: favId, lines: [3.5, 4.5, 5.5], sel: (l) => `${favName} Más de ${l}` },
-    { group: "tarjetas", category: "match", marketType: "cards", lines: [2.5, 3.5, 4.5], sel: (l) => `Más de ${l}` },
+    // Portería a cero del FAVORITO = el rival (underdog) no anota (under 0.5).
+    // Se etiqueta con el equipo que mantiene el cero (favorito), sin invertir.
+    { group: "clean_sheet", category: "team", marketType: "team_total_goals", teamId: dogId, lines: [0.5], sel: () => `${favName} portería a cero` },
+    { group: "corners_eq", category: "team", marketType: "team_total_corners", teamId: favId, lines: [4.5, 5.5, 6.5, 7.5], sel: (l) => `${favName} ${plus(l)} córners` },
+    { group: "corners_tot", category: "match", marketType: "corners", lines: [8.5, 9.5, 10.5], sel: (l) => `Más de ${l} córners` },
+    { group: "tiros_eq", category: "team", marketType: "team_shots", teamId: favId, lines: [9.5, 11.5, 13.5], sel: (l) => `${favName} ${plus(l)} tiros` },
+    { group: "sot_eq", category: "team", marketType: "team_shots_on_target", teamId: favId, lines: [3.5, 4.5, 5.5], sel: (l) => `${favName} ${plus(l)} tiros a puerta` },
+    { group: "tarjetas", category: "match", marketType: "cards", lines: [2.5, 3.5, 4.5], sel: (l) => `Más de ${l} tarjetas` },
   ];
   if (dogGk) {
     candidates.push({
@@ -123,7 +130,7 @@ export function buildMatchProjectionPicks(matchId: string): BetSelection[] {
       marketType: "goalkeeper_saves",
       teamId: dogId,
       lines: [3.5, 4.5, 5.5, 6.5],
-      sel: (l) => `${dogGk.playerName} Más de ${l}`,
+      sel: (l) => `${dogGk.playerName} ${plus(l)} atajadas`,
     });
   }
 
@@ -170,14 +177,15 @@ export function buildMatchProjectionPicks(matchId: string): BetSelection[] {
   // Ordena por confianza del modelo (no por EV: son proyecciones).
   const ranked = [...byFamily.values()].map((v) => v.pick).sort((a, b) => b.modelProbability - a.modelProbability);
 
-  // Limita correlación de guion (pocos goles / portería a cero): máx 2.
+  // Limita correlación de guion (pocos goles / portería a cero): solo 1 pick
+  // PRINCIPAL del mismo guion (las demás se omiten para no inflar redundancia).
   let scriptCount = 0;
   const top = ranked
     .filter((p) => {
       const isScript = p.correlationTags.some((t) => LOW_SCRIPT.has(t));
       if (!isScript) return true;
       scriptCount += 1;
-      return scriptCount <= 2;
+      return scriptCount <= 1;
     })
     .slice(0, 8);
 

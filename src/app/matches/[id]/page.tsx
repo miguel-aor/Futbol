@@ -20,7 +20,7 @@ import { getMatchScenario } from "@/lib/worldcup/scenarios";
 import { calculateExactScoreMatrix } from "@/lib/bet/exactScoreModel";
 import { getTodayMatchContext } from "@/lib/bet/statScreenshotContext";
 import { buildMatchProjectionPicks } from "@/lib/bet/matchPicks";
-import { PickTable } from "@/components/bet/PickTable";
+import { MatchLeansTable } from "@/components/bet/MatchLeansTable";
 import {
   FIXTURE_LABELS,
   formatDate,
@@ -427,16 +427,17 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           <section>
             <SectionTitle
               title="Picks del partido"
-              subtitle="Proyecciones del modelo: línea dinámica por mercado, contexto reciente y árbitro. Sin plantillas fijas ni mock."
+              subtitle="Predicciones del modelo y oportunidades del partido. Importa momios para calcular edge/EV real."
             />
             {projection.length ? (
-              <PickTable rows={projection} />
+              <MatchLeansTable rows={projection} />
             ) : (
               <EmptyState title="Sin picks proyectables" message="No hay proyección de modelo para este partido (¿finalizado o sin datos?)." />
             )}
             <p className="mt-2 text-[11px] text-slate-500">
-              Cuotas mostradas = cuota justa del modelo (no hay momio de mercado conectado). Importa momios en{" "}
-              <Link href="/importar" className="text-edge-mid hover:underline">/importar</Link> para calcular edge/EV reales.
+              Estas son <strong className="text-slate-300">predicciones del modelo</strong> (cuota justa, sin momio de
+              mercado). No son value picks hasta cruzarlas con un momio real: impórtalo en{" "}
+              <Link href="/importar" className="text-edge-mid hover:underline">/importar</Link> para edge/EV y rating de value.
             </p>
           </section>
         );
