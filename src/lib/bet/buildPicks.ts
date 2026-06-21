@@ -24,6 +24,7 @@ import {
 import { getTeamStrengthContext } from "@/lib/teamStrength";
 import { assessRealism, explainPick } from "@/lib/bet/realismChecks";
 import { calculateModelAgreement } from "@/lib/bet/modelAgreement";
+import { getRefereeAssignment } from "@/data/refereeAssignments";
 import type {
   BetMarket,
   BetSelection,
@@ -111,6 +112,8 @@ export function evaluateMarket(
   // --- Capa realista: fuerza de selección, sanity checks y coincidencia ---
   const ctx = getTeamStrengthContext(params.homeId, params.awayId);
   const matchResolved = Boolean(params.homeId) && Boolean(params.awayId) && params.homeId !== "home";
+  const refAssignment = getRefereeAssignment(m.matchId);
+  const refereeConfirmed = Boolean(refAssignment?.referee?.isConfirmed);
   const realism = assessRealism({
     marketType: m.marketType,
     selection: m.selection,
@@ -126,6 +129,8 @@ export function evaluateMarket(
     teamId: m.teamId,
     modelProbability,
     matchResolved,
+    refereeConfirmed,
+    refereeName: refAssignment?.referee?.name,
     ctx,
   });
   const agreement = calculateModelAgreement({

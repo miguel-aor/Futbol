@@ -6,6 +6,7 @@
 import "server-only";
 import { getActiveBundle } from "./data-providers/providerRegistry";
 import { MOCK_TIMESTAMP } from "@/data/mock-builder";
+import { isRefereeConfirmed } from "@/data/refereeAssignments";
 import { rankOpportunities, estimatePlayerProp, ALL_PLAYER_PROP_TYPES } from "./prediction";
 import {
   buildMatchIntelligenceReport,
@@ -173,7 +174,7 @@ export async function getOpportunityViews(): Promise<OpportunityView[]> {
     const away = m ? teamsById.get(m.awayTeamId) : null;
     const evenMatchup = home && away ? calculateOpponentSimilarity(home, away) >= 0.6 : false;
     const intel: OpportunityIntel = {
-      refereeKnown: Boolean(m?.refereeId),
+      refereeKnown: m ? isRefereeConfirmed(m.id) : false,
       dataQuality: opportunityQuality(o.sampleSize, o.confidence),
       backedByLast10: o.sampleSize >= 10,
       modelTrendAgree: o.edge > 0 && o.confidence !== "baja",

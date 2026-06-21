@@ -431,6 +431,13 @@ export interface Referee {
   /** true solo si la designación viene de fuente oficial/confiable. */
   isConfirmed: boolean;
   reliability: RefereeReliability;
+  /** Fuente y URL de la DESIGNACIÓN (separada de la fuente de estadísticas). */
+  designationSource?: string;
+  designationSourceUrl?: string;
+  /** Fuente de las estadísticas históricas (si se cargaron). */
+  statsSource?: string;
+  /** false = sin stats reales; el impacto disciplinario queda neutral. */
+  statsLoaded?: boolean;
 }
 
 /** Ajustes de mercado derivados del perfil del arbitro. */

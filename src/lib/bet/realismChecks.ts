@@ -46,6 +46,9 @@ export interface RealismInput {
   teamId?: string;
   modelProbability: number;
   matchResolved: boolean;
+  /** Designación arbitral confirmada para este partido (mercados disciplinarios). */
+  refereeConfirmed?: boolean;
+  refereeName?: string;
   ctx: StrengthContext;
 }
 
@@ -138,16 +141,24 @@ const DISCIPLINARY: MarketType[] = [
 ];
 
 /**
- * Riesgo por árbitro no confirmado en mercados disciplinarios. La app no tiene
- * designación oficial conectada → estos mercados usan promedio del torneo/equipos
- * y no pueden apoyarse en estadísticas de un árbitro específico.
+ * Riesgo/contexto por árbitro en mercados disciplinarios. Si la designación está
+ * confirmada, se marca informativamente (sin penalizar). Si está pendiente, se
+ * penaliza: la proyección usa promedios, no un árbitro específico.
  */
 export function detectRefereeRisk(input: RealismInput): RealismFlag | null {
   if (!DISCIPLINARY.includes(input.marketType)) return null;
+  if (input.refereeConfirmed) {
+    return {
+      code: "referee_confirmed",
+      label: input.refereeName ? `Árbitro: ${input.refereeName}` : "Árbitro confirmado",
+      note: "Designación arbitral confirmada; alimenta el modelo disciplinario con peso moderado.",
+      severity: "info",
+    };
+  }
   return {
     code: "referee_unconfirmed",
-    label: "Árbitro no confirmado",
-    note: "Sin designación arbitral oficial; la proyección disciplinaria usa promedios, no un árbitro específico. Riesgo mayor.",
+    label: "Árbitro pendiente",
+    note: "Designación arbitral pendiente de confirmar; la proyección disciplinaria usa promedios, no un árbitro específico. Riesgo mayor.",
     severity: "warn",
   };
 }

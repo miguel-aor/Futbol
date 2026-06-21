@@ -35,6 +35,7 @@ import type {
 } from "@/lib/data-providers/types";
 import { clamp, round } from "./math";
 import { getConfidenceLabel } from "./index";
+import { getConfirmedReferee } from "@/data/refereeAssignments";
 
 /** Mercados que aceptan ajuste por arbitro/entrenador/forma. */
 export type IntelMarket = "goles" | "corners" | "tarjetas" | "tiros" | "penal";
@@ -396,6 +397,16 @@ export function calculateCoachImpact(coach: Coach): CoachImpact {
 
 /** Ajustes de mercado a partir del arbitro. */
 export function calculateRefereeImpact(referee: Referee): RefereeImpact {
+  // Sin estadísticas históricas reales → impacto NEUTRAL (no se inflan mercados
+  // ni se presentan números inventados como reales).
+  if (referee.statsLoaded === false) {
+    return {
+      cardsMultiplier: 1,
+      foulsMultiplier: 1,
+      penaltyMultiplier: 1,
+      explanation: `${referee.name} (${referee.nationality}) está designado, pero aún sin estadísticas históricas cargadas: el modelo disciplinario usa promedio del torneo/equipos.`,
+    };
+  }
   // Promedio liga ~3.8 amarillas; multiplicador relativo.
   const cardsMultiplier = round(clamp(referee.yellowCardsPerMatch / 3.8, 0.7, 1.4), 2);
   const foulsMultiplier = round(clamp(referee.foulsPerMatch / 24, 0.75, 1.3), 2);
@@ -707,10 +718,9 @@ export function buildMatchIntelligenceReport(
   const awayProfile = buildTeamIntelligenceProfile(away.id, ctx);
   if (!homeProfile || !awayProfile) return null;
 
-  // Solo se usa el árbitro si la designación está CONFIRMADA por fuente oficial.
-  // Un árbitro demo/no confirmado nunca alimenta el modelo disciplinario.
-  const refereeRaw = match.refereeId ? ctx.referees.find((r) => r.id === match.refereeId) ?? null : null;
-  const referee = refereeRaw?.isConfirmed ? refereeRaw : null;
+  // Solo se usa el árbitro si la designación está CONFIRMADA/corroborada por
+  // fuente confiable (refereeAssignments). Nada de pool demo ni hash.
+  const referee = getConfirmedReferee(match.id);
   const homeCoach = ctx.coaches.find((c) => c.teamId === home.id) ?? null;
   const awayCoach = ctx.coaches.find((c) => c.teamId === away.id) ?? null;
 

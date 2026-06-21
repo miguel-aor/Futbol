@@ -227,21 +227,39 @@ export function RefereeCard({ referee, impact }: { referee: Referee; impact: Ref
           <span className="chip bg-base-700/60 capitalize text-slate-300">{referee.gameFlowStyle}</span>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-        {stat("Amarillas/partido", referee.yellowCardsPerMatch.toFixed(2))}
-        {stat("Rojas/partido", referee.redCardsPerMatch.toFixed(2))}
-        {stat("Faltas/partido", referee.foulsPerMatch.toFixed(1))}
-        {stat("Penales/partido", referee.penaltiesPerMatch.toFixed(2))}
-        {stat("Partidos", String(referee.matchesCount))}
-      </div>
+      {referee.statsLoaded === false ? (
+        <p className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-xs text-amber-200/90">
+          Designación confirmada, pero sin estadísticas históricas del árbitro cargadas todavía. El modelo
+          disciplinario usa promedio del torneo/equipos (impacto neutral).
+        </p>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+            {stat("Amarillas/partido", referee.yellowCardsPerMatch.toFixed(2))}
+            {stat("Rojas/partido", referee.redCardsPerMatch.toFixed(2))}
+            {stat("Faltas/partido", referee.foulsPerMatch.toFixed(1))}
+            {stat("Penales/partido", referee.penaltiesPerMatch.toFixed(2))}
+            {stat("Partidos", String(referee.matchesCount))}
+          </div>
+          <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-slate-500">
+            <span className="chip bg-base-800/60">Tarjetas ×{impact.cardsMultiplier}</span>
+            <span className="chip bg-base-800/60">Faltas ×{impact.foulsMultiplier}</span>
+            <span className="chip bg-base-800/60">Penal ×{impact.penaltyMultiplier}</span>
+          </div>
+        </>
+      )}
       <p className="mt-3 rounded-lg bg-base-900/60 p-3 text-xs text-slate-400">{impact.explanation}</p>
-      <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-slate-500">
-        <span className="chip bg-base-800/60">Tarjetas ×{impact.cardsMultiplier}</span>
-        <span className="chip bg-base-800/60">Faltas ×{impact.foulsMultiplier}</span>
-        <span className="chip bg-base-800/60">Penal ×{impact.penaltyMultiplier}</span>
-      </div>
-      <div className="mt-2 text-[11px] text-slate-500">
-        Fuente: {referee.source} · Actualizado: {referee.lastUpdated}
+      <div className="mt-2 space-y-0.5 text-[11px] text-slate-500">
+        <div>
+          Designación: {referee.designationSource ?? referee.source}
+          {referee.designationSourceUrl ? (
+            <a href={referee.designationSourceUrl} target="_blank" rel="noopener noreferrer" className="ml-1 text-sky-400 hover:underline">
+              ver fuente
+            </a>
+          ) : null}
+        </div>
+        {referee.statsSource ? <div>Estadísticas: {referee.statsSource}</div> : null}
+        <div>Actualizado: {referee.lastUpdated}</div>
       </div>
     </div>
   );
@@ -252,16 +270,16 @@ export function RefereeUnconfirmedCard() {
   return (
     <div className="card p-5">
       <div className="mb-2 flex items-center justify-between gap-2">
-        <div className="font-semibold text-slate-100">Árbitro no confirmado</div>
-        <span className={`chip ${REF_RELIABILITY_BADGE.unconfirmed.cls}`}>Sin verificar</span>
+        <div className="font-semibold text-slate-100">Árbitro pendiente de confirmar</div>
+        <span className={`chip ${REF_RELIABILITY_BADGE.unconfirmed.cls}`}>Pendiente</span>
       </div>
       <p className="rounded-lg bg-base-900/60 p-3 text-sm text-slate-400">
-        La designación arbitral todavía no está verificada. El modelo usa promedios del torneo, equipos y mercado,
-        no estadísticas de un árbitro específico.
+        No se encontró una fuente confiable de designación arbitral para este partido. Las proyecciones
+        disciplinarias usan promedios del torneo y estadísticas de equipos.
       </p>
       <p className="mt-2 text-xs text-amber-300/90">
         Las proyecciones disciplinarias (tarjetas/faltas/penales) tienen mayor riesgo hasta que se confirme la
-        designación por fuente oficial (FIFA Match Centre).
+        designación por fuente confiable (FIFA Match Centre).
       </p>
     </div>
   );
