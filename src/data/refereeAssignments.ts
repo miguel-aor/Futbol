@@ -34,7 +34,18 @@ export interface RefereeAssignmentReferee {
   foulsPerMatch?: number;
   penaltiesPerMatch?: number;
   matchesSample?: number;
+  // Contexto reciente/temporada (si una fuente lo separa de la carrera).
+  recentYellowCardsPerMatch?: number;
+  recentRedCardsPerMatch?: number;
+  recentFoulsPerMatch?: number;
+  recentMatchesSample?: number;
+  // Fuente de ESTADÍSTICAS (distinta de la fuente de designación).
   statsSource?: string;
+  statsSourceUrl?: string;
+  secondaryStatsSource?: string;
+  secondaryStatsSourceUrl?: string;
+  statsReliability?: "high" | "medium" | "low";
+  notes?: string;
 }
 
 export interface RefereeAssignment {
@@ -67,6 +78,14 @@ export const REFEREE_ASSIGNMENTS: RefereeAssignment[] = [
       source: "Wikipedia (2026 FIFA World Cup officials) + tracker law5-theref + prensa (canal26/GolCaracol)",
       sourceUrl: "http://law5-theref.blogspot.com/2026/06/2026-fifa-wc-referee-appointments-for.html",
       lastUpdated: TODAY,
+      yellowCardsPerMatch: 4.12,
+      redCardsPerMatch: 0.19,
+      foulsPerMatch: 24.0,
+      penaltiesPerMatch: 0.31, // 70 penales en 224 partidos
+      matchesSample: 224,
+      statsSource: "FootyMetrics",
+      statsReliability: "high",
+      notes: "Perfil medio-alto de tarjetas (4.12/partido); penales 70/224≈0.31.",
     },
   },
   {
@@ -81,6 +100,15 @@ export const REFEREE_ASSIGNMENTS: RefereeAssignment[] = [
       source: "Wikipedia (2026 FIFA World Cup officials) + tracker law5-theref",
       sourceUrl: "http://law5-theref.blogspot.com/2026/06/2026-fifa-wc-referee-appointments-for.html",
       lastUpdated: TODAY,
+      yellowCardsPerMatch: 5.5,
+      redCardsPerMatch: 0.33,
+      foulsPerMatch: 25.1,
+      penaltiesPerMatch: 0.26, // 65 penales en 248 partidos
+      matchesSample: 248,
+      statsSource: "FootyMetrics",
+      secondaryStatsSource: "ValueStats (5.68 amarillas / 0.24 rojas en otra muestra)",
+      statsReliability: "high",
+      notes: "Perfil tarjetero ALTO (>5 amarillas/partido). ValueStats difiere ligeramente (5.68/0.24).",
     },
   },
   {
@@ -95,6 +123,15 @@ export const REFEREE_ASSIGNMENTS: RefereeAssignment[] = [
       source: "Wikipedia (2026 FIFA World Cup officials) + tracker law5-theref",
       sourceUrl: "http://law5-theref.blogspot.com/2026/06/2026-fifa-wc-referee-appointments-for.html",
       lastUpdated: TODAY,
+      yellowCardsPerMatch: 3.41,
+      redCardsPerMatch: 0.1,
+      foulsPerMatch: 20.6,
+      penaltiesPerMatch: 0.21, // 30 penales en 146 partidos
+      matchesSample: 146,
+      statsSource: "FootyMetrics",
+      secondaryStatsSource: "ValueStats (3.53 amarillas / 0.07 rojas en otra muestra)",
+      statsReliability: "high",
+      notes: "Perfil MODERADO/BAJO de tarjetas (3.41/partido).",
     },
   },
   {
@@ -109,6 +146,19 @@ export const REFEREE_ASSIGNMENTS: RefereeAssignment[] = [
       source: "Wikipedia (2026 FIFA World Cup officials) + tracker law5-theref",
       sourceUrl: "http://law5-theref.blogspot.com/2026/06/2026-fifa-wc-referee-appointments-for.html",
       lastUpdated: TODAY,
+      yellowCardsPerMatch: 4.08, // ValueStats (carrera, 61 partidos)
+      redCardsPerMatch: 0.26,
+      foulsPerMatch: 26.45,
+      matchesSample: 61,
+      // Contexto temporada (StatsBet): incluye penales que la carrera no detalla.
+      recentYellowCardsPerMatch: 3.94,
+      recentRedCardsPerMatch: 0.22,
+      recentMatchesSample: 18,
+      penaltiesPerMatch: 0.67, // StatsBet temporada
+      statsSource: "ValueStats (carrera)",
+      secondaryStatsSource: "StatsBet (temporada: 4.22 tarjetas, 0.67 penales, 18 partidos)",
+      statsReliability: "medium",
+      notes: "Perfil MEDIO/ALTO en faltas (26.45). Penales 0.67 vienen de muestra de temporada (StatsBet), no de carrera.",
     },
   },
 ];

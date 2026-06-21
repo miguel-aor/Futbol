@@ -10,6 +10,7 @@
 import { getTodayMatchContext } from "./statScreenshotContext";
 import { getMatchScenario } from "@/lib/worldcup/scenarios";
 import { calculateGoalkeeperSavesContext as gkSavesPlayerContext } from "./playerPropsContext";
+import { getRefereeAssignment } from "@/data/refereeAssignments";
 import type { BetMarket, MatchModelParams } from "@/lib/bet/types";
 import type { TeamRecentMatchStats } from "@/data/todayMatchContextStats";
 
@@ -144,8 +145,28 @@ export function recentContextProbability(
     }
     case "cards":
     case "team_total_cards": {
-      const lambda = market.marketType === "team_total_cards" ? l.cardsTotal / 2 : l.cardsTotal;
-      return { prob: clamp01(poissonOver(lambda, line || 4.5, over)), notes: [`Tarjetas λ≈${lambda.toFixed(1)} (recientes bajas → mercado moderado).`] };
+      // Árbitro confirmado con stats reales: entra con peso moderado (15-25%
+      // si alta confiabilidad). No domina el modelo.
+      let cards = l.cardsTotal;
+      const refNotes: string[] = [];
+      const ref = getRefereeAssignment(market.matchId)?.referee;
+      if (ref?.isConfirmed && ref.yellowCardsPerMatch != null) {
+        const w = ref.statsReliability === "high" ? 0.22 : ref.statsReliability === "medium" ? 0.13 : 0.05;
+        cards = cards * (1 - w) + ref.yellowCardsPerMatch * w;
+        refNotes.push(`Árbitro ${ref.name}: ${ref.yellowCardsPerMatch.toFixed(2)} tarjetas/partido (peso ${Math.round(w * 100)}%).`);
+      }
+      const lambda = market.marketType === "team_total_cards" ? cards / 2 : cards;
+      return { prob: clamp01(poissonOver(lambda, line || 4.5, over)), notes: [`Tarjetas λ≈${lambda.toFixed(1)}.`, ...refNotes] };
+    }
+    case "penalty_awarded": {
+      const ref = getRefereeAssignment(market.matchId)?.referee;
+      if (!ref?.isConfirmed || ref.penaltiesPerMatch == null) return null;
+      const w = ref.statsReliability === "high" ? 0.25 : ref.statsReliability === "medium" ? 0.15 : 0.05;
+      const refYes = clamp01(1 - Math.exp(-ref.penaltiesPerMatch));
+      const wantsYes = /^s|s[íi]|yes/i.test(sel);
+      const base = 0.24; // prob base de penal en el partido
+      const yes = clamp01(base * (1 - w) + refYes * w);
+      return { prob: wantsYes ? yes : 1 - yes, notes: [`Árbitro ${ref.name}: ${ref.penaltiesPerMatch.toFixed(2)} penales/partido (peso ${Math.round(w * 100)}%).`] };
     }
     case "total_goals": {
       const lambda = l.xgHome + l.xgAway;
