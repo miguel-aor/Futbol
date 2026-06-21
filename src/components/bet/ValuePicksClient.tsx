@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Field, Select } from "@/components/analytics/primitives";
-import { buildValuePicks, selectionToSlipPick } from "@/lib/bet/buildPicks";
+import { buildValuePicks, detectGameScriptCorrelations, selectionToSlipPick } from "@/lib/bet/buildPicks";
 import { rankBestValuePicks } from "@/lib/betBuilderModels";
 import { dedupeSelections } from "@/lib/bet/dedupe";
 import type { BetSelection, MarketCategory, RiskLevel } from "@/lib/bet/types";
@@ -79,6 +79,7 @@ export function ValuePicksClient() {
   }, [all, category, source, minConf, minEdge, maxRisk, onlyReal, sort]);
 
   const pool = useMemo(() => filtered.map(selectionToSlipPick), [filtered]);
+  const correlations = useMemo(() => detectGameScriptCorrelations(filtered), [filtered]);
 
   return (
     <div className="space-y-5">
@@ -134,6 +135,17 @@ export function ValuePicksClient() {
           Solo datos reales (excluir demo)
         </label>
       </div>
+
+      {correlations.length ? (
+        <div className="space-y-1 rounded-xl border border-amber-400/30 bg-amber-400/5 p-3 text-[11px] text-amber-100/90">
+          <p className="font-semibold text-amber-300">⚠ Correlación entre picks</p>
+          {correlations.map((c) => (
+            <p key={c.matchId}>
+              <span className="text-amber-200">{c.matchName}:</span> {c.selections.join(" · ")} — {c.note}
+            </p>
+          ))}
+        </div>
+      ) : null}
 
       {showParlays ? <AIParlayGenerator pool={pool} /> : null}
 

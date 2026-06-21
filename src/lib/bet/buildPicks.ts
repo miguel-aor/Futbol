@@ -50,6 +50,10 @@ export function correlationTags(m: BetMarket): string[] {
     case "both_teams_score":
       tags.push(/^s|s[íi]|yes/i.test(m.selection) ? "btts_yes" : "btts_no");
       break;
+    case "team_total_goals":
+      // Under de un equipo = ese equipo no marca ⇒ guion de pocos goles / CS rival.
+      tags.push(isOver(m.selection) ? "team_goals_over" : "team_goals_under", "clean_sheet_script");
+      break;
     case "match_result":
     case "double_chance":
       tags.push("team_win");
@@ -87,6 +91,42 @@ export function correlationTags(m: BetMarket): string[] {
       break;
   }
   return tags;
+}
+
+// Tags que comparten el mismo "guion" de partido (pocos goles / portería a cero):
+// recomendarlos juntos NO es diversificar, es repetir la misma apuesta.
+const LOW_SCORING_SCRIPT = new Set(["goals_under", "btts_no", "team_goals_under", "clean_sheet_script"]);
+
+export interface ScriptCorrelationGroup {
+  matchId: string;
+  matchName: string;
+  selections: string[];
+  note: string;
+}
+
+/** Detecta selecciones del mismo partido que dependen del mismo guion. */
+export function detectGameScriptCorrelations(
+  picks: Array<{ matchId: string; matchName: string; selection: string; correlationTags: string[] }>,
+): ScriptCorrelationGroup[] {
+  const byMatch = new Map<string, typeof picks>();
+  for (const p of picks) {
+    if (p.correlationTags?.some((t) => LOW_SCORING_SCRIPT.has(t))) {
+      const arr = byMatch.get(p.matchId) ?? [];
+      arr.push(p);
+      byMatch.set(p.matchId, arr);
+    }
+  }
+  const out: ScriptCorrelationGroup[] = [];
+  for (const [matchId, group] of byMatch) {
+    if (group.length >= 2)
+      out.push({
+        matchId,
+        matchName: group[0].matchName,
+        selections: group.map((g) => g.selection),
+        note: "Alta correlación: estas selecciones dependen del mismo guion de partido (pocos goles / portería a cero).",
+      });
+  }
+  return out;
 }
 
 /** Evalúa un mercado y devuelve una pick con edge/EV/confianza/riesgo/rating. */
@@ -204,7 +244,7 @@ export function evaluateMarket(
     riskBump: realism.riskBump,
   });
   const hasDanger = flags.some((f) => f.severity === "danger");
-  const rating = calculatePickRating(edge, expectedValue, riskLevel, {
+  let rating = calculatePickRating(edge, expectedValue, riskLevel, {
     forceAvoid: realism.forceAvoid,
     hasDanger,
     modelAgreement: agreement.score,
@@ -225,7 +265,7 @@ export function evaluateMarket(
     confidenceScore = Math.min(confidenceScore, 75);
   if (["cards", "team_total_cards", "player_cards"].includes(m.marketType) && !refStatsLoaded)
     confidenceScore = Math.min(confidenceScore, 60);
-  const finalValueScore = calculateFinalValueScore({
+  let finalValueScore = calculateFinalValueScore({
     edge,
     expectedValue,
     confidenceScore,
@@ -235,6 +275,12 @@ export function evaluateMarket(
     reliability: m.reliability,
     forceAvoid: realism.forceAvoid,
   });
+  // GARANTÍA DURA: ninguna pick con EV o edge no positivos puede ser value.
+  // (Un momio castigado vence al modelo aunque la prob. parezca alta.)
+  if (expectedValue <= 0 || edge <= 0) {
+    if (rating === "strong_value" || rating === "positive_value") rating = edge < -0.01 ? "avoid" : "fair_line";
+    finalValueScore = Math.min(finalValueScore, 45);
+  }
   let explanation = explainPick({
     selection: m.selection,
     marketType: m.marketType,

@@ -415,6 +415,22 @@ export function calculateBetSlipRisk(picks: BetSlipPick[]): RiskLevel {
 }
 
 /**
+ * QA: una pick `strong_value`/`positive_value` DEBE tener edge y EV positivos.
+ * Devuelve null si es coherente, o un mensaje de error si la viola.
+ */
+export function assertStrongValueHasPositiveEV(pick: {
+  rating: PickRating;
+  edge: number;
+  expectedValue: number;
+  selection?: string;
+}): string | null {
+  if ((pick.rating === "strong_value" || pick.rating === "positive_value") && (pick.edge <= 0 || pick.expectedValue <= 0)) {
+    return `Rating ${pick.rating} con edge ${(pick.edge * 100).toFixed(1)}% / EV ${(pick.expectedValue * 100).toFixed(0)}% no positivo${pick.selection ? ` (${pick.selection})` : ""}`;
+  }
+  return null;
+}
+
+/**
  * Ordena picks por valor. Si existe `finalValueScore` (motor realista) manda ese;
  * luego confianza, EV, edge y menor riesgo. Así una pick con EV positivo pero
  * poco realista (penalizada) no llega al top.
