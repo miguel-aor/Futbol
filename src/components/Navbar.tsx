@@ -18,6 +18,7 @@ const LINKS = [
 // fuera del flujo principal de picks.
 const RESEARCH = [
   { href: "/importar", label: "Importar momios" },
+  { href: "/posiciones", label: "Posiciones y llaves" },
   { href: "/analytics", label: "Analytics (modelos)" },
   { href: "/worldcup", label: "Mundial 2026" },
   { href: "/stats", label: "Estadísticas" },

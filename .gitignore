@@ -44,3 +44,7 @@ yarn-error.log*
 
 # Capturas de referencia (no parte de la app)
 /Play do it/
+
+# Estadisticas mundial (screenshots de referencia, no parte de la app)
+/estadisticas mundial/
+/Estad*.zip

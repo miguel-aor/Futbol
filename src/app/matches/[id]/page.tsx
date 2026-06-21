@@ -18,6 +18,7 @@ import {
   RefereeUnconfirmedCard,
 } from "@/components/IntelligencePanels";
 import { MARKET_BY_KEY } from "@/data/markets";
+import { getMatchScenario } from "@/lib/worldcup/scenarios";
 import {
   FIXTURE_LABELS,
   formatDate,
@@ -324,6 +325,42 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           <TrendRow name={awayName} trend={awayTrend} />
         </div>
       </section>
+
+      {/* Contexto de grupo (posiciones + escenario) */}
+      {(() => {
+        const sc = getMatchScenario(match.homeTeamId, match.awayTeamId);
+        if (!sc.home && !sc.away) return null;
+        const row = (t: typeof sc.home) =>
+          t ? (
+            <div className="flex-1 rounded-lg bg-base-900/50 p-3">
+              <div className="mb-1 text-sm font-semibold text-slate-100">
+                {t.group}{t.position} · {t.teamName}
+                <span className="ml-2 rounded px-1.5 py-0.5 text-[10px] text-slate-400">
+                  {t.points} pts · {t.played} PJ
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400">{t.summary}</p>
+              <div className="mt-1 flex flex-wrap gap-1 text-[10px] text-slate-400">
+                <span className="chip bg-base-800/60">Debe ganar {Math.round(t.mustWinPressure * 100)}%</span>
+                <span className="chip bg-base-800/60">Rotación {Math.round(t.rotationRisk * 100)}%</span>
+                <span className="chip bg-base-800/60">Motivación {Math.round(t.motivationScore * 100)}%</span>
+              </div>
+            </div>
+          ) : null;
+        return (
+          <section className="card p-5">
+            <h3 className="mb-3 font-semibold text-slate-100">Contexto de grupo</h3>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              {row(sc.home)}
+              {row(sc.away)}
+            </div>
+            <p className="mt-3 text-[11px] text-slate-500">
+              Posiciones manual_screenshot (corte 21-06-2026 03:00 CDMX). Contexto que ajusta las picks; no reemplaza
+              el modelo base.
+            </p>
+          </section>
+        );
+      })()}
 
       {/* Pestañas */}
       <section>
