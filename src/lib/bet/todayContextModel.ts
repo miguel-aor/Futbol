@@ -9,6 +9,7 @@
 
 import { getTodayMatchContext } from "./statScreenshotContext";
 import { getMatchScenario } from "@/lib/worldcup/scenarios";
+import { calculateGoalkeeperSavesContext as gkSavesPlayerContext } from "./playerPropsContext";
 import type { BetMarket, MatchModelParams } from "@/lib/bet/types";
 import type { TeamRecentMatchStats } from "@/data/todayMatchContextStats";
 
@@ -137,8 +138,9 @@ export function recentContextProbability(
       return { prob: clamp01(poissonOver(lambda, line || 4.5, over)), notes: [`Tiros a puerta λ≈${lambda.toFixed(1)}.`] };
     }
     case "goalkeeper_saves": {
-      const lambda = isAway ? l.savesAway : l.savesHome;
-      return { prob: clamp01(poissonOver(lambda, line || 3.5, over || market.line == null)), notes: [`Atajadas λ≈${lambda.toFixed(1)}.`] };
+      const teamLambda = isAway ? l.savesAway : l.savesHome;
+      const gk = gkSavesPlayerContext(market.selection, market.teamId ?? "", teamLambda);
+      return { prob: clamp01(poissonOver(gk.lambda, line || 3.5, over || market.line == null)), notes: gk.notes };
     }
     case "cards":
     case "team_total_cards": {

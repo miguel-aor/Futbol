@@ -48,3 +48,5 @@ yarn-error.log*
 # Estadisticas mundial (screenshots de referencia, no parte de la app)
 /estadisticas mundial/
 /Estad*.zip
+/estadisticas jugadores/
+/Estadisticas*.zip
