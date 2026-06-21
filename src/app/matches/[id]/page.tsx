@@ -19,6 +19,8 @@ import {
 } from "@/components/IntelligencePanels";
 import { MARKET_BY_KEY } from "@/data/markets";
 import { getMatchScenario } from "@/lib/worldcup/scenarios";
+import { calculateExactScoreMatrix } from "@/lib/bet/exactScoreModel";
+import { getTodayMatchContext } from "@/lib/bet/statScreenshotContext";
 import {
   FIXTURE_LABELS,
   formatDate,
@@ -357,6 +359,67 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
             <p className="mt-3 text-[11px] text-slate-500">
               Posiciones manual_screenshot (corte 21-06-2026 03:00 CDMX). Contexto que ajusta las picks; no reemplaza
               el modelo base.
+            </p>
+          </section>
+        );
+      })()}
+
+      {/* Contexto último partido (stats 365Scores) */}
+      {(() => {
+        const c = getTodayMatchContext(match.id);
+        if (!c || !c.hasContext) return null;
+        const col = (s: typeof c.homeStats) =>
+          s ? (
+            <div className="flex-1 rounded-lg bg-base-900/50 p-3">
+              <div className="mb-1 text-sm font-semibold text-slate-100">{s.teamName} <span className="text-[11px] font-normal text-slate-500">vs {s.opponentName} ({s.scoreFor}-{s.scoreAgainst})</span></div>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[11px] text-slate-400">
+                <span>Posesión {s.possession}%</span><span>xG {s.xg}</span>
+                <span>Remates {s.shots} ({s.shotsOnTarget} a puerta)</span><span>Corners {s.corners}{s.cornersAgainst != null ? ` (${s.cornersAgainst} conc.)` : ""}</span>
+                <span>Faltas {s.fouls}</span><span>Amarillas {s.yellowCards}</span>
+                <span>Despejes {s.clearances}</span><span>Atajadas {s.gkSaves}</span>
+              </div>
+            </div>
+          ) : null;
+        return (
+          <section className="card p-5">
+            <h3 className="mb-3 font-semibold text-slate-100">Contexto último partido <span className="chip ml-1 bg-base-700/60 text-[10px] text-slate-400">365Scores screenshot · 1 partido</span></h3>
+            <div className="flex flex-col gap-3 sm:flex-row">{col(c.homeStats)}{col(c.awayStats)}</div>
+          </section>
+        );
+      })()}
+
+      {/* Marcadores exactos más probables */}
+      {(() => {
+        const es = calculateExactScoreMatrix(match.id);
+        if (!es) return null;
+        return (
+          <section className="card p-5">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <h3 className="font-semibold text-slate-100">Marcadores exactos más probables</h3>
+              <div className="flex flex-wrap gap-1 text-[10px]">
+                <span className="chip bg-base-700/60 text-slate-400">Poisson matrix</span>
+                <span className="chip bg-amber-500/15 text-amber-300">High variance</span>
+                {es.hasRecentContext ? <span className="chip bg-base-700/60 text-slate-400">+ contexto reciente</span> : null}
+              </div>
+            </div>
+            <div className="mb-3 flex flex-wrap gap-3 text-[11px] text-slate-400">
+              <span>1X2: <b className="text-slate-200">{Math.round(es.homeWin * 100)}</b> / {Math.round(es.draw * 100)} / {Math.round(es.awayWin * 100)}</span>
+              <span>xG: {es.xgHome} – {es.xgAway} (tot {es.expectedGoals})</span>
+              <span>BTTS sí: {Math.round(es.bttsYes * 100)}%</span>
+              <span>O2.5: {Math.round(es.over25 * 100)}%</span>
+              <span>{es.homeName} CS: {Math.round(es.homeCleanSheet * 100)}%</span>
+            </div>
+            <ol className="space-y-1">
+              {es.topScores.slice(0, 5).map((s, i) => (
+                <li key={s.scoreline} className="flex items-center justify-between rounded bg-base-900/40 px-3 py-1.5 text-sm">
+                  <span className="text-slate-200">{i + 1}. {es.homeName} {s.homeGoals}-{s.awayGoals} {es.awayName}</span>
+                  <span className="tabular-nums text-slate-400">{(s.probability * 100).toFixed(1)}% · cuota {s.fairOddsDecimal}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-2 text-[11px] text-slate-500">
+              Correct score = alta varianza: predicción del modelo, no Strong Value automático. La misma matriz
+              alimenta 1X2, goles, BTTS, team totals, hándicap y portería a cero.
             </p>
           </section>
         );

@@ -98,6 +98,8 @@ export interface BetMarket {
   /** Para player props / team props. */
   playerId?: string;
   teamId?: string;
+  /** Prop "Banca+" (cuenta también el suplente del rol) → prop de rol. */
+  benchPlus?: boolean;
   source: BetSource;
   reliability: Reliability;
   isDemo: boolean;

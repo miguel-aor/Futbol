@@ -25,6 +25,7 @@ import { getTeamStrengthContext } from "@/lib/teamStrength";
 import { assessRealism, explainPick } from "@/lib/bet/realismChecks";
 import { calculateModelAgreement } from "@/lib/bet/modelAgreement";
 import { getRefereeAssignment } from "@/data/refereeAssignments";
+import { recentContextProbability, scenarioVolumeNudge } from "@/lib/bet/todayContextModel";
 import type {
   BetMarket,
   BetSelection,
@@ -101,11 +102,32 @@ export function evaluateMarket(
       ? americanOddsToImpliedProbability(m.oppositeAmericanOdds)
       : null;
   const noVig = calculateNoVigProbability(implied, oppImplied);
-  const modelProbability = estimateModelProbability(m, {
+  const baseProbability = estimateModelProbability(m, {
     params,
     lambda: m.modelLambda ?? undefined,
     teamXG: m.marketType === "team_total_goals" ? m.modelLambda ?? undefined : undefined,
   });
+
+  // --- Capa de contexto reciente (stats 365Scores) ---
+  // El modelo base manda (85%); el contexto reciente ajusta (15%) + un pequeño
+  // empuje por escenario de grupo. sampleSize=1 → se marca y baja la confianza.
+  const recent = recentContextProbability(m, params);
+  const contextNotes: string[] = [];
+  let modelProbability = baseProbability;
+  let contextDirection: "boost" | "penalty" | null = null;
+  if (recent) {
+    const nudge = scenarioVolumeNudge(m, params);
+    // Peso del contexto: alto en props de volumen donde la base no tiene lambda
+    // informativa (tiros/atajadas → base por defecto poco fiable); bajo donde la
+    // base ya es sólida (goles/BTTS/corners/tarjetas).
+    const baseUninformative =
+      m.modelLambda == null && ["team_shots", "team_shots_on_target", "goalkeeper_saves"].includes(m.marketType);
+    const w = baseUninformative ? 0.7 : 0.15;
+    modelProbability = Math.min(0.99, Math.max(0.01, baseProbability * (1 - w) + recent.prob * w + nudge));
+    contextNotes.push(...recent.notes);
+    contextDirection = modelProbability >= baseProbability + 0.01 ? "boost" : modelProbability <= baseProbability - 0.01 ? "penalty" : null;
+  }
+
   const edge = calculateEdge(modelProbability, implied);
   const expectedValue = calculateExpectedValue(modelProbability, decimalOdds);
 
@@ -131,6 +153,7 @@ export function evaluateMarket(
     matchResolved,
     refereeConfirmed,
     refereeName: refAssignment?.referee?.name,
+    benchPlus: m.benchPlus,
     ctx,
   });
   const agreement = calculateModelAgreement({
@@ -145,6 +168,20 @@ export function evaluateMarket(
     ctx,
   });
 
+  // Flags de contexto reciente (informativos) + penalización leve por muestra.
+  const contextFlags: typeof realism.flags = [];
+  if (recent) {
+    contextFlags.push({ code: "last_match_context", label: "Last-match context", note: contextNotes.join(" "), severity: "info" });
+    if (contextDirection === "boost")
+      contextFlags.push({ code: "context_boost", label: "Context boost", note: "El contexto reciente sube la proyección.", severity: "info" });
+    if (contextDirection === "penalty")
+      contextFlags.push({ code: "context_penalty", label: "Context penalty", note: "El contexto reciente baja la proyección.", severity: "info" });
+    contextFlags.push({ code: "sample_size_1", label: "Sample size: 1", note: "Una sola muestra reciente; contexto con peso bajo.", severity: "info" });
+    contextFlags.push({ code: "src_365", label: "365Scores screenshot", note: "Contexto desde captura 365Scores (manual).", severity: "info" });
+  }
+  const flags = [...realism.flags, ...contextFlags];
+  const sampleSizePenalty = recent ? 3 : 0;
+
   const riskLevel = calculatePickRisk({
     marketType: m.marketType,
     edge,
@@ -152,7 +189,7 @@ export function evaluateMarket(
     isDemo: m.isDemo,
     riskBump: realism.riskBump,
   });
-  const hasDanger = realism.flags.some((f) => f.severity === "danger");
+  const hasDanger = flags.some((f) => f.severity === "danger");
   const rating = calculatePickRating(edge, expectedValue, riskLevel, {
     forceAvoid: realism.forceAvoid,
     hasDanger,
@@ -165,7 +202,7 @@ export function evaluateMarket(
     isDemo: m.isDemo,
     marketType: m.marketType,
     risk: riskLevel,
-    realismPenalty: realism.confidencePenalty,
+    realismPenalty: realism.confidencePenalty + sampleSizePenalty,
     modelAgreement: agreement.score,
   });
   const finalValueScore = calculateFinalValueScore({
@@ -174,18 +211,21 @@ export function evaluateMarket(
     confidenceScore,
     risk: riskLevel,
     modelAgreement: agreement.score,
-    realismPenalty: realism.confidencePenalty,
+    realismPenalty: realism.confidencePenalty + sampleSizePenalty,
     reliability: m.reliability,
     forceAvoid: realism.forceAvoid,
   });
-  const explanation = explainPick({
+  let explanation = explainPick({
     selection: m.selection,
     marketType: m.marketType,
     edge,
     rating,
     ctx,
-    flags: realism.flags,
+    flags,
   });
+  if (recent && contextNotes.length) {
+    explanation += ` Contexto reciente (365Scores): ${contextNotes.join(" ")}`;
+  }
 
   return {
     id: `sel-${m.id}`,
@@ -216,7 +256,7 @@ export function evaluateMarket(
     modelAgreement: agreement.score,
     modelAgreementLabel: agreement.label,
     strengthGap: ctx.gap,
-    realismFlags: realism.flags,
+    realismFlags: flags,
     explanation,
   };
 }

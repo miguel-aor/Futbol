@@ -49,6 +49,8 @@ export interface RealismInput {
   /** Designación arbitral confirmada para este partido (mercados disciplinarios). */
   refereeConfirmed?: boolean;
   refereeName?: string;
+  /** Prop Banca+ (cuenta el suplente del rol) → menor riesgo por sustitución. */
+  benchPlus?: boolean;
   ctx: StrengthContext;
 }
 
@@ -129,8 +131,11 @@ export function detectLowDataRisk(input: RealismInput): RealismFlag | null {
 
 /** Riesgo por mercado no soportado con datos suficientes (props sin alineación). */
 export function detectUnsupportedMarketRisk(input: RealismInput): RealismFlag | null {
-  if (isPlayerProp(input.marketType))
+  if (isPlayerProp(input.marketType)) {
+    if (input.benchPlus)
+      return { code: "bench_plus", label: "Banca+ / role prop", note: "Prop de rol (Banca+): si el jugador sale, el suplente suma; menor riesgo por sustitución. Aún depende del volumen del rol.", severity: "info" };
     return { code: "no_lineup", label: "Alineación no confirmada", note: "La prop depende de minutos/alineación no confirmada; no puede ser alta confianza.", severity: "warn" };
+  }
   if (isVolatileCount(input.marketType))
     return { code: "volatile_market", label: "Mercado volátil", note: "Tarjetas/faltas/offsides tienen alta varianza; confianza reducida aunque haya edge.", severity: "info" };
   return null;
@@ -178,6 +183,7 @@ const PENALTY: Record<string, number> = {
   unrealistic_under: 28,
   mismatch_trap: 22,
   no_lineup: 24,
+  bench_plus: 10,
   referee_unconfirmed: 12,
   extreme_line: 10,
   low_data: 10,
