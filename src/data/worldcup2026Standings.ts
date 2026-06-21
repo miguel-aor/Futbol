@@ -42,7 +42,7 @@ export const STANDINGS_LAST_UPDATED = "2026-06-21T03:00:00-06:00";
 export const STANDINGS_SOURCE = "365Scores screenshot";
 export const STANDINGS_CUTOFF_CDMX = "2026-06-21 03:00 America/Mexico_City";
 export const STANDINGS_WARNINGS = [
-  "Posiciones transcritas de screenshots 365Scores (manual_screenshot), no feed oficial.",
+  "Posiciones calculadas desde resultados confirmados del calendario (fixtures).",
   "Desempates avanzados (head-to-head/fair play) pendientes de validación.",
 ];
 

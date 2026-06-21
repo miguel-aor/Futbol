@@ -99,15 +99,17 @@ export const WORLD_CUP_FIXTURES: FixtureSeed[] = [
   f("wc-B-3", "B", "sui", "bih", "2026-06-18", 18, "los-angeles", 4, 1),
   f("wc-B-4", "B", "can", "qat", "2026-06-18", 22, "vancouver", 6, 0),
   f("wc-A-4", "A", "mex", "kor", "2026-06-19", 1, "guadalajara", 1, 0),
-  // Resto de la jornada 2 (programada):
-  f("wc-D-3", "D", "usa", "aus", "2026-06-19", 22, "seattle"),
-  f("wc-C-3", "C", "sco", "mar", "2026-06-19", 16, "boston"),
-  f("wc-C-4", "C", "bra", "hai", "2026-06-19", 19, "philadelphia"),
-  f("wc-D-4", "D", "tur", "par", "2026-06-19", 22, "bay-area"),
-  f("wc-F-3", "F", "ned", "swe", "2026-06-20", 16, "houston"),
-  f("wc-E-3", "E", "ger", "civ", "2026-06-20", 18, "toronto"),
-  f("wc-E-4", "E", "ecu", "cuw", "2026-06-20", 20, "kansas-city"),
-  f("wc-F-4", "F", "tun", "jpn", "2026-06-20", 22, "monterrey"),
+  // Jornada 2 grupos C-F YA JUGADOS (resultados reales, 19-20 jun 2026; fuentes:
+  // Wikipedia 2026 FIFA World Cup Group C/D/E/F, ESPN, Opta Analyst).
+  f("wc-D-3", "D", "usa", "aus", "2026-06-19", 22, "seattle", 2, 0),
+  f("wc-C-3", "C", "sco", "mar", "2026-06-19", 16, "boston", 0, 1),
+  f("wc-C-4", "C", "bra", "hai", "2026-06-19", 19, "philadelphia", 3, 0),
+  f("wc-D-4", "D", "tur", "par", "2026-06-19", 22, "bay-area", 0, 1),
+  f("wc-F-3", "F", "ned", "swe", "2026-06-20", 16, "houston", 5, 1),
+  f("wc-E-3", "E", "ger", "civ", "2026-06-20", 18, "toronto", 2, 1),
+  f("wc-E-4", "E", "ecu", "cuw", "2026-06-20", 20, "kansas-city", 0, 0),
+  f("wc-F-4", "F", "tun", "jpn", "2026-06-20", 22, "monterrey", 0, 4),
+  // Jornada 2 grupos G/H (HOY 21 jun, programados):
   f("wc-H-3", "H", "esp", "ksa", "2026-06-21", 16, "atlanta"),
   f("wc-G-3", "G", "bel", "irn", "2026-06-21", 18, "los-angeles"),
   f("wc-H-4", "H", "uru", "cpv", "2026-06-21", 20, "miami"),

@@ -11,7 +11,9 @@ import {
   WORLD_CUP_STANDINGS,
   type GroupId,
   type GroupStanding,
+  type GroupTeamStatus,
 } from "@/data/worldcup2026Standings";
+import { computeWorldCupMatches } from "@/lib/worldcup-2026/tournament-form";
 
 export interface WorldCupMatchResult {
   matchId: string;
@@ -93,25 +95,80 @@ export function calculateGroupStandings(results: WorldCupMatchResult[]): GroupSt
   return out;
 }
 
-/** Todas las posiciones del snapshot actual. */
+const GROUP_GAMES = 3;
+
+/** Deriva clasificado/eliminado de una tabla de grupo ya ordenada. */
+function deriveStatus(team: GroupStanding, sorted: GroupStanding[]): GroupTeamStatus {
+  const remaining = Math.max(0, GROUP_GAMES - team.played);
+  const maxPts = team.points + remaining * 3;
+  // Eliminado: ≥2 equipos ya superan el máximo alcanzable por este equipo.
+  const better = sorted.filter((t) => t.teamId !== team.teamId && t.points > maxPts).length;
+  if (better >= 2) return "eliminated";
+  if (remaining === 0 && team.position >= 4) return "eliminated";
+  const third = sorted[2];
+  const thirdMax = third ? third.points + Math.max(0, GROUP_GAMES - third.played) * 3 : 0;
+  if (team.position <= 2 && (team.points >= thirdMax || remaining === 0)) return "qualified";
+  return "active";
+}
+
+// Standings COMPUTADOS desde los resultados confirmados (fixtures). Sustituyen al
+// snapshot manual de screenshots para mantener coherencia con el calendario.
+let computedCache: GroupStanding[] | null = null;
+function buildStandingsFromResults(): GroupStanding[] {
+  const wc = computeWorldCupMatches();
+  const results: WorldCupMatchResult[] = wc
+    .filter((m) => m.homeScore != null && m.awayScore != null)
+    .map((m) => ({
+      matchId: m.id,
+      group: m.group as GroupId,
+      homeTeamId: m.homeId,
+      homeTeamName: m.homeName,
+      awayTeamId: m.awayId,
+      awayTeamName: m.awayName,
+      homeScore: m.homeScore as number,
+      awayScore: m.awayScore as number,
+      status: "finished",
+      kickoffTime: m.kickoff,
+      timezone: "America/Mexico_City",
+      source: "Computed from confirmed results (fixtures)",
+      reliability: "confirmed",
+      lastUpdated: m.kickoff,
+    }));
+  const table = calculateGroupStandings(results);
+  // Deriva estado por grupo.
+  const out: GroupStanding[] = [];
+  for (const g of GROUP_IDS) {
+    const rows = table.filter((r) => r.group === g);
+    out.push(...rows.map((r) => ({ ...r, status: deriveStatus(r, rows) })));
+  }
+  return out;
+}
+
+/** Todas las posiciones, COMPUTADAS desde resultados confirmados (memoizado). */
 export function getAllStandings(): GroupStanding[] {
+  if (!computedCache) computedCache = buildStandingsFromResults();
+  return computedCache;
+}
+
+/** Snapshot manual de screenshots (referencia; ya no es la fuente principal). */
+export function getSnapshotStandings(): GroupStanding[] {
   return WORLD_CUP_STANDINGS;
 }
 
 export function getStandingsByGroup(group: GroupId): GroupStanding[] {
-  return sortGroup(WORLD_CUP_STANDINGS.filter((r) => r.group === group));
+  return sortGroup(getAllStandings().filter((r) => r.group === group));
 }
 
 export function getTeamStanding(teamId: string): GroupStanding | null {
-  return WORLD_CUP_STANDINGS.find((r) => r.teamId === teamId) ?? null;
+  return getAllStandings().find((r) => r.teamId === teamId) ?? null;
 }
 
 export function getQualifiedTeams(): GroupStanding[] {
-  return WORLD_CUP_STANDINGS.filter((r) => r.status === "qualified");
+  return getAllStandings().filter((r) => r.status === "qualified");
 }
 
 export function getEliminatedTeams(): GroupStanding[] {
-  return WORLD_CUP_STANDINGS.filter((r) => r.status === "eliminated");
+  return getAllStandings().filter((r) => r.status === "eliminated");
 }
 
 export interface GroupScenarioContext {
