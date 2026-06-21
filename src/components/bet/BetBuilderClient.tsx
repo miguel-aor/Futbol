@@ -10,6 +10,7 @@ import {
   type EligibilityMatch,
 } from "@/lib/bet/eligibility";
 import { dedupeMatches } from "@/lib/bet/dedupe";
+import { filterBettable, isDemoEnabled } from "@/lib/bet/bettable";
 import type { MatchModelParams } from "@/lib/bet/types";
 import type { MatchupPrediction, WorldCupMatch } from "@/lib/worldcup-2026/types";
 import { MarketEntryForm, type BuilderMatch } from "./MarketEntryForm";
@@ -134,10 +135,10 @@ export function BetBuilderClient() {
     label: `${m.name}${m.isDemo ? " (demo)" : ""} — ${m.kickoff.slice(5, 10)} ${m.kickoff.slice(11, 16)} UTC`,
   }));
 
-  const demoPool = useMemo(() => buildValuePicks().map(selectionToSlipPick), []);
+  const demoPool = useMemo(() => (isDemoEnabled() ? buildValuePicks().map(selectionToSlipPick) : []), []);
   const pool = useMemo(() => {
     const seen = new Set(picks.map((p) => p.selectionId));
-    return [...picks, ...demoPool.filter((p) => !seen.has(p.selectionId))];
+    return filterBettable([...picks, ...demoPool.filter((p) => !seen.has(p.selectionId))]);
   }, [picks, demoPool]);
 
   return (

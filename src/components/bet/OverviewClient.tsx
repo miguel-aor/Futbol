@@ -5,7 +5,9 @@ import { useEffect, useMemo, useState } from "react";
 import { buildValuePicks } from "@/lib/bet/buildPicks";
 import { rankBestValuePicks } from "@/lib/betBuilderModels";
 import { dedupeSelections } from "@/lib/bet/dedupe";
-import { DEMO_LAST_UPDATED, DEMO_MATCH } from "@/data/betBuilderMock";
+import { filterBettable, isDemoEnabled } from "@/lib/bet/bettable";
+import { DEMO_MATCH } from "@/data/betBuilderMock";
+import { MATCHES_LAST_UPDATED } from "@/data/currentFootballMatches";
 import type { BetSelection } from "@/lib/bet/types";
 import { PickCard } from "./PickCard";
 import { BetSlip } from "./BetSlip";
@@ -49,7 +51,8 @@ function applyFilter(picks: BetSelection[], f: Filter): BetSelection[] {
 }
 
 export function OverviewClient() {
-  const demoUsa = useMemo(() => buildValuePicks(), []);
+  // El demo (USA vs Australia, ya jugado) solo en modo demo explícito.
+  const demoUsa = useMemo(() => (isDemoEnabled() ? buildValuePicks() : []), []);
   const [upcoming, setUpcoming] = useState<BetSelection[]>([]);
   useEffect(() => {
     let active = true;
@@ -61,8 +64,9 @@ export function OverviewClient() {
       active = false;
     };
   }, []);
+  // Solo picks de partidos APOSTABLES (próximos, no finalizados, no demo).
   const allPicks = useMemo(
-    () => rankBestValuePicks(dedupeSelections([...upcoming, ...demoUsa])),
+    () => rankBestValuePicks(filterBettable(dedupeSelections([...upcoming, ...demoUsa]))),
     [upcoming, demoUsa],
   );
   const [filter, setFilter] = useState<Filter>("all");
@@ -95,8 +99,8 @@ export function OverviewClient() {
           </Link>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="chip border border-white/10 bg-white/5 text-wc-muted">Datos al {DEMO_LAST_UPDATED.slice(0, 10)}</span>
-          <BetSourceBadge source="Demo" reliability="demo" />
+          <span className="chip border border-white/10 bg-white/5 text-wc-muted">Datos al {MATCHES_LAST_UPDATED.slice(0, 10)}</span>
+          {isDemoEnabled() ? <BetSourceBadge source="Demo" reliability="demo" /> : null}
         </div>
       </header>
 
@@ -149,9 +153,9 @@ export function OverviewClient() {
 
         <aside className="lg:sticky lg:top-20 lg:self-start">
           <BetSlip compact />
-          <p className="mt-2 text-center text-[11px] text-wc-muted">
-            Partido demo: {DEMO_MATCH.name}
-          </p>
+          {isDemoEnabled() ? (
+            <p className="mt-2 text-center text-[11px] text-wc-muted">Partido demo: {DEMO_MATCH.name}</p>
+          ) : null}
         </aside>
       </div>
     </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Field, Select } from "@/components/analytics/primitives";
 import { buildValuePicks, detectGameScriptCorrelations, selectionToSlipPick } from "@/lib/bet/buildPicks";
+import { filterBettable, isDemoEnabled } from "@/lib/bet/bettable";
 import { rankBestValuePicks } from "@/lib/betBuilderModels";
 import { dedupeSelections } from "@/lib/bet/dedupe";
 import type { BetSelection, MarketCategory, RiskLevel } from "@/lib/bet/types";
@@ -16,8 +17,8 @@ const RISK_RANK: Record<RiskLevel, number> = { low: 0, medium: 1, high: 2 };
 type Sort = "ev" | "edge" | "confidence" | "risk" | "odds";
 
 export function ValuePicksClient() {
-  // Demo USA (local) + value picks de los próximos 8 partidos (API, server).
-  const demoUsa = useMemo(() => buildValuePicks(), []);
+  // Demo USA (ya jugado): solo en modo demo explícito.
+  const demoUsa = useMemo(() => (isDemoEnabled() ? buildValuePicks() : []), []);
   const [upcoming, setUpcoming] = useState<BetSelection[]>([]);
   const [imported, setImported] = useState<BetSelection[]>([]);
   useEffect(() => {
@@ -41,9 +42,10 @@ export function ValuePicksClient() {
       active = false;
     };
   }, []);
-  // Prioridad en duplicados: importado > upcoming(demo) > demo USA.
+  // Prioridad en duplicados: importado > upcoming > demo. Solo apostables
+  // (próximos, no finalizados): los importados de partidos jugados se excluyen.
   const all = useMemo(
-    () => dedupeSelections([...imported, ...upcoming, ...demoUsa]),
+    () => filterBettable(dedupeSelections([...imported, ...upcoming, ...demoUsa])),
     [imported, upcoming, demoUsa],
   );
   const [category, setCategory] = useState<MarketCategory | "all">("all");

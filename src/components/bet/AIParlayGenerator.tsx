@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Field, Select } from "@/components/analytics/primitives";
+import { filterBettable } from "@/lib/bet/bettable";
 import {
   generateParlayCombinations,
   rankParlays,
@@ -84,7 +85,9 @@ export function AIParlayGenerator({ pool }: { pool: BetSlipPick[] }) {
   const [advice, setAdvice] = useState<AIParlayAdvice | null>(null);
   const [loadingAI, setLoadingAI] = useState(false);
 
-  const eligibleCount = pool.filter((p) => p.edge > 0 && p.expectedValue > 0).length;
+  // Solo picks de partidos APOSTABLES (próximos, no finalizados/demo).
+  const bettablePool = useMemo(() => filterBettable(pool), [pool]);
+  const eligibleCount = bettablePool.filter((p) => p.edge > 0 && p.expectedValue > 0).length;
 
   const generate = () => {
     const settings: ParlayGenerationSettings = {
@@ -95,7 +98,7 @@ export function AIParlayGenerator({ pool }: { pool: BetSlipPick[] }) {
       includeDemo,
       strategy,
     };
-    let result = generateParlayCombinations(pool, settings);
+    let result = generateParlayCombinations(bettablePool, settings);
     if (strategy !== "all") result = result.filter((p) => p.strategy === strategy);
     setParlays(rankParlays(result, sort));
     setAdvice(null);
