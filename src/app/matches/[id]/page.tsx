@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getMatchDetail, getMatchIntelligence, getTeamLabels } from "@/lib/data-access";
-import { OpportunityTable } from "@/components/OpportunityTable";
 import { TrendMiniChart } from "@/components/TrendMiniChart";
 import { MarketTabs } from "@/components/MarketTabs";
 import { DataQualityBadge, DataSourceBadge } from "@/components/badges";
@@ -17,10 +16,11 @@ import {
   RefereeCard,
   RefereeUnconfirmedCard,
 } from "@/components/IntelligencePanels";
-import { MARKET_BY_KEY } from "@/data/markets";
 import { getMatchScenario } from "@/lib/worldcup/scenarios";
 import { calculateExactScoreMatrix } from "@/lib/bet/exactScoreModel";
 import { getTodayMatchContext } from "@/lib/bet/statScreenshotContext";
+import { buildMatchProjectionPicks } from "@/lib/bet/matchPicks";
+import { PickTable } from "@/components/bet/PickTable";
 import {
   FIXTURE_LABELS,
   formatDate,
@@ -29,7 +29,6 @@ import {
   formatTime,
   formatUpdatedAt,
 } from "@/lib/format";
-import type { OpportunityView } from "@/lib/data-access";
 import { calculateCoachImpact } from "@/lib/prediction/intelligence";
 import { ArrowLeftIcon, ClockIcon, CompassIcon, PinIcon, StadiumIcon } from "@/components/icons";
 
@@ -44,33 +43,12 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   ]);
   if (!detail) notFound();
 
-  const { match, home, away, opportunities, keyPlayers } = detail;
+  const { match, home, away } = detail;
   const p = match.prediction;
   const homeName = home?.name ?? match.homeTeamId;
   const awayName = away?.name ?? match.awayTeamId;
   const homeCode = home?.code ?? match.homeTeamId.toUpperCase();
   const awayCode = away?.code ?? match.awayTeamId.toUpperCase();
-
-  const opViews: OpportunityView[] = opportunities.map((o) => ({
-    ...o,
-    match: {
-      id: match.id,
-      fixtureType: match.fixtureType,
-      competition: match.competition,
-      groupId: match.groupId,
-      kickoff: match.kickoff,
-      status: match.status,
-      venue: match.venue,
-      city: match.city,
-      homeScore: match.homeScore,
-      awayScore: match.awayScore,
-      home: { id: match.homeTeamId, name: homeName, code: homeCode, flag: home?.flag ?? "🏳️", groupId: match.groupId, confederation: home?.confederation ?? "UEFA" },
-      away: { id: match.awayTeamId, name: awayName, code: awayCode, flag: away?.flag ?? "🏳️", groupId: match.groupId, confederation: away?.confederation ?? "UEFA" },
-      source: match.source,
-      updatedAt: match.updatedAt,
-    },
-    player: o.playerId ? { id: o.playerId, name: keyPlayers.find((k) => k.id === o.playerId)?.name ?? o.playerId, teamId: "" } : null,
-  }));
 
   const homeTrend = match.trends.find((t) => t.teamId === match.homeTeamId);
   const awayTrend = match.trends.find((t) => t.teamId === match.awayTeamId);
@@ -442,20 +420,27 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         />
       </section>
 
-      {/* Picks (tabla) */}
-      <section>
-        <SectionTitle title="Picks del partido" subtitle="Mercados con edge contra cuota mock" />
-        <OpportunityTable opportunities={opViews} />
-        <div className="mt-4 space-y-2">
-          {opViews.slice(0, 5).map((o) => (
-            <div key={o.id} className="card p-3 text-sm">
-              <span className="font-medium text-slate-100">{o.pick}</span>
-              <span className="text-slate-500"> · {MARKET_BY_KEY[o.marketKey]?.label}</span>
-              <p className="mt-1 text-xs text-slate-500">{o.reason}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Picks del partido (modelo real: líneas dinámicas, sin mock) */}
+      {(() => {
+        const projection = buildMatchProjectionPicks(match.id);
+        return (
+          <section>
+            <SectionTitle
+              title="Picks del partido"
+              subtitle="Proyecciones del modelo: línea dinámica por mercado, contexto reciente y árbitro. Sin plantillas fijas ni mock."
+            />
+            {projection.length ? (
+              <PickTable rows={projection} />
+            ) : (
+              <EmptyState title="Sin picks proyectables" message="No hay proyección de modelo para este partido (¿finalizado o sin datos?)." />
+            )}
+            <p className="mt-2 text-[11px] text-slate-500">
+              Cuotas mostradas = cuota justa del modelo (no hay momio de mercado conectado). Importa momios en{" "}
+              <Link href="/importar" className="text-edge-mid hover:underline">/importar</Link> para calcular edge/EV reales.
+            </p>
+          </section>
+        );
+      })()}
     </div>
   );
 }
