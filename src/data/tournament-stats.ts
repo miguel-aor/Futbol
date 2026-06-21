@@ -32,10 +32,11 @@ export interface RealLeaderboard {
   entries: StatEntry[];
 }
 
-export const TOURNAMENT_STATS_AS_OF = "2026-06-19";
+export const TOURNAMENT_STATS_AS_OF = "2026-06-21";
 
 export const TOURNAMENT_STATS_SOURCES = [
-  "Wikipedia (Group A/B)",
+  "365Scores screenshot",
+  "Wikipedia (Group A-F)",
   "FIFA.com",
   "FOX Sports (stats)",
   "ESPN / Opta (The Analyst)",
@@ -49,10 +50,16 @@ export const REAL_LEADERBOARDS: RealLeaderboard[] = [
     key: "scorers",
     label: "Máximos goleadores",
     unit: "goles",
-    note: "J1 + J2 grupos A/B. Bota de Oro provisional: Messi y Jonathan David (hat-trick vs Catar) con 3.",
+    note: "J1 + J2 (grupos A-F jugados). Bota de Oro provisional con 3: Undav, J. David y Messi (365Scores/Opta).",
     entries: [
-      { name: "Lionel Messi", teamId: "arg", country: "Argentina", value: 3 },
+      { name: "Deniz Undav", teamId: "ger", country: "Alemania", value: 3 },
       { name: "Jonathan David", teamId: "can", country: "Canadá", value: 3 },
+      { name: "Lionel Messi", teamId: "arg", country: "Argentina", value: 3 },
+      { name: "Ayase Ueda", teamId: "jpn", country: "Japón", value: 2 },
+      { name: "Brian Brobbey", teamId: "ned", country: "Países Bajos", value: 2 },
+      { name: "Cody Gakpo", teamId: "ned", country: "Países Bajos", value: 2 },
+      { name: "Crysencio Summerville", teamId: "ned", country: "Países Bajos", value: 2 },
+      { name: "Daichi Kamada", teamId: "jpn", country: "Japón", value: 2 },
       { name: "Kylian Mbappé", teamId: "fra", country: "Francia", value: 2 },
       { name: "Erling Haaland", teamId: "nor", country: "Noruega", value: 2 },
       { name: "Harry Kane", teamId: "eng", country: "Inglaterra", value: 2 },
@@ -191,6 +198,26 @@ export const REAL_LEADERBOARDS: RealLeaderboard[] = [
       { name: "Jude Bellingham", teamId: "eng", country: "Inglaterra", value: 3 },
       { name: "Ryan Gravenberch", teamId: "ned", country: "Países Bajos", value: 2 },
       { name: "Hannes Delcroix", teamId: "hai", country: "Haití", value: 2 },
+    ],
+  },
+  {
+    key: "saves",
+    label: "Porteros con más atajadas",
+    unit: "atajadas/partido",
+    note: "Atajadas por partido (365Scores screenshot, manual; corte 21 jun). Al Owais (Arabia) viene de 9 vs Uruguay.",
+    entries: [
+      { name: "Eloy Room", teamId: "cuw", country: "Curazao", value: 9.5 },
+      { name: "Mohammed Al Owais", teamId: "ksa", country: "Arabia Saudita", value: 9 },
+      { name: "Dominik Livaković", teamId: "cro", country: "Croacia", value: 7 },
+      { name: "Vozinha", teamId: "cpv", country: "Cabo Verde", value: 7 },
+      { name: "Alireza Beiranvand", teamId: "irn", country: "Irán", value: 6 },
+      { name: "Édouard Mendy", teamId: "sen", country: "Senegal", value: 5 },
+      { name: "Mahmoud Abunada", teamId: "qat", country: "Catar", value: 4.5 },
+      { name: "Patrick Beach", teamId: "aus", country: "Australia", value: 4.5 },
+      { name: "Bart Verbruggen", teamId: "ned", country: "Países Bajos", value: 4 },
+      { name: "Orlando Gill", teamId: "par", country: "Paraguay", value: 4 },
+      { name: "Matej Kovář", teamId: "cze", country: "Chequia", value: 3.5 },
+      { name: "Mostafa Shobeir", teamId: "egy", country: "Egipto", value: 3 },
     ],
   },
 ];
