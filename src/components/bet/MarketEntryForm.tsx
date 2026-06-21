@@ -49,6 +49,9 @@ export function MarketEntryForm({ match }: { match: BuilderMatch }) {
   const [manualPlayer, setManualPlayer] = useState<string>("");
   const [selection, setSelection] = useState<string>("");
   const [line, setLine] = useState<number>(2.5);
+  // Origen de la línea: "manual_selected" cuando el usuario la elige a mano.
+  // El reset por defecto NO debe pisar una línea elegida manualmente.
+  const [lineSource, setLineSource] = useState<"default" | "manual_selected">("default");
   const [americanOdds, setAmericanOdds] = useState<number>(-110);
   const [lambda, setLambda] = useState<number>(1);
   const [notes, setNotes] = useState<string>("");
@@ -62,15 +65,19 @@ export function MarketEntryForm({ match }: { match: BuilderMatch }) {
     setMarketType(getMarketTypeOptions(category)[0].value);
   }, [category]);
 
-  // Reset dependientes al cambiar mercado o partido.
+  // Reset dependientes SOLO al cambiar de mercado o de PARTIDO (por id), no en
+  // cada nuevo objeto `match` (que cambia al cargar la predicción async y antes
+  // pisaba la línea manual del usuario, p. ej. 5.5 → 8.5).
   useEffect(() => {
     setTeamId(match.params.homeId);
     setLine(getDefaultLineForMarket(marketType));
+    setLineSource("default");
     setLambda(getDefaultLambda(marketType, match, match.params.homeId));
     if (players.length) setPlayerId(players[0].id);
     const opts = getMarketSelectionOptions(marketType, match);
     setSelection(opts[0] ?? "Más de");
-  }, [marketType, match, players]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [marketType, match.id]);
 
   const needsLine = marketRequiresLine(marketType);
   const needsTeam = marketRequiresTeam(marketType);
@@ -80,6 +87,12 @@ export function MarketEntryForm({ match }: { match: BuilderMatch }) {
   const playerName = players.find((p) => p.id === playerId)?.name ?? manualPlayer;
   const selectionOptions = getMarketSelectionOptions(marketType, match, teamName);
   const isScorer = marketType === "anytime_goalscorer" || marketType === "first_goalscorer";
+  // Mercados de conteo que la casa muestra como threshold entero (N+).
+  const thresholdMarket = [
+    "goalkeeper_saves", "player_shots", "player_shots_on_target", "player_assists",
+    "player_fouls", "player_fouls_drawn", "player_cards",
+  ].includes(marketType);
+  const plusLabel = (l: number) => `${Math.ceil(l)}+`;
 
   // Construye la selección final (texto legible + teamId/lambda).
   const built = useMemo(() => {
@@ -89,12 +102,16 @@ export function MarketEntryForm({ match }: { match: BuilderMatch }) {
     let finalLambda: number | null = null;
     if (needsPlayer) {
       const pname = playerName || "Jugador";
-      finalSelection = isScorer ? pname : `${pname} ${selection} ${line}`;
+      finalSelection = isScorer ? pname : thresholdMarket ? `${pname} ${plusLabel(line)}` : `${pname} ${selection} ${line}`;
       finalLambda = lambda;
     } else if (needsTeam) {
       finalTeamId = teamId;
       finalSelection =
-        marketType === "team_win_either_half" ? `${teamName} gana alguna mitad` : `${teamName} ${selection} ${line}`;
+        marketType === "team_win_either_half"
+          ? `${teamName} gana alguna mitad`
+          : thresholdMarket
+            ? `${teamName} ${plusLabel(line)}`
+            : `${teamName} ${selection} ${line}`;
       finalLambda = lambda;
     } else {
       if (marketType === "match_result" || marketType === "asian_handicap") {
@@ -104,7 +121,7 @@ export function MarketEntryForm({ match }: { match: BuilderMatch }) {
       finalSelection = needsLine ? `${selection} ${line}` : selection;
     }
     return { label, finalSelection, finalTeamId, finalLambda };
-  }, [category, marketType, selection, line, lambda, teamId, teamName, playerName, needsLine, needsPlayer, needsTeam, isScorer, match]);
+  }, [category, marketType, selection, line, lambda, teamId, teamName, playerName, needsLine, needsPlayer, needsTeam, isScorer, thresholdMarket, match]);
 
   // Autollenar el momio de referencia (capturas PlayDoit) si existe la selección.
   const [loadedOdds, setLoadedOdds] = useState(false);
@@ -192,8 +209,11 @@ export function MarketEntryForm({ match }: { match: BuilderMatch }) {
             <Field label="Línea">
               <Select
                 value={`${line}`}
-                onChange={(v) => setLine(Number(v))}
-                options={getMarketLineOptions(marketType).map((n) => ({ value: `${n}`, label: `${n}` }))}
+                onChange={(v) => {
+                  setLine(Number(v));
+                  setLineSource("manual_selected");
+                }}
+                options={getMarketLineOptions(marketType).map((n) => ({ value: `${n}`, label: thresholdMarket ? `${Math.ceil(n)}+` : `${n}` }))}
               />
             </Field>
             <Field label="Momio americano">

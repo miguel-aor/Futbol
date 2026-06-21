@@ -214,15 +214,19 @@ export function getDefaultLineForMarket(mt: MarketType): number {
 
 export function getMarketLineOptions(mt: MarketType): number[] {
   if (mt === "asian_handicap") return [-2, -1.5, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.5, 2];
-  if (mt === "total_goals" || mt === "team_total_goals") return [0.5, 1.5, 2.5, 3.5, 4.5];
-  if (mt === "corners" || mt === "team_total_corners") return [3.5, 4.5, 5.5, 8.5, 9.5, 10.5, 11.5];
-  if (mt === "cards" || mt === "team_total_cards") return [0.5, 1.5, 2.5, 3.5, 4.5, 5.5];
-  if (mt === "offsides") return [1.5, 2.5, 3.5, 4.5];
-  if (mt === "team_shots") return [8.5, 10.5, 11.5, 13.5];
-  if (mt === "team_shots_on_target") return [3.5, 4.5, 5.5];
+  if (mt === "total_goals") return [0.5, 1.5, 2.5, 3.5, 4.5, 5.5];
+  if (mt === "team_total_goals") return [0.5, 1.5, 2.5, 3.5, 4.5];
+  if (mt === "team_total_corners") return [2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5];
+  if (mt === "corners") return [5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5];
+  if (mt === "cards" || mt === "team_total_cards") return [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5];
+  if (mt === "offsides") return [1.5, 2.5, 3.5, 4.5, 5.5];
+  if (mt === "team_shots") return [4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5, 16.5, 17.5, 18.5, 19.5, 20.5];
+  if (mt === "team_shots_on_target") return [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5];
   if (mt === "player_passes") return [14.5, 19.5, 24.5, 29.5, 34.5];
-  if (mt === "goalkeeper_saves") return [1.5, 2.5, 3.5, 4.5];
-  return [0.5, 1.5, 2.5]; // tiros/SoT/asist/faltas/tarjetas jugador
+  if (mt === "goalkeeper_saves") return [1.5, 2.5, 3.5, 4.5, 5.5, 6.5];
+  if (mt === "player_shots") return [0.5, 1.5, 2.5, 3.5, 4.5, 5.5];
+  if (mt === "player_shots_on_target") return [0.5, 1.5, 2.5, 3.5];
+  return [0.5, 1.5, 2.5]; // asist/faltas/tarjetas jugador
 }
 
 /** λ por defecto sugerida para mercados de conteo (editable por el usuario). */
