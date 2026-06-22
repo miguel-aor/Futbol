@@ -1,0 +1,448 @@
+{
+  "generatedAt": "2026-06-22T01:41:15.082Z",
+  "source": "martj42/international_results",
+  "params": {
+    "baseElo": 1500,
+    "homeAdv": 65,
+    "minDate": "1990-01-01",
+    "shrink": 0.7
+  },
+  "mean": 1824.6,
+  "spread": 147.5,
+  "count": 48,
+  "ghostCount": 278,
+  "ratings": [
+    {
+      "teamId": "arg",
+      "teamName": "Argentina",
+      "elo": 2111.2,
+      "eloRaw": 2158.8,
+      "prior": 2000,
+      "matches": 469,
+      "lastMatch": "2026-06-16"
+    },
+    {
+      "teamId": "esp",
+      "teamName": "Espana",
+      "elo": 2087.8,
+      "eloRaw": 2128.5,
+      "prior": 1993,
+      "matches": 441,
+      "lastMatch": "2026-06-15"
+    },
+    {
+      "teamId": "fra",
+      "teamName": "Francia",
+      "elo": 2057.3,
+      "eloRaw": 2087.9,
+      "prior": 1986,
+      "matches": 451,
+      "lastMatch": "2026-06-16"
+    },
+    {
+      "teamId": "eng",
+      "teamName": "Inglaterra",
+      "elo": 2033.4,
+      "eloRaw": 2056.7,
+      "prior": 1979,
+      "matches": 431,
+      "lastMatch": "2026-06-17"
+    },
+    {
+      "teamId": "bra",
+      "teamName": "Brasil",
+      "elo": 2014.5,
+      "eloRaw": 2032.7,
+      "prior": 1972,
+      "matches": 532,
+      "lastMatch": "2026-06-19"
+    },
+    {
+      "teamId": "col",
+      "teamName": "Colombia",
+      "elo": 2001,
+      "eloRaw": 2037.5,
+      "prior": 1916,
+      "matches": 452,
+      "lastMatch": "2026-06-17"
+    },
+    {
+      "teamId": "ned",
+      "teamName": "Paises Bajos",
+      "elo": 1982.7,
+      "eloRaw": 1993.3,
+      "prior": 1958,
+      "matches": 426,
+      "lastMatch": "2026-06-20"
+    },
+    {
+      "teamId": "por",
+      "teamName": "Portugal",
+      "elo": 1980,
+      "eloRaw": 1986.5,
+      "prior": 1965,
+      "matches": 414,
+      "lastMatch": "2026-06-17"
+    },
+    {
+      "teamId": "ger",
+      "teamName": "Alemania",
+      "elo": 1976,
+      "eloRaw": 1989.7,
+      "prior": 1944,
+      "matches": 483,
+      "lastMatch": "2026-06-20"
+    },
+    {
+      "teamId": "mar",
+      "teamName": "Marruecos",
+      "elo": 1959.9,
+      "eloRaw": 1975.7,
+      "prior": 1923,
+      "matches": 406,
+      "lastMatch": "2026-06-19"
+    },
+    {
+      "teamId": "mex",
+      "teamName": "Mexico",
+      "elo": 1952.4,
+      "eloRaw": 1971,
+      "prior": 1909,
+      "matches": 658,
+      "lastMatch": "2026-06-18"
+    },
+    {
+      "teamId": "jpn",
+      "teamName": "Japon",
+      "elo": 1949.7,
+      "eloRaw": 1979.1,
+      "prior": 1881,
+      "matches": 525,
+      "lastMatch": "2026-06-20"
+    },
+    {
+      "teamId": "uru",
+      "teamName": "Uruguay",
+      "elo": 1911.9,
+      "eloRaw": 1916.2,
+      "prior": 1902,
+      "matches": 423,
+      "lastMatch": "2026-06-15"
+    },
+    {
+      "teamId": "bel",
+      "teamName": "Belgica",
+      "elo": 1906.9,
+      "eloRaw": 1888,
+      "prior": 1951,
+      "matches": 375,
+      "lastMatch": "2026-06-15"
+    },
+    {
+      "teamId": "cro",
+      "teamName": "Croacia",
+      "elo": 1905.3,
+      "eloRaw": 1891.6,
+      "prior": 1937,
+      "matches": 379,
+      "lastMatch": "2026-06-17"
+    },
+    {
+      "teamId": "usa",
+      "teamName": "Estados Unidos",
+      "elo": 1902.5,
+      "eloRaw": 1905.7,
+      "prior": 1895,
+      "matches": 620,
+      "lastMatch": "2026-06-19"
+    },
+    {
+      "teamId": "nor",
+      "teamName": "Noruega",
+      "elo": 1890.9,
+      "eloRaw": 1925.1,
+      "prior": 1811,
+      "matches": 395,
+      "lastMatch": "2026-06-16"
+    },
+    {
+      "teamId": "sui",
+      "teamName": "Suiza",
+      "elo": 1889.9,
+      "eloRaw": 1896.7,
+      "prior": 1874,
+      "matches": 383,
+      "lastMatch": "2026-06-18"
+    },
+    {
+      "teamId": "ecu",
+      "teamName": "Ecuador",
+      "elo": 1885.3,
+      "eloRaw": 1902.1,
+      "prior": 1846,
+      "matches": 411,
+      "lastMatch": "2026-06-20"
+    },
+    {
+      "teamId": "irn",
+      "teamName": "Iran",
+      "elo": 1864.1,
+      "eloRaw": 1862.9,
+      "prior": 1867,
+      "matches": 453,
+      "lastMatch": "2026-06-15"
+    },
+    {
+      "teamId": "sen",
+      "teamName": "Senegal",
+      "elo": 1864.1,
+      "eloRaw": 1853.9,
+      "prior": 1888,
+      "matches": 417,
+      "lastMatch": "2026-06-16"
+    },
+    {
+      "teamId": "aus",
+      "teamName": "Australia",
+      "elo": 1862.1,
+      "eloRaw": 1874.9,
+      "prior": 1832,
+      "matches": 384,
+      "lastMatch": "2026-06-19"
+    },
+    {
+      "teamId": "aut",
+      "teamName": "Austria",
+      "elo": 1861,
+      "eloRaw": 1870.5,
+      "prior": 1839,
+      "matches": 343,
+      "lastMatch": "2026-06-16"
+    },
+    {
+      "teamId": "kor",
+      "teamName": "Corea del Sur",
+      "elo": 1857.5,
+      "eloRaw": 1859.5,
+      "prior": 1853,
+      "matches": 556,
+      "lastMatch": "2026-06-18"
+    },
+    {
+      "teamId": "can",
+      "teamName": "Canada",
+      "elo": 1851.2,
+      "eloRaw": 1865.5,
+      "prior": 1818,
+      "matches": 333,
+      "lastMatch": "2026-06-18"
+    },
+    {
+      "teamId": "tur",
+      "teamName": "Turquia",
+      "elo": 1822,
+      "eloRaw": 1820.6,
+      "prior": 1825,
+      "matches": 399,
+      "lastMatch": "2026-06-19"
+    },
+    {
+      "teamId": "alg",
+      "teamName": "Argelia",
+      "elo": 1818.8,
+      "eloRaw": 1849.1,
+      "prior": 1748,
+      "matches": 394,
+      "lastMatch": "2026-06-16"
+    },
+    {
+      "teamId": "par",
+      "teamName": "Paraguay",
+      "elo": 1813.3,
+      "eloRaw": 1835.3,
+      "prior": 1762,
+      "matches": 398,
+      "lastMatch": "2026-06-19"
+    },
+    {
+      "teamId": "pan",
+      "teamName": "Panama",
+      "elo": 1785,
+      "eloRaw": 1782.9,
+      "prior": 1790,
+      "matches": 403,
+      "lastMatch": "2026-06-17"
+    },
+    {
+      "teamId": "egy",
+      "teamName": "Egipto",
+      "elo": 1784.2,
+      "eloRaw": 1778.7,
+      "prior": 1797,
+      "matches": 511,
+      "lastMatch": "2026-06-15"
+    },
+    {
+      "teamId": "civ",
+      "teamName": "Costa de Marfil",
+      "elo": 1783.6,
+      "eloRaw": 1807.9,
+      "prior": 1727,
+      "matches": 414,
+      "lastMatch": "2026-06-20"
+    },
+    {
+      "teamId": "sco",
+      "teamName": "Escocia",
+      "elo": 1774,
+      "eloRaw": 1791.1,
+      "prior": 1734,
+      "matches": 334,
+      "lastMatch": "2026-06-19"
+    },
+    {
+      "teamId": "swe",
+      "teamName": "Suecia",
+      "elo": 1764.6,
+      "eloRaw": 1759.7,
+      "prior": 1776,
+      "matches": 462,
+      "lastMatch": "2026-06-20"
+    },
+    {
+      "teamId": "uzb",
+      "teamName": "Uzbekistan",
+      "elo": 1736.7,
+      "eloRaw": 1782.8,
+      "prior": 1629,
+      "matches": 355,
+      "lastMatch": "2026-06-17"
+    },
+    {
+      "teamId": "cze",
+      "teamName": "Chequia",
+      "elo": 1726.6,
+      "eloRaw": 1732.5,
+      "prior": 1713,
+      "matches": 362,
+      "lastMatch": "2026-06-18"
+    },
+    {
+      "teamId": "cod",
+      "teamName": "RD Congo",
+      "elo": 1697.8,
+      "eloRaw": 1733.3,
+      "prior": 1615,
+      "matches": 343,
+      "lastMatch": "2026-06-17"
+    },
+    {
+      "teamId": "tun",
+      "teamName": "Tunez",
+      "elo": 1685.1,
+      "eloRaw": 1670.2,
+      "prior": 1720,
+      "matches": 456,
+      "lastMatch": "2026-06-20"
+    },
+    {
+      "teamId": "irq",
+      "teamName": "Irak",
+      "elo": 1670.6,
+      "eloRaw": 1697.4,
+      "prior": 1608,
+      "matches": 434,
+      "lastMatch": "2026-06-16"
+    },
+    {
+      "teamId": "jor",
+      "teamName": "Jordania",
+      "elo": 1669.8,
+      "eloRaw": 1717.3,
+      "prior": 1559,
+      "matches": 428,
+      "lastMatch": "2026-06-16"
+    },
+    {
+      "teamId": "ksa",
+      "teamName": "Arabia Saudita",
+      "elo": 1666.7,
+      "eloRaw": 1700.8,
+      "prior": 1587,
+      "matches": 578,
+      "lastMatch": "2026-06-15"
+    },
+    {
+      "teamId": "qat",
+      "teamName": "Catar",
+      "elo": 1639.8,
+      "eloRaw": 1590.5,
+      "prior": 1755,
+      "matches": 503,
+      "lastMatch": "2026-06-18"
+    },
+    {
+      "teamId": "rsa",
+      "teamName": "Sudafrica",
+      "elo": 1636.2,
+      "eloRaw": 1651.3,
+      "prior": 1601,
+      "matches": 456,
+      "lastMatch": "2026-06-18"
+    },
+    {
+      "teamId": "nzl",
+      "teamName": "Nueva Zelanda",
+      "elo": 1620.1,
+      "eloRaw": 1712.3,
+      "prior": 1405,
+      "matches": 235,
+      "lastMatch": "2026-06-15"
+    },
+    {
+      "teamId": "gha",
+      "teamName": "Ghana",
+      "elo": 1611.3,
+      "eloRaw": 1660.7,
+      "prior": 1496,
+      "matches": 420,
+      "lastMatch": "2026-06-17"
+    },
+    {
+      "teamId": "cpv",
+      "teamName": "Cabo Verde",
+      "elo": 1610,
+      "eloRaw": 1649.9,
+      "prior": 1517,
+      "matches": 201,
+      "lastMatch": "2026-06-15"
+    },
+    {
+      "teamId": "hai",
+      "teamName": "Haiti",
+      "elo": 1587.2,
+      "eloRaw": 1656.3,
+      "prior": 1426,
+      "matches": 301,
+      "lastMatch": "2026-06-19"
+    },
+    {
+      "teamId": "bih",
+      "teamName": "Bosnia y Herzegovina",
+      "elo": 1570.5,
+      "eloRaw": 1608.5,
+      "prior": 1482,
+      "matches": 285,
+      "lastMatch": "2026-06-18"
+    },
+    {
+      "teamId": "cuw",
+      "teamName": "Curazao",
+      "elo": 1548.3,
+      "eloRaw": 1597.7,
+      "prior": 1433,
+      "matches": 178,
+      "lastMatch": "2026-06-20"
+    }
+  ]
+}

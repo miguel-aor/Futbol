@@ -14,6 +14,11 @@
 
 import { WORLD_CUP_TEAMS } from "@/data/worldcup-teams";
 import {
+  ELO_MEAN,
+  ELO_RATINGS,
+  ELO_SPREAD,
+} from "@/data/elo-ratings.generated";
+import {
   calculateMatchOutcomeProbabilities,
   generateScoreMatrix,
 } from "@/lib/footballModels";
@@ -41,6 +46,17 @@ function rankingStrength(teamId: string): number {
   return clamp(100 - (r - 1) * 1.0, 25, 100);
 }
 
+/**
+ * Fuerza 0-100 derivada del Elo REAL calibrado (capa 3). Si el equipo no tiene
+ * Elo calibrado todavía (placeholder vacío), cae al baseline de ranking FIFA →
+ * comportamiento idéntico al previo, build siempre verde.
+ */
+function eloStrength(teamId: string): number {
+  const elo = ELO_RATINGS[teamId];
+  if (elo == null) return rankingStrength(teamId);
+  return clamp(50 + ((elo - ELO_MEAN) / ELO_SPREAD) * 25, 25, 100);
+}
+
 /** Promedio de goles por partido del torneo (para normalizar índices WC). */
 function leagueGoalsPerMatch(forms: TournamentTeamForm[]): number {
   let goals = 0;
@@ -58,6 +74,7 @@ function buildLayers(
   leagueGpm: number,
 ): StrengthLayer[] {
   const baseline = rankingStrength(f.teamId);
+  const elo = eloStrength(f.teamId);
 
   // Capa 1: Mundial actual (real si jugó ≥1).
   const wcAttack =
@@ -92,11 +109,16 @@ function buildLayers(
     },
     {
       label: "Elo / ranking FIFA",
-      attack: baseline,
-      defense: baseline,
+      // Elo REAL calibrado de resultados internacionales (martj42) si existe;
+      // si no, baseline de ranking FIFA.
+      attack: elo,
+      defense: elo,
       weight: w.eloRanking,
-      hasRealData: true,
-      note: `Ranking FIFA aprox. #${RANKING.get(f.teamId) ?? "?"}`,
+      hasRealData: ELO_RATINGS[f.teamId] != null,
+      note:
+        ELO_RATINGS[f.teamId] != null
+          ? `Elo calibrado ${Math.round(ELO_RATINGS[f.teamId])}`
+          : `Ranking FIFA aprox. #${RANKING.get(f.teamId) ?? "?"} (Elo aún no calibrado)`,
     },
     {
       label: "Forma de club (jugadores)",

@@ -50,3 +50,7 @@ yarn-error.log*
 /Estad*.zip
 /estadisticas jugadores/
 /Estadisticas*.zip
+
+# Cache grande regenerable: resultados historicos de martj42 (~8MB). Se baja con
+# `npm run wc:calibrate`; no se versiona. Los ratings calibrados sí (elo-ratings.json).
+/data/worldcup-2026/international-results.json

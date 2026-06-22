@@ -14,13 +14,15 @@
     "wc:sync": "tsx scripts/sync-openfootball-worldcup.ts",
     "wc:playerstats": "tsx scripts/collect-playerstats-football.ts",
     "wc:365": "tsx scripts/collect-365scores-worldcup.ts",
-    "wc:elo": "tsx scripts/build-team-elo-history.ts",
+    "wc:elo": "tsx scripts/calibrate-elo.ts",
+    "wc:calibrate": "tsx scripts/calibrate-elo.ts",
+    "wc:backtest": "tsx scripts/backtest.ts",
     "wc:form": "tsx scripts/build-current-worldcup-form.ts",
     "wc:features": "tsx scripts/build-prediction-features.ts",
     "wc:props": "tsx scripts/build-player-prop-features.ts",
     "wc:events": "tsx scripts/build-match-events.ts",
     "wc:validate": "tsx scripts/validate-worldcup-data.ts",
-    "wc:build": "npm run wc:sync && npm run wc:playerstats && npm run wc:365 && npm run wc:elo && npm run wc:form && npm run wc:features && npm run wc:props && npm run wc:events && npm run wc:validate"
+    "wc:build": "npm run wc:sync && npm run wc:playerstats && npm run wc:365 && npm run wc:calibrate && npm run wc:form && npm run wc:features && npm run wc:props && npm run wc:events && npm run wc:validate"
   },
   "dependencies": {
     "next": "^15.5.19",

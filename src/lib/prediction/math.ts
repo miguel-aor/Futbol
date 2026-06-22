@@ -90,3 +90,51 @@ export function bttsProbability(lambdaHome: number, lambdaAway: number): number 
   const pAway0 = poissonPmf(lambdaAway, 0);
   return clamp(1 - pHome0 - pAway0 + pHome0 * pAway0, 0, 1);
 }
+
+/**
+ * Ajuste tau de Dixon-Coles (Dixon & Coles, 1997): corrige la dependencia en
+ * marcadores bajos (0-0, 1-0, 0-1, 1-1) que la Poisson independiente estima mal.
+ * rho < 0 sube empates 0-0/1-1 y baja 1-0/0-1. Con rho = 0, tau = 1 (sin efecto).
+ */
+function dcTau(
+  h: number,
+  a: number,
+  lambda: number,
+  mu: number,
+  rho: number,
+): number {
+  if (h === 0 && a === 0) return 1 - lambda * mu * rho;
+  if (h === 0 && a === 1) return 1 + lambda * rho;
+  if (h === 1 && a === 0) return 1 + mu * rho;
+  if (h === 1 && a === 1) return 1 - rho;
+  return 1;
+}
+
+/**
+ * Distribución 1X2 con corrección Dixon-Coles. Idéntica a
+ * `outcomeFromExpectedGoals` cuando rho = 0 (default), por lo que es un superset
+ * seguro: ningún caller existente cambia de comportamiento.
+ */
+export function dcOutcomeFromExpectedGoals(
+  lambdaHome: number,
+  lambdaAway: number,
+  opts: { maxGoals?: number; rho?: number } = {},
+): { homeWin: number; draw: number; awayWin: number } {
+  const maxGoals = opts.maxGoals ?? 8;
+  const rho = opts.rho ?? 0;
+  let home = 0;
+  let draw = 0;
+  let away = 0;
+  for (let h = 0; h <= maxGoals; h++) {
+    const ph = poissonPmf(lambdaHome, h);
+    for (let a = 0; a <= maxGoals; a++) {
+      const pa = poissonPmf(lambdaAway, a);
+      const p = ph * pa * dcTau(h, a, lambdaHome, lambdaAway, rho);
+      if (h > a) home += p;
+      else if (h === a) draw += p;
+      else away += p;
+    }
+  }
+  const total = home + draw + away || 1;
+  return { homeWin: home / total, draw: draw / total, awayWin: away / total };
+}

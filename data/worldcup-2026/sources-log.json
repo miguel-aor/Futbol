@@ -88,5 +88,14 @@
     "records": 4,
     "collectedAt": "2026-06-19T07:23:50.079Z",
     "note": "14 goles y 14 tarjetas reales (J2 grupos A/B). Tiros/asistencias por jugador = null (no publicados)."
+  },
+  {
+    "script": "calibrate-elo",
+    "source": "martj42/international_results",
+    "sourceUrl": "local:international-results.json",
+    "status": "fallback",
+    "records": 32323,
+    "collectedAt": "2026-06-22T01:41:15.082Z",
+    "note": "Elo calibrado para 48 selecciones (278 ghosts)."
   }
 ]
