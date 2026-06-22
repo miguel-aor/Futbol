@@ -112,11 +112,43 @@ ${entries}
   await fs.writeFile(GENERATED_TS, body, "utf8");
 }
 
+/** Clave no ordenada (date + par de equipos) para deduplicar al fusionar. */
+function matchKey(r: CleanResult): string {
+  const [x, y] = [r.homeId, r.awayId].sort();
+  return `${r.date}|${x}|${y}`;
+}
+
+/**
+ * Fusiona resultados del Mundial en vivo (worldcup-results.json, de openfootball)
+ * que NO estén ya en el histórico martj42. Determinista (re-ordena por ts).
+ */
+async function mergeWorldCupResults(results: CleanResult[]): Promise<number> {
+  const wc = await readJsonSafe<{ results?: CleanResult[] } | null>("worldcup-results.json", null);
+  if (!wc?.results?.length) return 0;
+  const seen = new Set(results.map(matchKey));
+  let added = 0;
+  for (const r of wc.results) {
+    const k = matchKey(r);
+    if (!seen.has(k)) {
+      results.push(r);
+      seen.add(k);
+      added++;
+    }
+  }
+  if (added > 0) {
+    results.sort((a, b) =>
+      a.ts !== b.ts ? a.ts - b.ts : a.homeId !== b.homeId ? a.homeId.localeCompare(b.homeId) : a.awayId.localeCompare(b.awayId),
+    );
+  }
+  return added;
+}
+
 async function main() {
   const dry = process.argv.includes("--dry");
   assertAll48Covered();
 
   const { results, origin } = await loadResults();
+  const wcAdded = await mergeWorldCupResults(results);
 
   // Walk-forward: actualiza ratings cronológicamente.
   const R: Record<string, number> = {};
@@ -157,7 +189,7 @@ async function main() {
       .slice(0, 20)
       .map(([id, n]) => `${id.replace("ghost:", "")} (${n})`);
     summarize(SCRIPT, [
-      `[DRY] resultados conservados: ${results.length}`,
+      `[DRY] resultados conservados: ${results.length} (incl. ${wcAdded} del Mundial vía openfootball)`,
       `[DRY] equipos totales (reales+ghost): ${Object.keys(R).length}`,
       `[DRY] ghosts: ${ghostIds.length} (${ghostMatches} apariciones)`,
       `[DRY] top nombres ghost (revisar que NO sea ninguna de las 48):`,
@@ -193,6 +225,7 @@ async function main() {
     generatedAt,
     source: "martj42/international_results",
     params: { baseElo: BASE_ELO, homeAdv: HOME_ADV, minDate: MIN_DATE, shrink: SHRINK },
+    worldCupMerged: wcAdded,
     mean: round1(mean),
     spread: round1(spread),
     count: detail.length,
@@ -216,7 +249,7 @@ async function main() {
   const top5 = detail.slice(0, 5).map((d) => `${d.teamName} ${d.elo}`);
   const bottom3 = detail.slice(-3).map((d) => `${d.teamName} ${d.elo}`);
   summarize(SCRIPT, [
-    `resultados procesados: ${results.length} (desde ${MIN_DATE})`,
+    `resultados procesados: ${results.length} (desde ${MIN_DATE}; +${wcAdded} del Mundial vía openfootball)`,
     `equipos: ${detail.length} reales + ${ghostIds.length} ghosts`,
     `mean ${round1(mean)} · spread ${round1(spread)}`,
     `top: ${top5.join(", ")}`,

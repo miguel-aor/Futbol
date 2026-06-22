@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-22T01:37:47.583Z",
+  "generatedAt": "2026-06-22T01:59:36.452Z",
   "method": "Walk-forward out-of-sample: cada partido predicho con ratings solo de partidos previos; Elo actualizado después. Burn-in omitido.",
   "totalMatches": 32323,
   "evaluated": 32173,

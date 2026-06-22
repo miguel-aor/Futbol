@@ -5,9 +5,9 @@
 // con shrinkage 0.7 calibrado + 0.3 prior (ranking FIFA).
 // =====================================================================
 
-export const ELO_GENERATED_AT = "2026-06-22T01:41:15.082Z";
+export const ELO_GENERATED_AT = "2026-06-22T02:00:19.273Z";
 export const ELO_MEAN = 1824.6;
-export const ELO_SPREAD = 147.5;
+export const ELO_SPREAD = 147.3;
 
 /** teamId (3 letras) → rating Elo calibrado. */
 export const ELO_RATINGS: Record<string, number> = {
@@ -15,31 +15,31 @@ export const ELO_RATINGS: Record<string, number> = {
   arg: 2111.2,
   aus: 1862.1,
   aut: 1861,
-  bel: 1906.9,
+  bel: 1905.5,
   bih: 1570.5,
   bra: 2014.5,
   can: 1851.2,
   civ: 1783.6,
   cod: 1697.8,
   col: 2001,
-  cpv: 1610,
+  cpv: 1622.4,
   cro: 1905.3,
   cuw: 1548.3,
   cze: 1726.6,
   ecu: 1885.3,
   egy: 1784.2,
   eng: 2033.4,
-  esp: 2087.8,
+  esp: 2093.5,
   fra: 2057.3,
   ger: 1976,
   gha: 1611.3,
   hai: 1587.2,
-  irn: 1864.1,
+  irn: 1865.5,
   irq: 1670.6,
   jor: 1669.8,
   jpn: 1949.7,
   kor: 1857.5,
-  ksa: 1666.7,
+  ksa: 1661,
   mar: 1959.9,
   mex: 1952.4,
   ned: 1982.7,
@@ -56,7 +56,7 @@ export const ELO_RATINGS: Record<string, number> = {
   swe: 1764.6,
   tun: 1685.1,
   tur: 1822,
-  uru: 1911.9,
+  uru: 1899.5,
   usa: 1902.5,
   uzb: 1736.7,
 };

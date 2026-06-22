@@ -1,23 +1,5 @@
 [
   {
-    "script": "sync-openfootball-worldcup",
-    "source": "openfootball/worldcup",
-    "sourceUrl": "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json",
-    "status": "ok",
-    "records": null,
-    "collectedAt": "2026-06-19T07:15:40.345Z",
-    "note": "Remoto disponible (no se sobrescribe el snapshot verificado)."
-  },
-  {
-    "script": "sync-openfootball-worldcup",
-    "source": "in-repo snapshot (worldcup-fixtures)",
-    "sourceUrl": "src/data/worldcup-fixtures.ts",
-    "status": "fallback",
-    "records": 72,
-    "collectedAt": "2026-06-19T07:15:40.345Z",
-    "note": "Grupos A–L reales. 24 partidos de jornada 1."
-  },
-  {
     "script": "collect-playerstats-football",
     "source": "PlayerStats.Football",
     "sourceUrl": null,
@@ -90,12 +72,30 @@
     "note": "14 goles y 14 tarjetas reales (J2 grupos A/B). Tiros/asistencias por jugador = null (no publicados)."
   },
   {
+    "script": "sync-openfootball-worldcup",
+    "source": "openfootball/worldcup.json",
+    "sourceUrl": "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json",
+    "status": "ok",
+    "records": 39,
+    "collectedAt": "2026-06-22T01:58:59.416Z",
+    "note": "39 partidos jugados parseados → worldcup-results.json"
+  },
+  {
+    "script": "sync-openfootball-worldcup",
+    "source": "in-repo snapshot (worldcup-fixtures)",
+    "sourceUrl": "src/data/worldcup-fixtures.ts",
+    "status": "fallback",
+    "records": 72,
+    "collectedAt": "2026-06-22T01:58:59.416Z",
+    "note": "Grupos A–L reales. 24 partidos de jornada 1."
+  },
+  {
     "script": "calibrate-elo",
     "source": "martj42/international_results",
     "sourceUrl": "local:international-results.json",
     "status": "fallback",
-    "records": 32323,
-    "collectedAt": "2026-06-22T01:41:15.082Z",
+    "records": 32326,
+    "collectedAt": "2026-06-22T02:00:19.273Z",
     "note": "Elo calibrado para 48 selecciones (278 ghosts)."
   }
 ]
